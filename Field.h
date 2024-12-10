@@ -1,17 +1,14 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-class Player :public GameObject
+class Field :public GameObject
 {
-	int hmodel;
-
-	//キャラクターの移動
-	void Move();
+	int hModel_;
 
 public:
-	Player(GameObject* parent);
+	Field(GameObject* parent);
 
-	~Player();
+	~Field();
 
 	//初期化
 	void Initialize() override;

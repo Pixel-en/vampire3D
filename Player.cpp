@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Engine/Model.h"
 #include "Engine/Input.h"
+#include "Engine/Camera.h"
 
 namespace {
 	const float MOVESPEED{ 10.0 };
@@ -24,28 +25,61 @@ void Player::Initialize()
 
 void Player::Update()
 {
-	//向いている方向のベクトル
-	XMVECTOR moveVec = XMVECTOR{ 0,0,0 };
-	if (Input::IsKey(DIK_UP))
-		moveVec = XMVectorSetZ(moveVec, 1.0);
-	if (Input::IsKey(DIK_DOWN))
-		moveVec = XMVectorSetZ(moveVec, -1.0);
-	if (Input::IsKey(DIK_LEFT))
-		moveVec = XMVectorSetX(moveVec, -1.0);
-	if (Input::IsKey(DIK_RIGHT)) 
-		moveVec=XMVectorSetX(moveVec, 1.0);
-	//if (Input::IsKey(DIK_A))
-	//	transform_.rotate_.y -= 50.0f * Time::DeltaTime();
-	//if (Input::IsKey(DIK_D))
-	//	transform_.rotate_.y += 50.0f * Time::DeltaTime();
+	Move();
+}
 
-	transform_.position_ += moveVec * MOVESPEED * Time::DeltaTime();
+void Player::Move()
+{
+	//移動方向ベクトル
+	XMVECTOR moveVec = XMVECTOR{ 0,0,0 };
+	//カメラターゲット用ベクトル
+	XMVECTOR camtarVec = XMVECTOR{ 0, 0, 1, 0 };
+
+	//移動
+	if (Input::IsKey(DIK_W))
+		moveVec = XMVectorSetZ(moveVec, 1.0);
+	if (Input::IsKey(DIK_S))
+		moveVec = XMVectorSetZ(moveVec, -1.0);
+	if (Input::IsKey(DIK_A))
+		moveVec = XMVectorSetX(moveVec, -1.0);
+	if (Input::IsKey(DIK_D))
+		moveVec = XMVectorSetX(moveVec, 1.0);
+
+
+	//カメラ回転
+	if (Input::IsKey(DIK_LEFT))
+		transform_.rotate_.y -= 50.0f * Time::DeltaTime();
+	if (Input::IsKey(DIK_RIGHT))
+		transform_.rotate_.y += 50.0f * Time::DeltaTime();
+
+	//Y軸の回転をマトリクスに変換
+	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
+
+	//移動方向ベクトルに回転マトリクスをかけ回転させたベクトルを作る
+	XMVECTOR rotMoveVec = XMVector3TransformCoord(moveVec, rot);
+	rotMoveVec = XMVector3Normalize(rotMoveVec);
+
+	//ターゲット用ベクトルに回転マトリクスをかけ回転させたベクトルを作る
+	XMVECTOR rotCamtarVec = XMVector3TransformCoord(camtarVec, rot);
+	rotCamtarVec = XMVector3Normalize(rotCamtarVec);
+	
+	transform_.position_ += rotMoveVec * MOVESPEED * Time::DeltaTime();
+
+	if (Input::IsKey(DIK_SPACE)) {
+		Camera::SetPosition({ transform_.position_.x,transform_.position_.y + 15,transform_.position_.z - 0.1f });
+		Camera::SetTarget(transform_.position_);
+	}
+	else {
+		Camera::SetPosition({ transform_.position_.x,transform_.position_.y+1,transform_.position_.z });
+		Camera::SetTarget(transform_.position_ + 10.0f * rotCamtarVec);
+	}
 }
 
 void Player::Draw()
 {
 	Model::SetTransform(hmodel, transform_);
-	Model::Draw(hmodel);
+	if (Input::IsKey(DIK_SPACE)) 
+		Model::Draw(hmodel);
 }
 
 void Player::Release()

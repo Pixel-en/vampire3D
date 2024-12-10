@@ -1,17 +1,13 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-class Player :public GameObject
+class PlayScene : public GameObject
 {
-	int hmodel;
-
-	//キャラクターの移動
-	void Move();
 
 public:
-	Player(GameObject* parent);
-
-	~Player();
+	//コンストラクタ
+	//引数：parent  親オブジェクト（SceneManager）
+	PlayScene(GameObject* parent);
 
 	//初期化
 	void Initialize() override;
@@ -25,4 +21,3 @@ public:
 	//開放
 	void Release() override;
 };
-

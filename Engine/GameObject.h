@@ -8,7 +8,7 @@
 #include "Transform.h"
 #include "Time.h"
 #include "Debug.h"
-#include "../ImprovedOperator.h"
+#include "ImprovedOperator.h"
 
 using namespace DirectX;
 
@@ -87,6 +87,70 @@ public:
 	//引数：name	検索する名前
 	//戻値：見つけたオブジェクトのアドレス（見つからなければnullptr）
 	GameObject* FindChildObject(const std::string& name);
+
+	//クラス名でオブジェクトを検索（対象は自分の子供以下）
+	//戻値：見つけたオブジェクトのアドレス（見つからなければnullptr）
+	template<class C>
+	C* FindGameObject() {
+		auto list = GetChildList();
+		for (GameObject* obj : *list) {
+			C* ret = dynamic_cast<C*>(obj);
+			if (ret != nullptr) {
+				return ret;
+			}
+		}
+		return nullptr;
+	}
+
+	//名前でオブジェクトを検索（対象は自分の子供以下）
+	//引数：tag	検索するタグ
+	//戻値：見つけたオブジェクトのアドレス（見つからなければnullptr）
+	template<class C>
+	C* FindGameObject(const std::string& name) {
+		auto list = GetChildList();
+		for (GameObject* obj : *list) {
+			C* ret = dynamic_cast<C*>(obj);
+			if (ret != nullptr) {
+				if (obj->GetObjectName() == name) {
+					return ret;
+				}
+			}
+		}
+		return nullptr;
+	}
+
+	//クラス名でオブジェクトを検索（対象は自分の子供以下）
+	//戻値：見つけたオブジェクトのリスト
+	template<class C>
+	std::list<C*> FindGameObjects() {
+		std::list<C*> rets;
+		auto list = GetChildList();
+		for (GameObject* obj : *list) {
+			C* ret = dynamic_cast<C*>(obj);
+			if (ret != nullptr) {
+				rets.push_back(ret);
+			}
+		}
+		return rets;
+	}
+
+	//名前でオブジェクトを検索（対象は自分の子供以下）
+	//引数：tag	検索するタグ
+	//戻値：見つけたオブジェクトのアドレス（見つからなければnullptr）
+	template<class C>
+	std::list<C*> FindGameObjects(const std::string& name) {
+		std::list<C*> rets;
+		auto list = GetChildList();
+		for (GameObject* obj : *list) {
+			C* ret = dynamic_cast<C*>(obj);
+			if (ret != nullptr) {
+				if (obj->GetObjectName() == name) {
+					rets.push_back(ret);
+				}
+			}
+		}
+		return rets;
+	}
 
 	//名前でオブジェクトを検索（対象は全体）
 	//引数：検索する名前

@@ -1,7 +1,6 @@
 #include "TestScene.h"
-#include "Player.h"
-#include "Engine/Camera.h"
-#include "Engine/Camera.h"
+#include "Engine/SceneManager.h"
+#include "Engine/Input.h"
 
 //コンストラクタ
 TestScene::TestScene(GameObject * parent)
@@ -12,13 +11,16 @@ TestScene::TestScene(GameObject * parent)
 //初期化
 void TestScene::Initialize()
 {
-	Instantiate<Player>(this);
-	Camera::SetPosition({ 0,7,-10 });
 }
 
 //更新
 void TestScene::Update()
 {
+	if (Input::IsKeyDown(DIK_RETURN)) {
+		SceneManager* psManager = (SceneManager*)FindObject("SceneManager");
+		psManager->ChangeScene(SCENE_ID_PLAY);
+	}
+		
 }
 
 //描画

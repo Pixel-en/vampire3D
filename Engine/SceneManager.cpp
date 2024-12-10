@@ -1,10 +1,11 @@
 #include "sceneManager.h"
 
-#include "../TestScene.h"
 #include "Model.h"
 #include "Image.h"
 #include "Audio.h"
 
+#include "../TestScene.h"
+#include "../PlayScene.h"
 
 //コンストラクタ
 SceneManager::SceneManager(GameObject * parent)
@@ -40,6 +41,7 @@ void SceneManager::Update()
 		switch (nextSceneID_)
 		{
 		case SCENE_ID_TEST: Instantiate<TestScene>(this); break;
+		case SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
 
 		}
 		Audio::Initialize();
