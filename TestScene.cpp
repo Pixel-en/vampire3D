@@ -1,6 +1,7 @@
 #include "TestScene.h"
 #include "Player.h"
 #include "Engine/Camera.h"
+#include "Engine/Camera.h"
 
 //コンストラクタ
 TestScene::TestScene(GameObject * parent)
@@ -12,6 +13,7 @@ TestScene::TestScene(GameObject * parent)
 void TestScene::Initialize()
 {
 	Instantiate<Player>(this);
+	Camera::SetPosition({ 0,7,-10 });
 }
 
 //更新

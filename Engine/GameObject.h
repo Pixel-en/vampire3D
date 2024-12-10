@@ -8,9 +8,7 @@
 #include "Transform.h"
 #include "Time.h"
 #include "Debug.h"
-
-
-
+#include "../ImprovedOperator.h"
 
 using namespace DirectX;
 

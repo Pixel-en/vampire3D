@@ -15,6 +15,7 @@ SceneManager::SceneManager(GameObject * parent)
 //‰Šú‰»
 void SceneManager::Initialize()
 {
+	Time::Init();
 	//Å‰‚ÌƒV[ƒ“‚ğ€”õ
 	currentSceneID_ = SCENE_ID_TEST;
 	nextSceneID_ = currentSceneID_;
@@ -49,6 +50,7 @@ void SceneManager::Update()
 //•`‰æ
 void SceneManager::Draw()
 {
+	Time::Refresh();
 }
 
 //ŠJ•ú

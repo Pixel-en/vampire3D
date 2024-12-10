@@ -177,6 +177,7 @@
     </ClInclude>
     <ClInclude Include="TestObject.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ImprovedOperator.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
