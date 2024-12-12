@@ -34,6 +34,7 @@ void Player::Update()
 
 void Player::Move()
 {
+
 	//移動方向ベクトル
 	XMVECTOR moveVec = XMVECTOR{ 0,0,0 };
 	//カメラターゲット用ベクトル
