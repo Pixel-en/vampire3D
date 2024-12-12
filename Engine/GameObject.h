@@ -13,6 +13,7 @@
 using namespace DirectX;
 
 
+
 //-----------------------------------------------------------
 //全てのゲームオブジェクト（シーンも含めて）が継承するインターフェース
 // ゲームオブジェクトは、親子構造になっていて、
@@ -31,7 +32,8 @@ protected:
 	//衝突判定リスト
 	std::list<Collider*>	colliderList_;	
 
-
+	int screenWidth;		//スクリーンの幅
+	int screenHeight;		//スクリーンの高さ
 
 public:
 	//コンストラクタ

@@ -39,7 +39,8 @@ void Player::Move()
 	//カメラターゲット用ベクトル
 	XMVECTOR camtarVec = XMVECTOR{ 0, 0, 1, 0 };
 
-	cursorTrans_.position_ = { Input::GetMousePosition().x - screenWidth / 2.0f ,Input::GetMousePosition().y - screenHeight / 2.0f,Input::GetMousePosition().z };
+	cursorTrans_.position_ = { (Input::GetMousePosition().x - screenWidth / 2.0f) / screenWidth / 2.0f,
+								(Input::GetMousePosition().y - screenHeight / 2.0f) / -screenHeight / 2.0f,Input::GetMousePosition().z };
 	Debug::Log(cursorTrans_.position_.x, true);
 
 	//移動

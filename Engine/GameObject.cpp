@@ -6,7 +6,6 @@
 GameObject::GameObject(void) :
 	GameObject(nullptr, "")
 {
-
 }
 
 //コンストラクタ（名前なし）
@@ -17,11 +16,7 @@ GameObject::GameObject(GameObject * parent) :
 
 //コンストラクタ（標準）
 GameObject::GameObject(GameObject * parent, const std::string& name)
-	: pParent_(parent),
-
-
-
-	objectName_(name)
+	: pParent_(parent),objectName_(name)
 {
 	childList_.clear();
 	state_ = { 0, 1, 1, 0 };
@@ -29,6 +24,8 @@ GameObject::GameObject(GameObject * parent, const std::string& name)
 	if(parent)
 		transform_.pParent_ = &parent->transform_;
 
+	screenWidth = Direct3D::screenWidth_;
+	screenHeight = Direct3D::screenHeight_;
 }
 
 //デストラクタ

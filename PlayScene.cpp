@@ -12,7 +12,6 @@ void PlayScene::Initialize()
 {
 	Instantiate<Field>(this);
 	Instantiate<Player>(this);
-	Camera::SetPosition({ 0, 7, -10});
 }
 
 void PlayScene::Update()

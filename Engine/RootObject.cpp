@@ -7,7 +7,6 @@ RootObject::RootObject():
 {
 }
 
-
 RootObject::~RootObject()
 {
 }
