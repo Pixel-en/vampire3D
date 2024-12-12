@@ -31,6 +31,8 @@ protected:
 	//衝突判定リスト
 	std::list<Collider*>	colliderList_;	
 
+
+
 public:
 	//コンストラクタ
 	GameObject();

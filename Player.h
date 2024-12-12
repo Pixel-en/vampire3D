@@ -4,6 +4,9 @@
 class Player :public GameObject
 {
 	int hmodel;
+	int hImage_;
+
+	Transform cursorTrans_;
 
 	//キャラクターの移動
 	void Move();

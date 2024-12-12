@@ -2,15 +2,17 @@
 #include "Engine/Model.h"
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
+#include "Engine/Image.h"
 
 namespace {
 	const float MOVESPEED{ 10.0 };
 }
 
 Player::Player(GameObject* parent)
-	:hmodel(-1)
+	:GameObject(parent,"Player"), hmodel(-1), hImage_(-1)
 {
 	transform_.position_ = { 0,0,0 };
+	cursorTrans_.position_ = { 0,0,0 };
 }
 
 Player::~Player()
@@ -21,6 +23,8 @@ void Player::Initialize()
 {
 	hmodel = Model::Load("Assets\\Model\\Player.fbx");
 	assert(hmodel >= 0);
+	hImage_ = Image::Load("Assets\\Image\\cursor.png");
+	assert(hImage_ >= 0);
 }
 
 void Player::Update()
@@ -35,6 +39,9 @@ void Player::Move()
 	//カメラターゲット用ベクトル
 	XMVECTOR camtarVec = XMVECTOR{ 0, 0, 1, 0 };
 
+	cursorTrans_.position_ = { Input::GetMousePosition().x - screenWidth / 2.0f ,Input::GetMousePosition().y - screenHeight / 2.0f,Input::GetMousePosition().z };
+	Debug::Log(cursorTrans_.position_.x, true);
+
 	//移動
 	if (Input::IsKey(DIK_W))
 		moveVec = XMVectorSetZ(moveVec, 1.0);
@@ -45,7 +52,10 @@ void Player::Move()
 	if (Input::IsKey(DIK_D))
 		moveVec = XMVectorSetX(moveVec, 1.0);
 
-
+	if (Input::IsKeyUp(DIK_L))
+		cursorTrans_.position_.x += 1;
+	if (Input::IsKeyUp(DIK_J))
+		cursorTrans_.position_.x -= 1;
 	//カメラ回転
 	if (Input::IsKey(DIK_LEFT))
 		transform_.rotate_.y -= 50.0f * Time::DeltaTime();
@@ -80,6 +90,8 @@ void Player::Draw()
 	Model::SetTransform(hmodel, transform_);
 	if (Input::IsKey(DIK_SPACE)) 
 		Model::Draw(hmodel);
+	Image::SetTransform(hImage_, cursorTrans_);
+	Image::Draw(hImage_);
 }
 
 void Player::Release()
