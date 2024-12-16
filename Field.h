@@ -21,5 +21,8 @@ public:
 
 	//開放
 	void Release() override;
+
+	//モデルのハンドルを返す
+	int GetModelHandle() { return hModel_; }
 };
 

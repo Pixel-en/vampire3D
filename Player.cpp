@@ -4,15 +4,24 @@
 #include "Engine/Camera.h"
 #include "Engine/Image.h"
 
+#include "Field.h"
+#include <algorithm>
+
 namespace {
 	const float MOVESPEED{ 10.0 };
+	const float PLAYERHEIGHT{ 1.0f };
+	const float ROTATESPEED{ 70.0f };
+	const float RAYHEIGHT{ 5.0f };
+	const float GRAVITY{ 9.8f / 2.0f / 60.0f };
 }
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"), hmodel(-1), hImage_(-1)
+	:GameObject(parent,"Player"), hmodel(-1)
 {
 	transform_.position_ = { 0,0,0 };
-	cursorTrans_.position_ = { 0,0,0 };
+	lookHeight_ = PLAYERHEIGHT;
+	onGround_ = false;
+	gravity = 0.0f;
 }
 
 Player::~Player()
@@ -23,13 +32,12 @@ void Player::Initialize()
 {
 	hmodel = Model::Load("Assets\\Model\\Player.fbx");
 	assert(hmodel >= 0);
-	hImage_ = Image::Load("Assets\\Image\\cursor.png");
-	assert(hImage_ >= 0);
 }
 
 void Player::Update()
 {
 	Move();
+
 }
 
 void Player::Move()
@@ -40,9 +48,18 @@ void Player::Move()
 	//カメラターゲット用ベクトル
 	XMVECTOR camtarVec = XMVECTOR{ 0, 0, 1, 0 };
 
-	cursorTrans_.position_ = { (Input::GetMousePosition().x - screenWidth / 2.0f) / screenWidth / 2.0f,
-								(Input::GetMousePosition().y - screenHeight / 2.0f) / -screenHeight / 2.0f,Input::GetMousePosition().z };
-	Debug::Log(cursorTrans_.position_.x, true);
+	XMVECTOR Gravity = XMVECTOR{ 0,0,0 };
+	//重力方向のベクトルを作る
+	if (!onGround_) {
+		gravity += GRAVITY;
+		Gravity = XMVECTOR{ 0,-1,0 };
+	}
+	else {
+		Gravity = XMVECTOR{ 0,0,0 };
+		gravity = 0.0f;
+	}
+
+	Gravity = XMVector3Normalize(Gravity);
 
 	//移動
 	if (Input::IsKey(DIK_W))
@@ -54,15 +71,18 @@ void Player::Move()
 	if (Input::IsKey(DIK_D))
 		moveVec = XMVectorSetX(moveVec, 1.0);
 
-	if (Input::IsKeyUp(DIK_L))
-		cursorTrans_.position_.x += 1;
-	if (Input::IsKeyUp(DIK_J))
-		cursorTrans_.position_.x -= 1;
 	//カメラ回転
 	if (Input::IsKey(DIK_LEFT))
-		transform_.rotate_.y -= 50.0f * Time::DeltaTime();
+		transform_.rotate_.y -= ROTATESPEED * Time::DeltaTime();
 	if (Input::IsKey(DIK_RIGHT))
-		transform_.rotate_.y += 50.0f * Time::DeltaTime();
+		transform_.rotate_.y += ROTATESPEED * Time::DeltaTime();
+
+	//カメラ縦
+	if (Input::IsKey(DIK_UP))
+		lookHeight_ += 1.0f * Time::DeltaTime();
+	if (Input::IsKey(DIK_DOWN))
+		lookHeight_ -= 1.0f * Time::DeltaTime();
+	lookHeight_ = std::clamp(lookHeight_, 0.0f, 2.0f);
 
 	//Y軸の回転をマトリクスに変換
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
@@ -75,16 +95,51 @@ void Player::Move()
 	XMVECTOR rotCamtarVec = XMVector3TransformCoord(camtarVec, rot);
 	rotCamtarVec = XMVector3Normalize(rotCamtarVec);
 	
-	transform_.position_ += rotMoveVec * MOVESPEED * Time::DeltaTime();
+	transform_.position_ += rotMoveVec * MOVESPEED * Time::DeltaTime() + Gravity * gravity;
 
+
+	//フィールドからモデルのハンドルをとってくる
+	Field* field = GetParent()->FindGameObject<Field>();
+	int fieldHandle = field->GetModelHandle();
+
+	//レイ
+	RayCastData data;
+	data.start = transform_.position_;		//レイの発射位置
+	data.start.y += RAYHEIGHT;				//レイの発射する高さを少し上に
+	data.dir = XMFLOAT3(0, -1, 0);			//レイの方向
+	Model::RayCast(fieldHandle, &data);		//レイを発射
+
+
+
+	//レイが当たったら
+	if (data.hit)
+	{
+		//発射した高さと当たった高さ分下げる
+		if (data.dist - RAYHEIGHT >= -1.0f && data.dist - RAYHEIGHT <= 1.0f) {
+			transform_.position_.y -= data.dist - RAYHEIGHT;
+
+			onGround_ = true;
+		}
+		else
+			onGround_ = false;
+	}
+	else
+		onGround_ = false;
+
+
+	//カメラ
 	if (Input::IsKey(DIK_SPACE)) {
-		Camera::SetPosition({ transform_.position_.x,transform_.position_.y + 15,transform_.position_.z - 0.1f });
+		//俯瞰モード
+		Camera::SetPosition({ transform_.position_.x,transform_.position_.y + 15,transform_.position_.z - 10 });
 		Camera::SetTarget(transform_.position_);
 	}
 	else {
-		Camera::SetPosition({ transform_.position_.x,transform_.position_.y+1,transform_.position_.z });
-		Camera::SetTarget(transform_.position_ + 10.0f * rotCamtarVec);
+		//一人称モード
+		Camera::SetPosition({ transform_.position_.x,transform_.position_.y + PLAYERHEIGHT,transform_.position_.z });
+		XMFLOAT3 tarPos = transform_.position_ + 1.0f * rotCamtarVec;
+		Camera::SetTarget({ tarPos.x, tarPos.y + lookHeight_, tarPos.z });
 	}
+
 }
 
 void Player::Draw()
@@ -92,8 +147,6 @@ void Player::Draw()
 	Model::SetTransform(hmodel, transform_);
 	if (Input::IsKey(DIK_SPACE)) 
 		Model::Draw(hmodel);
-	Image::SetTransform(hImage_, cursorTrans_);
-	Image::Draw(hImage_);
 }
 
 void Player::Release()

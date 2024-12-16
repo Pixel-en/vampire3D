@@ -12,7 +12,7 @@ Field::~Field()
 
 void Field::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\Test_Ground.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Box.fbx");
 	assert(hModel_ >= 0);
 }
 
@@ -25,6 +25,7 @@ void Field::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
+
 }
 
 void Field::Release()

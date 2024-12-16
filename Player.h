@@ -4,9 +4,10 @@
 class Player :public GameObject
 {
 	int hmodel;
-	int hImage_;
+	float lookHeight_;
 
-	Transform cursorTrans_;
+	bool onGround_;
+	float gravity;
 
 	//キャラクターの移動
 	void Move();
