@@ -16,12 +16,13 @@ namespace {
 }
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"), hmodel(-1)
+	:GameObject(parent,"Player"), hModel_(-1),hImage_(-1)
 {
 	transform_.position_ = { 0,0,0 };
 	lookHeight_ = PLAYERHEIGHT;
 	onGround_ = false;
 	gravity = 0.0f;
+	crossTrans = transform_;
 }
 
 Player::~Player()
@@ -30,8 +31,11 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	hmodel = Model::Load("Assets\\Model\\Player.fbx");
-	assert(hmodel >= 0);
+	hModel_ = Model::Load("Assets\\Model\\Player.fbx");
+	assert(hModel_ >= 0);
+
+	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
+	assert(hImage_ >= 0);
 }
 
 void Player::Update()
@@ -94,7 +98,7 @@ void Player::Move()
 	//ターゲット用ベクトルに回転マトリクスをかけ回転させたベクトルを作る
 	XMVECTOR rotCamtarVec = XMVector3TransformCoord(camtarVec, rot);
 	rotCamtarVec = XMVector3Normalize(rotCamtarVec);
-	
+
 	transform_.position_ += rotMoveVec * MOVESPEED * Time::DeltaTime() + Gravity * gravity;
 
 
@@ -110,7 +114,7 @@ void Player::Move()
 	Model::RayCast(fieldHandle, &data);		//レイを発射
 
 
-
+	onGround_ = false;
 	//レイが当たったら
 	if (data.hit)
 	{
@@ -120,11 +124,7 @@ void Player::Move()
 
 			onGround_ = true;
 		}
-		else
-			onGround_ = false;
 	}
-	else
-		onGround_ = false;
 
 
 	//カメラ
@@ -144,9 +144,11 @@ void Player::Move()
 
 void Player::Draw()
 {
-	Model::SetTransform(hmodel, transform_);
+	Model::SetTransform(hModel_, transform_);
 	if (Input::IsKey(DIK_SPACE)) 
-		Model::Draw(hmodel);
+		Model::Draw(hModel_);
+	Image::SetTransform(hImage_, crossTrans);
+	Image::Draw(hImage_);
 }
 
 void Player::Release()

@@ -12,7 +12,7 @@ Field::~Field()
 
 void Field::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\Box.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Test_Ground.fbx");
 	assert(hModel_ >= 0);
 }
 

@@ -4,6 +4,7 @@
 class Field :public GameObject
 {
 	int hModel_;
+	Transform trans;
 
 public:
 	Field(GameObject* parent);

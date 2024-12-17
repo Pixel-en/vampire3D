@@ -3,11 +3,14 @@
 
 class Player :public GameObject
 {
-	int hmodel;
-	float lookHeight_;
+	int hModel_;			//モデルハンドル
+	float lookHeight_;	//視点の高さ
 
-	bool onGround_;
-	float gravity;
+	bool onGround_;	//地面についているか
+	float gravity;	//重力
+
+	int hImage_;	//画像のハンドル(クロスヘア)
+	Transform crossTrans;
 
 	//キャラクターの移動
 	void Move();
