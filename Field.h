@@ -5,6 +5,7 @@ class Field :public GameObject
 {
 	int hModel_;
 	Transform trans;
+	int model;
 
 public:
 	Field(GameObject* parent);
@@ -25,5 +26,6 @@ public:
 
 	//ƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹‚ð•Ô‚·
 	int GetModelHandle() { return hModel_; }
+	int GetModelHandle2() { return model; }
 };
 

@@ -127,6 +127,8 @@ void Player::Move()
 	}
 
 
+
+
 	//ƒJƒƒ‰
 	if (Input::IsKey(DIK_SPACE)) {
 		//˜ëáÕƒ‚[ƒh
