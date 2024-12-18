@@ -1,5 +1,10 @@
 #include "Field.h"
 #include "Engine/Model.h"
+#include "Player.h"
+
+namespace {
+	const float RAYHEIGHT{ 5.0f };
+}
 
 Field::Field(GameObject* parent)
 	:GameObject(parent,"Field"),hModel_(-1)
@@ -13,25 +18,53 @@ Field::~Field()
 void Field::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Model\\Test_Ground.fbx");
-	assert(hModel_ >= 0);
-	model = Model::Load("Assets\\Model\\Test_Ground.fbx", 1);
-	assert(model >= 0);
+	assert(hModel_ >= 0); 
+	fieldPosList_ = { {-50,-1, 50}, {0,-1, 50}, {50,-1, 50}
+					, {-50,-1,  0}, {0,-1,  0}, {50,-1,  0}
+					, {-50,-1,-50}, {0,-1,-50}, {50,-1,-50} };
+	//fieldPosList_ = { {0,-1,0} };
 }
 
 void Field::Update()
 {
-	transform_.position_ = { 0,-1,0};
-	trans = transform_;
-	trans.position_.x += 50.0;
+	//Player* p = GetParent()->FindGameObject<Player>();
+
+	////レイ
+	//RayCastData data;
+	//data.start = p->GetPosition();		//レイの発射位置
+	////data.start.y += RAYHEIGHT;
+	//data.dir = XMFLOAT3(0, -1, 0);			//レイの方向
+	//p->SetonGround(false);
+	//Debug::Log("start");
+	//Debug::Log(data.start.y, true);
+	//for (int i = 0; i < fieldPosList_.size(); i++) {
+	//	transform_.position_ = fieldPosList_[i];
+	//	transform_.Calclation();
+	//	Model::SetTransform(hModel_, transform_);
+	//	Model::RayCast(hModel_, &data);
+
+	//	if (data.hit) {
+	//		p->SetonGround(true);
+	//		dist_ = data.dist - RAYHEIGHT;
+	//		break;
+	//	}
+	//	else
+	//		dist_ = 0;
+	//}
+
+	//Debug::Log(data.hit, true);
+	//Debug::Log(p->GetPosition().y, true);
+
+	//Debug::Log(data.dist, true);
 }
 
 void Field::Draw()
 {
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
-	
-	Model::SetTransform(model, trans);
-	Model::Draw(model);
+	for (int i = 0; i < fieldPosList_.size(); i++) {
+		transform_.position_ = fieldPosList_[i];
+		Model::SetTransform(hModel_, transform_);
+		Model::Draw(hModel_);
+	}
 
 }
 

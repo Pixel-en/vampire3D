@@ -1,11 +1,14 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include <vector>
 
 class Field :public GameObject
 {
 	int hModel_;
-	Transform trans;
-	int model;
+
+	std::vector<XMFLOAT3> fieldPosList_;
+
+	float dist_;
 
 public:
 	Field(GameObject* parent);
@@ -26,6 +29,9 @@ public:
 
 	//ƒ‚ƒfƒ‹‚Ìƒnƒ“ƒhƒ‹‚ð•Ô‚·
 	int GetModelHandle() { return hModel_; }
-	int GetModelHandle2() { return model; }
+
+	float GetRayDist() { return dist_; };
+
+	std::vector<XMFLOAT3> GetPosList() { return fieldPosList_; };
 };
 

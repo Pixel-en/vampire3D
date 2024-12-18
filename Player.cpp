@@ -41,7 +41,6 @@ void Player::Initialize()
 void Player::Update()
 {
 	Move();
-
 }
 
 void Player::Move()
@@ -107,27 +106,29 @@ void Player::Move()
 	int fieldHandle = field->GetModelHandle();
 
 	//レイ
-	RayCastData data;
-	data.start = transform_.position_;		//レイの発射位置
-	data.start.y += RAYHEIGHT;				//レイの発射する高さを少し上に
-	data.dir = XMFLOAT3(0, -1, 0);			//レイの方向
-	Model::RayCast(fieldHandle, &data);		//レイを発射
+	//RayCastData data;
+	//data.start = transform_.position_;		//レイの発射位置
+	//data.start.y += RAYHEIGHT;				//レイの発射する高さを少し上に
+	//data.dir = XMFLOAT3(0, -1, 0);			//レイの方向
+	//Model::RayCast(fieldHandle, &data);		//レイを発射
+	//
+	//for (int i = 0; i < field->GetPosList().size(); i++) {
 
+	//	onGround_ = false;
+	//	//レイが当たったら
+	//	if (data.hit)
+	//	{
+	//		//発射した高さと当たった高さ分下げる
+	//		if (data.dist - RAYHEIGHT >= -1.0f && data.dist - RAYHEIGHT <= 1.0f) {
+	//			transform_.position_.y -= data.dist - RAYHEIGHT;
 
-	onGround_ = false;
-	//レイが当たったら
-	if (data.hit)
-	{
-		//発射した高さと当たった高さ分下げる
-		if (data.dist - RAYHEIGHT >= -1.0f && data.dist - RAYHEIGHT <= 1.0f) {
-			transform_.position_.y -= data.dist - RAYHEIGHT;
+	//			onGround_ = true;
+	//		}
+	//	}
+	//}
 
-			onGround_ = true;
-		}
-	}
-
-
-
+	//if (onGround_)
+	//	transform_.position_.y -= field->GetRayDist();
 
 	//カメラ
 	if (Input::IsKey(DIK_SPACE)) {
@@ -155,4 +156,9 @@ void Player::Draw()
 
 void Player::Release()
 {
+}
+
+XMFLOAT3 Player::GetRayStart()
+{
+	return { transform_.position_.x,transform_.position_.y,transform_.position_.z };
 }

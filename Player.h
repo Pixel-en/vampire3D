@@ -31,5 +31,8 @@ public:
 
 	//ŠJ•ú
 	void Release() override;
+
+	XMFLOAT3 GetRayStart();
+	void SetonGround(bool _set) { onGround_ = _set; };
 };
 
