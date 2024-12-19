@@ -27,11 +27,7 @@ public:
 	//開放
 	void Release() override;
 
-	//モデルのハンドルを返す
-	int GetModelHandle() { return hModel_; }
-
+	//レイの距離を返す
 	float GetRayDist() { return dist_; };
-
-	std::vector<XMFLOAT3> GetPosList() { return fieldPosList_; };
 };
 

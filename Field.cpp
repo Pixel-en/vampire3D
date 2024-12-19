@@ -3,7 +3,6 @@
 #include "Player.h"
 
 namespace {
-	const float RAYHEIGHT{ 5.0f };
 }
 
 Field::Field(GameObject* parent)
@@ -22,40 +21,41 @@ void Field::Initialize()
 	fieldPosList_ = { {-50,-1, 50}, {0,-1, 50}, {50,-1, 50}
 					, {-50,-1,  0}, {0,-1,  0}, {50,-1,  0}
 					, {-50,-1,-50}, {0,-1,-50}, {50,-1,-50} };
-	//fieldPosList_ = { {0,-1,0} };
+	//fieldPosList_ = { {0,-1,0},{50,-1,  0} };
 }
 
 void Field::Update()
 {
-	//Player* p = GetParent()->FindGameObject<Player>();
+	Player* p = GetParent()->FindGameObject<Player>();
 
-	////レイ
-	//RayCastData data;
-	//data.start = p->GetPosition();		//レイの発射位置
-	////data.start.y += RAYHEIGHT;
-	//data.dir = XMFLOAT3(0, -1, 0);			//レイの方向
-	//p->SetonGround(false);
-	//Debug::Log("start");
-	//Debug::Log(data.start.y, true);
-	//for (int i = 0; i < fieldPosList_.size(); i++) {
-	//	transform_.position_ = fieldPosList_[i];
-	//	transform_.Calclation();
-	//	Model::SetTransform(hModel_, transform_);
-	//	Model::RayCast(hModel_, &data);
 
-	//	if (data.hit) {
-	//		p->SetonGround(true);
-	//		dist_ = data.dist - RAYHEIGHT;
-	//		break;
-	//	}
-	//	else
-	//		dist_ = 0;
-	//}
+	
+	for (int i = 0; i < fieldPosList_.size();i++) {
 
-	//Debug::Log(data.hit, true);
-	//Debug::Log(p->GetPosition().y, true);
+		//レイ
+		RayCastData data;
+		data.start = p->GetRayStart();   //レイの発射位置
+		data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
 
-	//Debug::Log(data.dist, true);
+		//ハンドルにポジションをセットしなおす
+		transform_.position_ = fieldPosList_[i];
+		Model::SetTransform(hModel_, transform_);
+		Model::RayCast(hModel_, &data); //レイを発射
+
+
+		p->SetonGround(false);
+		dist_ = 0;
+		//レイが当たったら
+		if (data.hit)
+		{
+			if (data.dist - p->GetRayHeight() >= -1.0f && data.dist - p->GetRayHeight() <= 1.0f) {
+				dist_ = data.dist - p->GetRayHeight();
+				Debug::Log(dist_, true);
+				p->SetonGround(true);
+				break;
+			}
+		}
+	}
 }
 
 void Field::Draw()
@@ -64,6 +64,7 @@ void Field::Draw()
 		transform_.position_ = fieldPosList_[i];
 		Model::SetTransform(hModel_, transform_);
 		Model::Draw(hModel_);
+
 	}
 
 }

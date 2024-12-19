@@ -1,5 +1,5 @@
-#include <windows.h>
 #include "Debug.h"
+#include <windows.h>
 
 void Debug::Log(int value, bool isLineFeed)
 {
@@ -19,4 +19,11 @@ void Debug::Log(std::string value, bool isLineFeed)
 {
 	if (isLineFeed)	value += "\n";
 	OutputDebugString(value.c_str());
+}
+
+void Debug::Log(DirectX::XMFLOAT3 value, bool isLineFeed)
+{
+	char str[256];
+	sprintf_s(str, "%f,%f,%f", value.x, value.y, value.z );
+	Debug::Log(str, isLineFeed);
 }
