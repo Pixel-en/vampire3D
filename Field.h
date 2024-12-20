@@ -8,9 +8,7 @@ class Field :public GameObject
 
 	std::vector<XMFLOAT3> fieldPosList_;
 
-	float dist_;
-
-	//現在の
+	//プレイヤーのいる配列番号
 	int currentNum_;
 	void SpawnField(int num);
 	XMFLOAT3 DeleteField(int num);
@@ -32,7 +30,21 @@ public:
 	//開放
 	void Release() override;
 
-	//レイの距離を返す
-	float GetRayDist() { return dist_; };
+	/// <summary>
+	/// 地面との当たり判定
+	/// </summary>
+	/// <param name="_pos">当たり判定したい側のポジション</param>
+	/// <param name="_rayHeight">レイの高さ</param>
+	/// <param name="_name">送ってきたオブジェクト</param>
+	/// <returns>当たっているかどうか</returns>
+	bool RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name);
+
+	/// <summary>
+	/// 地面との当たり判定
+	/// </summary>
+	/// <param name="_pos">当たり判定したい側のポジション</param>
+	/// <param name="_rayHeight">レイの高さ</param>
+	/// <returns>当たっているかどうか</returns>
+	bool RayCastField(XMFLOAT3& _pos, float _rayHeight);
 };
 

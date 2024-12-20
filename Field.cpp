@@ -4,7 +4,7 @@
 
 namespace {
 	const XMFLOAT2 FIELDSIZE{ 50,50 };
-	const XMFLOAT2 FIELDGRID{ 3,3 };
+	const XMINT2 FIELDGRID{ 3,3 };
 }
 
 void Field::SpawnField(int num)
@@ -48,37 +48,6 @@ void Field::Initialize()
 
 void Field::Update()
 {
-	Player* p = GetParent()->FindGameObject<Player>();
-
-
-	
-	for (int i = 0; i < fieldPosList_.size();i++) {
-
-		//レイ
-		RayCastData data;
-		data.start = p->GetRayStart();   //レイの発射位置
-		data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
-
-		//ハンドルにポジションをセットしなおす
-		transform_.position_ = fieldPosList_[i];
-		Model::SetTransform(hModel_, transform_);
-		Model::RayCast(hModel_, &data); //レイを発射
-
-
-		p->SetonGround(false);
-		dist_ = 0;
-		//レイが当たったら
-		if (data.hit)
-		{
-			if (data.dist - p->GetRayHeight() >= -1.0f && data.dist - p->GetRayHeight() <= 1.0f) {
-				dist_ = data.dist - p->GetRayHeight();
-				p->SetonGround(true);
-				if (currentNum_ != i)
-					SpawnField(i);
-				break;
-			}
-		}
-	}
 }
 
 void Field::Draw()
@@ -94,4 +63,44 @@ void Field::Draw()
 
 void Field::Release()
 {
+}
+
+bool Field::RayCastField(XMFLOAT3& pos, float _rayHeight, std::string _str)
+{
+
+	for (int i = 0; i < fieldPosList_.size(); i++) {
+
+		//レイ
+		RayCastData data;
+		data.start = pos;   //レイの発射位置
+		data.start.y += _rayHeight;
+		data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
+
+		//ハンドルにポジションをセットしなおす
+		transform_.position_ = fieldPosList_[i];
+		Model::SetTransform(hModel_, transform_);
+		Model::RayCast(hModel_, &data); //レイを発射
+
+		
+		//レイが当たったら
+		if (data.hit)
+		{
+			if (data.dist - _rayHeight >= -1.0f && data.dist - _rayHeight <= 1.0f) {
+				pos.y -= data.dist - _rayHeight;
+				if (_str == "Player") {
+					if (currentNum_ != i)
+						SpawnField(i);
+				}
+				return true;
+				break;
+			}
+		}
+	}
+	return false;
+}
+
+bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight)
+{
+	bool temp = RayCastField(_pos, _rayHeight, "");
+	return temp;
 }

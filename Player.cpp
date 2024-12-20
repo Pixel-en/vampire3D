@@ -110,8 +110,11 @@ void Player::Move()
 	//フィールドからモデルのハンドルをとってくる
 	Field* field = GetParent()->FindGameObject<Field>();
 	//レイがあたった距離下げる
-	transform_.position_.y -= field->GetRayDist();
-
+	onGround_ = false;
+	if (field->RayCastField(transform_.position_, RAYHEIGHT, "Player")) {
+		onGround_ = true;
+	}
+	
 
 	//カメラ
 	if (Input::IsKey(DIK_SPACE)) {
@@ -141,12 +144,3 @@ void Player::Release()
 {
 }
 
-XMFLOAT3 Player::GetRayStart()
-{
-	return { transform_.position_.x,transform_.position_.y + RAYHEIGHT,transform_.position_.z };
-}
-
-float Player::GetRayHeight()
-{
-	return RAYHEIGHT;
-}
