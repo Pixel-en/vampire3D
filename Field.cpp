@@ -3,10 +3,35 @@
 #include "Player.h"
 
 namespace {
+	const XMFLOAT2 FIELDSIZE{ 50,50 };
+	const XMFLOAT2 FIELDGRID{ 3,3 };
+}
+
+void Field::SpawnField(int num)
+{
+	XMFLOAT3 temp = DeleteField(num);
+
+	for (int i = 0; i < FIELDGRID.y; i++) {
+		for (int j = 0; j < FIELDGRID.x; j++) {
+			XMFLOAT3 data = { temp.x + (FIELDSIZE.x * (j - (int)(FIELDGRID.x / 2))),-1,temp.z + (FIELDSIZE.y * (i - (int)(FIELDGRID.y / 2))) };
+			fieldPosList_.push_back(data);
+		}
+	}
+
+	currentNum_ = fieldPosList_.size() / 2;
+	Debug::Log(temp);
+	Debug::Log("‚ð’†S‚É¶¬", true);
+}
+
+XMFLOAT3 Field::DeleteField(int num)
+{
+	XMFLOAT3 temp = fieldPosList_[num];
+	fieldPosList_.clear();
+	return temp;
 }
 
 Field::Field(GameObject* parent)
-	:GameObject(parent,"Field"),hModel_(-1)
+	:GameObject(parent,"Field"),hModel_(-1),currentNum_(-1)
 {
 }
 
@@ -18,10 +43,7 @@ void Field::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Model\\Test_Ground.fbx");
 	assert(hModel_ >= 0); 
-	fieldPosList_ = { {-50,-1, 50}, {0,-1, 50}, {50,-1, 50}
-					, {-50,-1,  0}, {0,-1,  0}, {50,-1,  0}
-					, {-50,-1,-50}, {0,-1,-50}, {50,-1,-50} };
-	//fieldPosList_ = { {0,-1,0},{50,-1,  0} };
+	fieldPosList_ = { {0,-1,0} };
 }
 
 void Field::Update()
@@ -50,8 +72,9 @@ void Field::Update()
 		{
 			if (data.dist - p->GetRayHeight() >= -1.0f && data.dist - p->GetRayHeight() <= 1.0f) {
 				dist_ = data.dist - p->GetRayHeight();
-				Debug::Log(dist_, true);
 				p->SetonGround(true);
+				if (currentNum_ != i)
+					SpawnField(i);
 				break;
 			}
 		}

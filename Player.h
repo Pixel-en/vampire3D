@@ -12,6 +12,8 @@ class Player :public GameObject
 	int hImage_;	//画像のハンドル(クロスヘア)
 	Transform crossTrans;
 
+	float speed_;
+
 	//キャラクターの移動
 	void Move();
 

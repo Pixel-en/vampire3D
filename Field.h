@@ -10,6 +10,11 @@ class Field :public GameObject
 
 	float dist_;
 
+	//åªç›ÇÃ
+	int currentNum_;
+	void SpawnField(int num);
+	XMFLOAT3 DeleteField(int num);
+
 public:
 	Field(GameObject* parent);
 

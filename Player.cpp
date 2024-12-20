@@ -8,7 +8,7 @@
 #include <algorithm>
 
 namespace {
-	const float MOVESPEED{ 10.0 };
+	const float MOVESPEED{ 50.0f };
 	const float PLAYERHEIGHT{ 1.0f };
 	const float ROTATESPEED{ 70.0f };
 	const float RAYHEIGHT{ 5.0f };
@@ -65,6 +65,11 @@ void Player::Move()
 
 	Gravity = XMVector3Normalize(Gravity);
 
+	if (Input::IsKey(DIK_LSHIFT) || Input::IsKey(DIK_RSHIFT))
+		speed_ = MOVESPEED * 2.0f;
+	else
+		speed_ = MOVESPEED;
+
 	//移動
 	if (Input::IsKey(DIK_W))
 		moveVec = XMVectorSetZ(moveVec, 1.0);
@@ -75,18 +80,19 @@ void Player::Move()
 	if (Input::IsKey(DIK_D))
 		moveVec = XMVectorSetX(moveVec, 1.0);
 
-	//カメラ回転
-	if (Input::IsKey(DIK_LEFT))
-		transform_.rotate_.y -= ROTATESPEED * Time::DeltaTime();
-	if (Input::IsKey(DIK_RIGHT))
-		transform_.rotate_.y += ROTATESPEED * Time::DeltaTime();
-
 	//カメラ縦
 	if (Input::IsKey(DIK_UP))
 		lookHeight_ += 1.0f * Time::DeltaTime();
 	if (Input::IsKey(DIK_DOWN))
 		lookHeight_ -= 1.0f * Time::DeltaTime();
 	lookHeight_ = std::clamp(lookHeight_, 0.0f, 2.0f);
+
+
+	//カメラ回転
+	if (Input::IsKey(DIK_LEFT))
+		transform_.rotate_.y -= ROTATESPEED * Time::DeltaTime();
+	if (Input::IsKey(DIK_RIGHT))
+		transform_.rotate_.y += ROTATESPEED * Time::DeltaTime();
 
 	//Y軸の回転をマトリクスに変換
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
@@ -99,13 +105,13 @@ void Player::Move()
 	XMVECTOR rotCamtarVec = XMVector3TransformCoord(camtarVec, rot);
 	rotCamtarVec = XMVector3Normalize(rotCamtarVec);
 
-	transform_.position_ += rotMoveVec * MOVESPEED * Time::DeltaTime() + Gravity * gravity;
-
+	transform_.position_ += rotMoveVec * speed_ * Time::DeltaTime() + Gravity * gravity;
 
 	//フィールドからモデルのハンドルをとってくる
 	Field* field = GetParent()->FindGameObject<Field>();
 	//レイがあたった距離下げる
 	transform_.position_.y -= field->GetRayDist();
+
 
 	//カメラ
 	if (Input::IsKey(DIK_SPACE)) {
