@@ -1,7 +1,9 @@
 #include "PlayScene.h"
+
+//オブジェクト
 #include "Player.h"
-#include "Engine/Camera.h"
 #include "Field.h"
+#include "EnemySpawn.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	:GameObject(parent,"PlayScene")
@@ -11,6 +13,7 @@ PlayScene::PlayScene(GameObject* parent)
 void PlayScene::Initialize()
 {
 	Instantiate<Field>(this);
+	Instantiate<EnemySpawn>(this);
 	Instantiate<Player>(this);
 }
 

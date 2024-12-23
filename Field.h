@@ -2,15 +2,19 @@
 #include "Engine/GameObject.h"
 #include <vector>
 
+//地面
 class Field :public GameObject
 {
 	int hModel_;
 
-	std::vector<XMFLOAT3> fieldPosList_;
+	std::vector<XMFLOAT3> fieldPosList_;	//地面のリスト
 
-	//プレイヤーのいる配列番号
+	//プレイヤーのいる地面の配列番号
 	int currentNum_;
+
+	//地面を出現させる
 	void SpawnField(int num);
+	//地面を消す
 	XMFLOAT3 DeleteField(int num);
 
 public:

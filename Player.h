@@ -1,22 +1,22 @@
 #pragma once
 #include "Engine/GameObject.h"
 
+//プレイヤー
 class Player :public GameObject
 {
+	bool onGround_;	//地面についているか
+	float gravity;	//重力
+	float speed_;	//スピード
+
 	int hModel_;			//モデルハンドル
 	float lookHeight_;	//視点の高さ
 
-	bool onGround_;	//地面についているか
-	float gravity;	//重力
-
 	int hImage_;	//画像のハンドル(クロスヘア)
-	Transform crossTrans;
+	Transform crossTrans;	//クロスヘア用のトランス
 
-	float speed_;
 
 	//キャラクターの移動
 	void Move();
-
 public:
 	Player(GameObject* parent);
 

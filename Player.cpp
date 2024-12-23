@@ -3,9 +3,10 @@
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
 #include "Engine/Image.h"
+#include <algorithm>
 
 #include "Field.h"
-#include <algorithm>
+#include "Enemy.h"
 
 namespace {
 	const float MOVESPEED{ 50.0f };
@@ -16,7 +17,7 @@ namespace {
 }
 
 Player::Player(GameObject* parent)
-	:GameObject(parent,"Player"), hModel_(-1),hImage_(-1)
+	:GameObject(parent, "Player"), hModel_(-1), hImage_(-1)
 {
 	transform_.position_ = { 0,50,0 };
 	lookHeight_ = PLAYERHEIGHT;
@@ -42,6 +43,34 @@ void Player::Initialize()
 void Player::Update()
 {
 	Move();
+
+	Enemy* e = GetParent()->FindGameObject<Enemy>();
+
+	if (e == nullptr)
+		return;
+
+	XMFLOAT3 pos = Camera::GetPosition();
+	XMFLOAT3 tar = Camera::GetTarget();
+
+	XMVECTOR vpos = XMLoadFloat3(&pos);
+	XMVECTOR vtar = XMLoadFloat3(&tar);
+
+	XMVECTOR look = vtar - vpos;
+	look = XMVector3Normalize(look);
+	//レイ
+	RayCastData data;
+	data.start = transform_.position_;   //レイの発射位置
+	XMStoreFloat3(&data.dir, look);       //レイの方向
+
+	//ハンドルにポジションをセットしなおす
+	Model::RayCast(e->GetModelHandle(), &data); //レイを発射
+
+
+	//レイが当たったら
+	if (data.hit)
+	{
+		e->KillMe();
+	}
 }
 
 void Player::Move()
@@ -114,7 +143,7 @@ void Player::Move()
 	if (field->RayCastField(transform_.position_, RAYHEIGHT, "Player")) {
 		onGround_ = true;
 	}
-	
+
 
 	//カメラ
 	if (Input::IsKey(DIK_SPACE)) {
@@ -134,8 +163,9 @@ void Player::Move()
 void Player::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
-	if (Input::IsKey(DIK_SPACE)) 
+	if (Input::IsKey(DIK_SPACE))
 		Model::Draw(hModel_);
+
 	Image::SetTransform(hImage_, crossTrans);
 	Image::Draw(hImage_);
 }
