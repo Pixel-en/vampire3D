@@ -290,7 +290,8 @@ GameObject * GameObject::GetRootJob()
 
 void GameObject::UpdateSub()
 {
-	Update();
+	if(IsEntered())
+		Update();
 	Transform();
 
 	for (auto it = childList_.begin(); it != childList_.end(); it++)
@@ -317,7 +318,8 @@ void GameObject::UpdateSub()
 
 void GameObject::DrawSub()
 {
-	Draw();
+	if (IsVisibled())
+		Draw();
 
 
 	//ƒŠƒŠ[ƒX‚Ííœ

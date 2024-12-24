@@ -47,7 +47,7 @@ void Player::Update()
 	Enemy* e = GetParent()->FindGameObject<Enemy>();
 
 	if (e == nullptr)
-		return;
+		exit(0);
 
 	XMFLOAT3 pos = Camera::GetPosition();
 	XMFLOAT3 tar = Camera::GetTarget();
@@ -69,7 +69,7 @@ void Player::Update()
 	//ƒŒƒC‚ª“–‚½‚Á‚½‚ç
 	if (data.hit)
 	{
-		e->KillMe();
+		//e->KillMe();
 	}
 }
 

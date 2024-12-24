@@ -102,6 +102,11 @@ public:
 			if (ret != nullptr) {
 				return ret;
 			}
+			else {
+				C* c = obj->FindGameObject<C>();
+				if (c != nullptr)
+					return c;
+			}
 		}
 		return nullptr;
 	}
@@ -119,6 +124,11 @@ public:
 					return ret;
 				}
 			}
+			else {
+				C* c = obj->FindGameObject<C>(name);
+				if (c != nullptr)
+					return c;
+			}
 		}
 		return nullptr;
 	}
@@ -133,6 +143,11 @@ public:
 			C* ret = dynamic_cast<C*>(obj);
 			if (ret != nullptr) {
 				rets.push_back(ret);
+			}
+			else {
+				std::list<C*> childList = obj->FindGameObjects<C>();
+				for (C* I : childList)
+					rets.push_back(I);
 			}
 		}
 		return rets;
@@ -151,6 +166,11 @@ public:
 				if (obj->GetObjectName() == name) {
 					rets.push_back(ret);
 				}
+			}
+			else {
+				std::list<C*> childList = obj->FindGameObjects<C>();
+				for (C* I : childList)
+					rets.push_back(I);
 			}
 		}
 		return rets;

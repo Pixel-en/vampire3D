@@ -20,6 +20,8 @@ EnemySpawn::~EnemySpawn()
 
 void EnemySpawn::Initialize()
 {
+	Leave();
+	Instantiate<Enemy>(this);
 }
 
 void EnemySpawn::Update()
