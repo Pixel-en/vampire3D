@@ -40,6 +40,16 @@ public:
 	/// <param name="_pos">当たり判定したい側のポジション</param>
 	/// <param name="_rayHeight">レイの高さ</param>
 	/// <param name="_name">送ってきたオブジェクト</param>
+	/// <param name="_limit">レイの制限</param>
+	/// <returns>当たっているかどうか</returns>
+	bool RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name, float _limit);
+
+	/// <summary>
+	/// 地面との当たり判定
+	/// </summary>
+	/// <param name="_pos">当たり判定したい側のポジション</param>
+	/// <param name="_rayHeight">レイの高さ</param>
+	/// <param name="_name">送ってきたオブジェクト</param>
 	/// <returns>当たっているかどうか</returns>
 	bool RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name);
 
@@ -48,7 +58,17 @@ public:
 	/// </summary>
 	/// <param name="_pos">当たり判定したい側のポジション</param>
 	/// <param name="_rayHeight">レイの高さ</param>
+	/// <param name="_limit">レイの制限</param>
+	/// <returns>当たっているかどうか</returns>
+	bool RayCastField(XMFLOAT3& _pos, float _rayHeight, float _limit);
+
+	/// <summary>
+	/// 地面との当たり判定
+	/// </summary>
+	/// <param name="_pos">当たり判定したい側のポジション</param>
+	/// <param name="_rayHeight">レイの高さ</param>
 	/// <returns>当たっているかどうか</returns>
 	bool RayCastField(XMFLOAT3& _pos, float _rayHeight);
+
 };
 

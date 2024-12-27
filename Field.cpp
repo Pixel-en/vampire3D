@@ -65,14 +65,13 @@ void Field::Release()
 {
 }
 
-bool Field::RayCastField(XMFLOAT3& pos, float _rayHeight, std::string _str)
+bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name, float _limit)
 {
-
 	for (int i = 0; i < fieldPosList_.size(); i++) {
 
 		//レイ
 		RayCastData data;
-		data.start = pos;   //レイの発射位置
+		data.start = _pos;   //レイの発射位置
 		data.start.y += _rayHeight;
 		data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
 
@@ -81,13 +80,13 @@ bool Field::RayCastField(XMFLOAT3& pos, float _rayHeight, std::string _str)
 		Model::SetTransform(hModel_, transform_);
 		Model::RayCast(hModel_, &data); //レイを発射
 
-		
+
 		//レイが当たったら
 		if (data.hit)
 		{
-			if (data.dist - _rayHeight >= -1.0f && data.dist - _rayHeight <= 1.0f) {
-				pos.y -= data.dist - _rayHeight;
-				if (_str == "Player") {
+			if (data.dist - _rayHeight >= -_limit && data.dist - _rayHeight <= _limit) {
+				_pos.y -= data.dist - _rayHeight;
+				if (_name == "Player") {
 					if (currentNum_ != i)
 						SpawnField(i);
 				}
@@ -99,8 +98,18 @@ bool Field::RayCastField(XMFLOAT3& pos, float _rayHeight, std::string _str)
 	return false;
 }
 
+bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name)
+{
+	return RayCastField(_pos, _rayHeight, _name, 1.0f);
+}
+
+bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, float _limit)
+{
+	return RayCastField(_pos, _rayHeight, "", _limit);
+}
+
 bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight)
 {
-	bool temp = RayCastField(_pos, _rayHeight, "");
-	return temp;
+	return RayCastField(_pos, _rayHeight, "", 1.0f);
+
 }

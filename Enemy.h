@@ -6,6 +6,9 @@ class Enemy :public GameObject
 {
 
 	int hModel_;
+	float speed_;
+
+	void Move();
 
 public:
 	Enemy(GameObject* parent);
@@ -25,5 +28,7 @@ public:
 	void Release() override;
 
 	int GetModelHandle() { return hModel_; }
+
+
 };
 

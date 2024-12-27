@@ -44,10 +44,13 @@ void Player::Update()
 {
 	Move();
 
+
+	//テスト↓
 	Enemy* e = GetParent()->FindGameObject<Enemy>();
 
 	if (e == nullptr)
-		exit(0);
+		return;
+		//exit(0);
 
 	XMFLOAT3 pos = Camera::GetPosition();
 	XMFLOAT3 tar = Camera::GetTarget();
@@ -69,7 +72,7 @@ void Player::Update()
 	//レイが当たったら
 	if (data.hit)
 	{
-		//e->KillMe();
+		e->KillMe();
 	}
 }
 
