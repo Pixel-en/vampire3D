@@ -3,10 +3,19 @@
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
 #include "Engine/Image.h"
+#include "Engine/SphereCollider.h"
 #include <algorithm>
+#include <vector>
 
 #include "Field.h"
+#include "EnemySpawn.h"
 #include "Enemy.h"
+#include "Knife.h"
+
+//とりあえず攻撃は3つ作る
+//通常射撃
+//範囲内ダメージ
+//BL本
 
 namespace {
 	const float MOVESPEED{ 50.0f };
@@ -38,13 +47,16 @@ void Player::Initialize()
 
 	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
 	assert(hImage_ >= 0);
+
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
+	AddCollider(collision);
 }
 
 void Player::Update()
 {
 	Move();
 
-
+	/*
 	//テスト↓
 	Enemy* e = GetParent()->FindGameObject<Enemy>();
 
@@ -72,7 +84,11 @@ void Player::Update()
 	//レイが当たったら
 	if (data.hit)
 	{
-		e->KillMe();
+		//e->KillMe();
+	}
+	*/
+	if (Input::IsKeyDown(DIK_J)) {
+		Instantiate<Knife>(this);
 	}
 }
 
@@ -98,9 +114,9 @@ void Player::Move()
 	Gravity = XMVector3Normalize(Gravity);
 
 	if (Input::IsKey(DIK_LSHIFT) || Input::IsKey(DIK_RSHIFT))
-		speed_ = MOVESPEED * 2.0f;
+		status_.speed_ = MOVESPEED * 2.0f;
 	else
-		speed_ = MOVESPEED;
+		status_.speed_ = MOVESPEED;
 
 	//移動
 	if (Input::IsKey(DIK_W))
@@ -137,7 +153,7 @@ void Player::Move()
 	XMVECTOR rotCamtarVec = XMVector3TransformCoord(camtarVec, rot);
 	rotCamtarVec = XMVector3Normalize(rotCamtarVec);
 
-	transform_.position_ += rotMoveVec * speed_ * Time::DeltaTime() + Gravity * gravity;
+	transform_.position_ += rotMoveVec * status_.speed_ * Time::DeltaTime() + Gravity * gravity;
 
 	//フィールドからモデルのハンドルをとってくる
 	Field* field = GetParent()->FindGameObject<Field>();
@@ -177,3 +193,16 @@ void Player::Release()
 {
 }
 
+void Player::OnCollision(GameObject* pTarget)
+{
+
+	if (pTarget->GetObjectName() == "Enemy")
+	{
+		EnemySpawn* ep = GetParent()->FindGameObject<EnemySpawn>();
+		std::vector<Enemy*> List = ep->GetEnemyList();
+		for (int i = 0; i < List.size(); i++) {
+			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber())
+				pTarget->KillMe();
+		}
+	}
+}

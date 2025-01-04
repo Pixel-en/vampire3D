@@ -1,4 +1,5 @@
 #include <DirectXMath.h>
+#include <cmath>
 
 using namespace DirectX;
 
@@ -32,6 +33,10 @@ inline void operator +=(XMFLOAT3& a, const XMVECTOR& b) {
 	c = c + b;
 	XMStoreFloat3(&temp, c);
 	a = temp;
+}
+
+inline float operator -(const XMFLOAT3& a, const XMFLOAT3& b) {
+	return std::sqrtf((a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y) + (a.z - b.z) * (a.z - b.z));
 }
 
 inline XMFLOAT3 operator -(const XMVECTOR& a, const XMFLOAT3& b) {

@@ -1,10 +1,12 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include <vector>
+#include "Enemy.h"
 
 //“G‚ğoŒ»‚³‚¹‚é
 class EnemySpawn :public GameObject
 {
-
+	unsigned int number_;
 public:
 	EnemySpawn(GameObject* parent);
 
@@ -21,5 +23,7 @@ public:
 
 	//ŠJ•ú
 	void Release() override;
+
+	std::vector<Enemy*> GetEnemyList();
 };
 

@@ -6,7 +6,17 @@ class Enemy :public GameObject
 {
 
 	int hModel_;
-	float speed_;
+
+	unsigned int number_;
+
+	struct Status
+	{
+		int power_;		//攻撃力
+		float speed_;	//スピード
+		int hp_;		//体力
+	};
+
+	Status status_;
 
 	void Move();
 
@@ -29,6 +39,9 @@ public:
 
 	int GetModelHandle() { return hModel_; }
 
+	void SetEnemyNumber(unsigned int _number) { number_ = _number; };
+
+	unsigned int GetEnemyNumber() { return number_; };
 
 };
 

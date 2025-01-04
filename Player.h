@@ -6,7 +6,21 @@ class Player :public GameObject
 {
 	bool onGround_;	//地面についているか
 	float gravity;	//重力
-	float speed_;	//スピード
+
+	struct Status
+	{
+		int hp_;				//体力
+		float speed_;			//移動速度
+		float critical_;		//クリティカル
+		float collectionRange_;	//回収範囲
+		float haste_;			//攻撃頻度
+
+		//内部データ
+		int resist_;			//防御
+
+	};
+
+	Status status_;
 
 	int hModel_;			//モデルハンドル
 	float lookHeight_;	//視点の高さ
@@ -33,5 +47,9 @@ public:
 
 	//開放
 	void Release() override;
+
+	//何かに当たった
+	//引数：pTarget 当たった相手
+	void OnCollision(GameObject* pTarget) override;
 };
 

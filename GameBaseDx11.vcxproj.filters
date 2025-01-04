@@ -114,7 +114,11 @@
     <ClCompile Include="Enemy.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
-    <ClCompile Include="EnemySpawn.cpp" />
+    <ClCompile Include="EnemySpawn.cpp">
+      <Filter>PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponObject.cpp" />
+    <ClCompile Include="Knife.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -206,7 +210,11 @@
     <ClInclude Include="Enemy.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
-    <ClInclude Include="EnemySpawn.h" />
+    <ClInclude Include="EnemySpawn.h">
+      <Filter>PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponObject.h" />
+    <ClInclude Include="Knife.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

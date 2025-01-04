@@ -220,6 +220,7 @@ public:
 
 
 	//各アクセス関数
+	Transform GetTransform(){ return transform_; }
 	XMFLOAT3 GetPosition() { return transform_.position_; }
 	XMFLOAT3 GetRotate() { return transform_.rotate_; }
 	XMFLOAT3 GetScale() { return transform_.scale_; }

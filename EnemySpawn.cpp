@@ -1,17 +1,18 @@
 #include "EnemySpawn.h"
-#include <vector>
-#include "Enemy.h"
 #include "Player.h"
 
 namespace {
 	std::vector<Enemy*> EnemyList_;
 	float timer = 1.0f;
+
+	int SPAWNAREA{ 40 };
 }
 
 
 EnemySpawn::EnemySpawn(GameObject* parent)
 	:GameObject(parent,"EnemySpawn")
 {
+	number_ = 1;
 }
 
 EnemySpawn::~EnemySpawn()
@@ -20,7 +21,6 @@ EnemySpawn::~EnemySpawn()
 
 void EnemySpawn::Initialize()
 {
-	Instantiate<Enemy>(this);
 }
 
 void EnemySpawn::Update()
@@ -34,15 +34,17 @@ void EnemySpawn::Update()
 		Enemy* e = Instantiate<Enemy>(this);
 		int x, z;
 		while (true) {
-			x = (rand() % 40) - 20;
-			z = (rand() % 40) - 20;
+			x = (rand() % SPAWNAREA) - SPAWNAREA / 2;
+			z = (rand() % SPAWNAREA) - SPAWNAREA / 2;
 			if ((x > -10 && x < 10) || (z > -10 && z < 10))
 				continue;
 			break;
 		}
 		e->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
+		e->SetEnemyNumber(number_);
 		EnemyList_.push_back(e);
 		timer = 1.0f;
+		number_++;
 	}
 	else
 		timer -= Time::DeltaTime();
@@ -54,4 +56,9 @@ void EnemySpawn::Draw()
 
 void EnemySpawn::Release()
 {
+}
+
+std::vector<Enemy*> EnemySpawn::GetEnemyList()
+{
+	return EnemyList_;
 }

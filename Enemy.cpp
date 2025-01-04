@@ -1,18 +1,19 @@
 #include "Enemy.h"
 #include "Engine/Model.h"
+#include "Engine/SphereCollider.h"
 #include <algorithm>
 
 #include "Player.h"
 #include "Field.h"
 
 namespace {
-	float MOVESPEED{ 20.0f };
+	float MOVESPEED{ 5.0f };
 }
 
 Enemy::Enemy(GameObject* parent)
 	:GameObject(parent,"Enemy"),hModel_(-1)
 {
-	speed_ = MOVESPEED;
+	status_.speed_ = MOVESPEED;
 	transform_.position_ = { 0,0,0 };
 }
 
@@ -24,6 +25,9 @@ void Enemy::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Model\\Player.fbx");
 	assert(hModel_ >= 0);
+
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 3.0f);
+	AddCollider(collision);
 }
 
 void Enemy::Update()
@@ -74,7 +78,7 @@ void Enemy::Move()
 		transform_.rotate_.y += XMConvertToDegrees(angle);
 	}
 
-	transform_.position_ += epDistance * speed_ * Time::DeltaTime();
+	transform_.position_ += epDistance * status_.speed_ * Time::DeltaTime();
 
 	field->RayCastField(transform_.position_, 3);
 }
