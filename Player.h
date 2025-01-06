@@ -1,11 +1,12 @@
 #pragma once
 #include "Engine/GameObject.h"
+#include "WeaponObject.h"
+#include <vector>
 
 //プレイヤー
 class Player :public GameObject
 {
-	bool onGround_;	//地面についているか
-	float gravity;	//重力
+	std::vector<WeaponObject*> weaponList_;
 
 	struct Status
 	{
@@ -22,15 +23,20 @@ class Player :public GameObject
 
 	Status status_;
 
+	bool onGround_;	//地面についているか
+	float gravity;	//重力
+
 	int hModel_;			//モデルハンドル
 	float lookHeight_;	//視点の高さ
-
 	int hImage_;	//画像のハンドル(クロスヘア)
 	Transform crossTrans;	//クロスヘア用のトランス
 
 
 	//キャラクターの移動
 	void Move();
+
+	void Attack();
+
 public:
 	Player(GameObject* parent);
 

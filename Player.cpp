@@ -5,7 +5,6 @@
 #include "Engine/Image.h"
 #include "Engine/SphereCollider.h"
 #include <algorithm>
-#include <vector>
 
 #include "Field.h"
 #include "EnemySpawn.h"
@@ -15,7 +14,7 @@
 //とりあえず攻撃は3つ作る
 //通常射撃
 //範囲内ダメージ
-//BL本
+//回転
 
 namespace {
 	const float MOVESPEED{ 50.0f };
@@ -34,6 +33,13 @@ Player::Player(GameObject* parent)
 	gravity = 0.0f;
 	crossTrans = transform_;
 	crossTrans.position_ = { 0,0,0 };
+
+
+	status_.hp_ = 10;
+	status_.speed_ = 0;
+	status_.critical_ = 0.0f;
+	status_.collectionRange_ = 30.0f;
+	status_.haste_ = 10.0f;
 }
 
 Player::~Player()
@@ -50,46 +56,15 @@ void Player::Initialize()
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
 	AddCollider(collision);
+
+	Knife* k = Instantiate<Knife>(GetParent());
+	weaponList_.push_back(k);
 }
 
 void Player::Update()
 {
 	Move();
-
-	/*
-	//テスト↓
-	Enemy* e = GetParent()->FindGameObject<Enemy>();
-
-	if (e == nullptr)
-		return;
-		//exit(0);
-
-	XMFLOAT3 pos = Camera::GetPosition();
-	XMFLOAT3 tar = Camera::GetTarget();
-
-	XMVECTOR vpos = XMLoadFloat3(&pos);
-	XMVECTOR vtar = XMLoadFloat3(&tar);
-
-	XMVECTOR look = vtar - vpos;
-	look = XMVector3Normalize(look);
-	//レイ
-	RayCastData data;
-	data.start = transform_.position_;   //レイの発射位置
-	XMStoreFloat3(&data.dir, look);       //レイの方向
-
-	//ハンドルにポジションをセットしなおす
-	Model::RayCast(e->GetModelHandle(), &data); //レイを発射
-
-
-	//レイが当たったら
-	if (data.hit)
-	{
-		//e->KillMe();
-	}
-	*/
-	if (Input::IsKeyDown(DIK_J)) {
-		Instantiate<Knife>(this);
-	}
+	Attack();
 }
 
 void Player::Move()
@@ -176,6 +151,11 @@ void Player::Move()
 		XMFLOAT3 tarPos = transform_.position_ + 1.0f * rotCamtarVec;
 		Camera::SetTarget({ tarPos.x, tarPos.y + lookHeight_, tarPos.z });
 	}
+
+}
+
+void Player::Attack()
+{
 
 }
 

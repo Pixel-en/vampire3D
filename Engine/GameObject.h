@@ -73,10 +73,13 @@ public:
 	void Leave();			// Updateを拒否
 	void Visible();			// Drawを許可
 	void Invisible();		// Drawを拒否
+	void Clash();			// 当たり判定を許可
+	void NonClash();		// 当たり判定を拒否
 	bool IsInitialized();	// 初期化済みかどうか
 	void SetInitialized();	// 初期化済みにする
 	bool IsEntered();		// Update実行していいか
 	bool IsVisibled();		// Draw実行していいか
+	bool IsClash();			//当たり判定を許可するかどうか
 
 
 	//子オブジェクトリストを取得
@@ -253,6 +256,7 @@ private:
 		unsigned entered : 1;		//更新するか
 		unsigned visible : 1;		//描画するか
 		unsigned dead : 1;			//削除するか
+		unsigned clash : 1;			//当たりの判定するか
 	};
 	OBJECT_STATE state_;
 

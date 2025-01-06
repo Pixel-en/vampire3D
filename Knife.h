@@ -1,7 +1,7 @@
 #pragma once
 #include "WeaponObject.h"
 
-//オブジェクトコピー用
+
 class Knife :public WeaponObject
 {
 
@@ -15,12 +15,14 @@ public:
 	void Initialize() override;
 
 	//更新
-	void Update() override;
+	//void Update() override;
 
 	//描画
 	void Draw() override;
 
 	//開放
 	void Release() override;
+
+	void OnCollision(GameObject* pTarget) override;
 };
 

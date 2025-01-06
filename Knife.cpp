@@ -1,7 +1,13 @@
 #include "Knife.h"
+#include "EnemySpawn.h"
+#include "Enemy.h"
 
 void Knife::Move()
 {
+
+	if (!allowsMove_)
+		return;
+
 	XMVECTOR pFront = { 0,0,1,0 };
 
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
@@ -12,13 +18,15 @@ void Knife::Move()
 	transform_.position_ += dir * status_.speed_ * Time::DeltaTime();
 
 	float distance = transform_.position_ - originPos;
-	if (distance >= 100.0f)
-		KillMe();
+	if (distance >= 100.0f) {
+		Stop();
+	}
 }
 
 Knife::Knife(GameObject* parent)
 	:WeaponObject(parent,"Knife")
 {
+	status_.speed_ = 50.0f;
 }
 
 Knife::~Knife()
@@ -30,18 +38,10 @@ void Knife::Initialize()
 	hModel_ = Model::Load("Assets\\Model\\Box.fbx");
 	assert(hModel_ >= 0);
 
-	Player* player = GetRootJob()->FindGameObject<Player>();
-	assert(player != nullptr);
-
-	transform_ = player->GetTransform();
-	originPos = player->GetPosition();
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.2f);
+	AddCollider(collision);
 }
 
-void Knife::Update()
-{
-	Move();
-
-}
 
 void Knife::Draw()
 {
@@ -51,4 +51,19 @@ void Knife::Draw()
 
 void Knife::Release()
 {
+}
+
+void Knife::OnCollision(GameObject* pTarget)
+{
+	if (pTarget->GetObjectName() == "Enemy")
+	{
+		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
+		std::vector<Enemy*> List = ep->GetEnemyList();
+		for (int i = 0; i < List.size(); i++) {
+			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
+				pTarget->KillMe();
+				Stop();
+			}
+		}
+	}
 }

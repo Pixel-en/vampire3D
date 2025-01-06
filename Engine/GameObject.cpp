@@ -19,7 +19,7 @@ GameObject::GameObject(GameObject * parent, const std::string& name)
 	: pParent_(parent),objectName_(name)
 {
 	childList_.clear();
-	state_ = { 0, 1, 1, 0 };
+	state_ = { 0, 1, 1, 0, 1 };
 
 	if(parent)
 		transform_.pParent_ = &parent->transform_;
@@ -74,6 +74,16 @@ void GameObject::Invisible()
 	state_.visible = 0;
 }
 
+void GameObject::Clash()
+{
+	state_.clash = 1;
+}
+
+void GameObject::NonClash()
+{
+	state_.clash = 0;
+}
+
 // 初期化済みかどうか
 bool GameObject::IsInitialized()
 {
@@ -96,6 +106,11 @@ bool GameObject::IsEntered()
 bool GameObject::IsVisibled()
 {
 	return (state_.visible != 0);
+}
+
+bool GameObject::IsClash()
+{
+	return (state_.clash != 0);
 }
 
 //子オブジェクトリストを取得
@@ -235,6 +250,9 @@ void GameObject::Collision(GameObject * pTarget)
 	{
 		return;
 	}
+
+	if (!this->IsClash() || !pTarget->IsClash())
+		return;
 
 	//自分とpTargetのコリジョン情報を使って当たり判定
 	//1つのオブジェクトが複数のコリジョン情報を持ってる場合もあるので二重ループ

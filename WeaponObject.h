@@ -1,9 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
-#include "Player.h"
 #include "Engine/Model.h"
-
-
+#include "Engine/SphereCollider.h"
 
 //武器の継承元
 //継承元なだけで実際にインスタンスは作らない
@@ -15,6 +13,8 @@ protected:
 	int hModel_;
 
 	XMFLOAT3 originPos;	//攻撃開始原点
+	float attackTimer_;
+	bool allowsMove_;	//moveを許可するか
 
 	struct Status
 	{
@@ -26,25 +26,34 @@ protected:
 	Status status_;
 
 	//動き方を書く
-	virtual void Move() = 0;
+	virtual void Move() {};
+
+	//攻撃を出す
+	virtual void Reset();
+
+	//攻撃を止める
+	//当たった時など
+	virtual void Stop();
 
 public:
 	WeaponObject(GameObject* parent);
 
 	WeaponObject(GameObject* parent, const std::string& name);
 
-	~WeaponObject();
+	virtual ~WeaponObject();
 
 	//初期化
-	void Initialize() override;
+	virtual void Initialize() override;
 
 	//更新
-	void Update() override;
+	virtual void Update() override;
 
 	//描画
-	void Draw() override;
+	virtual void Draw() override;
 
 	//開放
-	void Release() override;
+	virtual void Release() override;
+
+	virtual void OnCollision(GameObject* pTarget) override;
 };
 
