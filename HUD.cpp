@@ -55,6 +55,7 @@ void HUD::RadarInitialize()
 	assert(hREnemy_ >= 0);
 	hRPlayer_ = Image::Load("Assets\\Image\\RadarPlayer.png");
 	assert(hRPlayer_ >= 0);
+
 }
 
 void HUD::RadarUpdate()
@@ -62,42 +63,48 @@ void HUD::RadarUpdate()
 	Player* player = GetParent()->FindGameObject<Player>();
 	assert(player != nullptr);
 
+	//敵のリストを取得
 	EnemySpawn* ep = GetParent()->FindGameObject<EnemySpawn>();
 	assert(ep != nullptr);
 	std::vector<Enemy*> EnemyList = ep->GetEnemyList();
 
+	//敵がいないなら戻る
 	if (EnemyList.empty())
 		return;
 
+	//一度リストを空にする
 	REnemyPosList_.clear();
 
 	for (auto I : EnemyList) {
 
 		//プレイヤーと敵の距離が一定以上外なら表示しない
 		float EPDistance = I->GetPosition() - player->GetPosition();
-		Debug::Log(EPDistance, true);
+
 		if (EPDistance <= -RADAR::RADARRANGE * RADAR::RADARSCALE || EPDistance >= RADAR::RADARRANGE * RADAR::RADARSCALE)
 			continue;
 
 		//画像は2次元でxy座標なのでyとz入れ替え
 		XMFLOAT3 EPos = { I->GetPosition().x - player->GetPosition().x,I->GetPosition().z - player->GetPosition().z, I->GetPosition().y - player->GetPosition().y };
+		//レーダー用に比率を変えずに小さくする
 		EPos.x = EPos.x / RADAR::RADARSCALE;
-		//画面の比率によって変わるため比率を合わせる
-		EPos.y = EPos.y / RADAR::RADARSCALE * (screenWidth / screenHeight);
+		EPos.y = EPos.y / RADAR::RADARSCALE * (screenWidth / screenHeight);		//画面の比率によって変わるため比率を合わせる
 
 		REnemyPosList_.push_back(EPos);
 	}
 
-	//ここもzとy入れ替え+逆回転になってるので
+	//ここもzとy入れ替え+逆回転になってるので－
 	RPlayerTransform_.rotate_.z = -player->GetRotate().y;
 }
 
 
 void HUD::RadarDraw()
 {
+	//透明度変更
 	Image::SetAlpha(hRadar_, RADAR::RADARALPHA);
 	Image::SetAlpha(hREnemy_, RADAR::RADARALPHA);
 	Image::SetAlpha(hRPlayer_, RADAR::RADARALPHA);
+
+	//レーダーの一を右下に
 	RadarTransform_.position_ = RADAR::RADARPOS;
 	RPlayerTransform_.position_ = RADAR::RADARPOS;
 

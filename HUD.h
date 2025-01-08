@@ -12,7 +12,7 @@ class HUD :public GameObject
 	Transform RadarTransform_;	//レーダー用トランスフォーム
 	Transform REnemyTransform_;	//レーダー上の敵用トランスフォーム
 	Transform RPlayerTransform_;//レーダー上のプレイヤー用トランスフォーム
-	std::vector<XMFLOAT3> REnemyPosList_;
+	std::vector<XMFLOAT3> REnemyPosList_;	//レーダー上の敵の位置のリスト
 	void RadarInitialize();
 	void RadarUpdate();
 	void RadarDraw();
