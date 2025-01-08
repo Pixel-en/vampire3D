@@ -3,6 +3,10 @@
 
 using namespace DirectX;
 
+inline XMFLOAT3 operator +(const XMFLOAT3& a, const XMFLOAT3& b) {
+	return { a.x + b.x,a.y + b.y, a.z + b.z };
+}
+
 inline XMFLOAT3 operator +(const XMVECTOR& a, const XMFLOAT3& b) {
 	XMVECTOR c = XMLoadFloat3(&b);
 	XMFLOAT3 temp;

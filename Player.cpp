@@ -176,13 +176,13 @@ void Player::Release()
 void Player::OnCollision(GameObject* pTarget)
 {
 
-	if (pTarget->GetObjectName() == "Enemy")
-	{
-		EnemySpawn* ep = GetParent()->FindGameObject<EnemySpawn>();
-		std::vector<Enemy*> List = ep->GetEnemyList();
-		for (int i = 0; i < List.size(); i++) {
-			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber())
-				pTarget->KillMe();
-		}
-	}
+	//if (pTarget->GetObjectName() == "Enemy")
+	//{
+	//	EnemySpawn* ep = GetParent()->FindGameObject<EnemySpawn>();
+	//	std::vector<Enemy*> List = ep->GetEnemyList();
+	//	for (int i = 0; i < List.size(); i++) {
+	//		if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber())
+	//			pTarget->KillMe();
+	//	}
+	//}
 }

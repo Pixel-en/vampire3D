@@ -7,6 +7,9 @@
 class EnemySpawn :public GameObject
 {
 	unsigned int number_;
+
+	std::vector<Enemy*> EnemyList_;
+
 public:
 	EnemySpawn(GameObject* parent);
 

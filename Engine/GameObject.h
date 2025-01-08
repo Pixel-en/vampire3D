@@ -32,8 +32,8 @@ protected:
 	//衝突判定リスト
 	std::list<Collider*>	colliderList_;	
 
-	int screenWidth;		//スクリーンの幅
-	int screenHeight;		//スクリーンの高さ
+	float screenWidth;		//スクリーンの幅
+	float screenHeight;		//スクリーンの高さ
 
 public:
 	//コンストラクタ

@@ -154,6 +154,7 @@
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Transform.cpp" />
     <ClCompile Include="Field.cpp" />
+    <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
@@ -189,6 +190,7 @@
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="HUD.h" />
     <ClInclude Include="Knife.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />

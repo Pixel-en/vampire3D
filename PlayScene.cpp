@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Field.h"
 #include "EnemySpawn.h"
+#include "HUD.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	:GameObject(parent,"PlayScene")
@@ -13,8 +14,11 @@ PlayScene::PlayScene(GameObject* parent)
 void PlayScene::Initialize()
 {
 	Instantiate<Field>(this);
+	
 	Instantiate<EnemySpawn>(this);
 	Instantiate<Player>(this);
+
+	Instantiate<HUD>(this);
 }
 
 void PlayScene::Update()

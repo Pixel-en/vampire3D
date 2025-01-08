@@ -61,8 +61,10 @@ void Knife::OnCollision(GameObject* pTarget)
 		std::vector<Enemy*> List = ep->GetEnemyList();
 		for (int i = 0; i < List.size(); i++) {
 			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
+				List[i]->KillMe();
 				pTarget->KillMe();
 				Stop();
+				break;
 			}
 		}
 	}

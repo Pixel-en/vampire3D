@@ -2,7 +2,6 @@
 #include "Player.h"
 
 namespace {
-	std::vector<Enemy*> EnemyList_;
 	float timer = 1.0f;
 
 	int SPAWNAREA{ 40 };
@@ -48,6 +47,15 @@ void EnemySpawn::Update()
 	}
 	else
 		timer -= Time::DeltaTime();
+
+	//ƒŠƒXƒg‚©‚çíœ
+	for (auto I = EnemyList_.begin(); I != EnemyList_.end();) {
+		if ((*I)->IsDead()) {
+			I = EnemyList_.erase(I);
+		}
+		else
+			I++;
+	}
 }
 
 void EnemySpawn::Draw()
