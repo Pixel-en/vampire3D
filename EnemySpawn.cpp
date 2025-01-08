@@ -2,9 +2,8 @@
 #include "Player.h"
 
 namespace {
-	float timer = 1.0f;
-
 	int SPAWNAREA{ 40 };
+	float SPAWNTIME{ 1.0f };
 }
 
 
@@ -12,6 +11,7 @@ EnemySpawn::EnemySpawn(GameObject* parent)
 	:GameObject(parent,"EnemySpawn")
 {
 	number_ = 1;
+	timer = SPAWNTIME;
 }
 
 EnemySpawn::~EnemySpawn()
@@ -42,7 +42,7 @@ void EnemySpawn::Update()
 		e->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
 		e->SetEnemyNumber(number_);
 		EnemyList_.push_back(e);
-		timer = 1.0f;
+		timer = SPAWNTIME;
 		number_++;
 	}
 	else

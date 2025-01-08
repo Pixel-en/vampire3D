@@ -35,6 +35,7 @@ class Player :public GameObject
 	//キャラクターの移動
 	void Move();
 
+	//プレイヤーの攻撃
 	void Attack();
 
 public:

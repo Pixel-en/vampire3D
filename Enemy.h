@@ -18,6 +18,9 @@ class Enemy :public GameObject
 
 	Status status_;
 
+	/// <summary>
+	/// “®‚«
+	/// </summary>
 	void Move();
 
 public:
@@ -37,10 +40,16 @@ public:
 	//ŠJ•ú
 	void Release() override;
 
-	int GetModelHandle() { return hModel_; }
-
+	/// <summary>
+	/// “G‚Ì”Ô†‚ğƒZƒbƒg
+	/// </summary>
+	/// <param name="_number">”Ô†</param>
 	void SetEnemyNumber(unsigned int _number) { number_ = _number; };
 
+	/// <summary>
+	/// “G‚Ì”Ô†‚ğæ“¾
+	/// </summary>
+	/// <returns>“G‚Ì”Ô†</returns>
 	unsigned int GetEnemyNumber() { return number_; };
 
 };

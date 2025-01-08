@@ -153,6 +153,8 @@
     <ClCompile Include="Engine\Text.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Transform.cpp" />
+    <ClCompile Include="EXP.cpp" />
+    <ClCompile Include="EXPManager.cpp" />
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Knife.cpp" />
@@ -189,6 +191,8 @@
     <ClInclude Include="Engine\Text.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Transform.h" />
+    <ClInclude Include="EXP.h" />
+    <ClInclude Include="EXPManager.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Knife.h" />

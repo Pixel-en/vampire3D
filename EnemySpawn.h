@@ -7,6 +7,7 @@
 class EnemySpawn :public GameObject
 {
 	unsigned int number_;
+	float timer;
 
 	std::vector<Enemy*> EnemyList_;
 
@@ -27,6 +28,10 @@ public:
 	//開放
 	void Release() override;
 
+	/// <summary>
+	/// 敵のリストを取得
+	/// </summary>
+	/// <returns>敵のリストを返す</returns>
 	std::vector<Enemy*> GetEnemyList();
 };
 

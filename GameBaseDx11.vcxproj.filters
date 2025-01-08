@@ -123,7 +123,15 @@
     <ClCompile Include="Knife.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
-    <ClCompile Include="HUD.cpp" />
+    <ClCompile Include="EXP.cpp">
+      <Filter>PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="EXPManager.cpp">
+      <Filter>PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD.cpp">
+      <Filter>PlayScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -224,7 +232,15 @@
     <ClInclude Include="Knife.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
-    <ClInclude Include="HUD.h" />
+    <ClInclude Include="HUD.h">
+      <Filter>PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="EXP.h">
+      <Filter>PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="EXPManager.h">
+      <Filter>PlayScene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
