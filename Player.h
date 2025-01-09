@@ -17,8 +17,11 @@ class Player :public GameObject
 		float haste_;			//攻撃頻度
 
 		//内部データ
-		int resist_;			//防御
-
+		int resist_;					//防御
+		unsigned int level_;			//現在のレベル
+		unsigned int currentExp_;		//今の経験値量
+		unsigned int nextLvExp_;		//次のレベルまでの必要経験値量
+		unsigned long long totalExp_;	//取得した経験値量
 	};
 
 	Status status_;
@@ -58,5 +61,11 @@ public:
 	//何かに当たった
 	//引数：pTarget 当たった相手
 	void OnCollision(GameObject* pTarget) override;
+
+	/// <summary>
+	/// 経験値を取得
+	/// </summary>
+	/// <param name="_exp">取得した経験値</param>
+	void AcquisitionEXP(int _exp);
 };
 

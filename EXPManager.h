@@ -10,6 +10,7 @@ class EXPManager :public GameObject
 	std::vector<EXP> EXPList_;
 
 	int EXPStorage_;	//出現させれなかった経験値をためておく
+
 public:
 	EXPManager(GameObject* parent);
 
@@ -26,11 +27,12 @@ public:
 
 	//開放
 	void Release() override;
-
+	
 	/// <summary>
 	/// 経験値を出現させる
 	/// </summary>
 	/// <param name="pos">出現場所</param>
-	void SpawnEXP(XMFLOAT3 pos);
+	/// <param name="_exp">経験値</param>
+	void SpawnEXP(XMFLOAT3 pos, int _exp);
 };
 

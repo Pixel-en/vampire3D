@@ -40,6 +40,11 @@ Player::Player(GameObject* parent)
 	status_.critical_ = 0.0f;
 	status_.collectionRange_ = 30.0f;
 	status_.haste_ = 10.0f;
+	status_.resist_ = 0.0;
+	status_.level_ = 1;
+	status_.currentExp_ = 0;
+	status_.nextLvExp_ = 0;
+	status_.totalExp_ = 0;
 }
 
 Player::~Player()
@@ -185,4 +190,9 @@ void Player::OnCollision(GameObject* pTarget)
 	//			pTarget->KillMe();
 	//	}
 	//}
+}
+
+void Player::AcquisitionEXP(int _exp)
+{
+	status_.currentExp_ = _exp;
 }

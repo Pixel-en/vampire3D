@@ -4,7 +4,18 @@
 //経験値
 class EXP :public GameObject
 {
-	int hModel_;
+	int hModel_;	
+	int expValue_;	//経験値量
+
+	bool dead_;	//取得された
+
+	enum EXPVAL
+	{
+		SMALL = 2,
+		MEDIUM = 9,
+		LARGE = 23,
+		MAX,
+	};
 
 public:
 	EXP(GameObject* parent);
@@ -22,5 +33,26 @@ public:
 
 	//開放
 	void Release() override;
+
+	/// <summary>
+	/// 初期値を設定
+	/// </summary>
+	/// <param name="_pos">出現場所</param>
+	/// <param name="_exp">経験値量</param>
+	void SetStatus(XMFLOAT3 _pos, int _exp);
+
+	/// <summary>
+	/// 加算経験値
+	/// </summary>
+	/// <param name="_exp">経験値量</param>
+	void AddEXP(int _exp);
+
+	/// <summary>
+	/// 取得されたかどうか
+	/// </summary>
+	/// <returns>されたらtrue</returns>
+	bool isGet() { return dead_; };
+
+	void OnCollision(GameObject* pTarget) override;
 };
 
