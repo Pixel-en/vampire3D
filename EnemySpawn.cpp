@@ -2,8 +2,9 @@
 #include "Player.h"
 
 namespace {
-	int SPAWNAREA{ 40 };
-	float SPAWNTIME{ 1.0f };
+	const int SPAWNAREA{ 10 };
+	const int SPAWNAREALIMIT{ 50 };
+	const float SPAWNTIME{ 1.0f };
 }
 
 
@@ -31,14 +32,19 @@ void EnemySpawn::Update()
 	if (timer <= 0.0) {
 
 		Enemy* e = Instantiate<Enemy>(this);
+		//oŒ»êŠ‚ðŒˆ‚ß‚é
 		int x, z;
-		while (true) {
-			x = (rand() % SPAWNAREA) - SPAWNAREA / 2;
-			z = (rand() % SPAWNAREA) - SPAWNAREA / 2;
-			if ((x > -10 && x < 10) || (z > -10 && z < 10))
-				continue;
-			break;
-		}
+		x = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
+		z = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
+		int signX = rand() % 2;
+		int signZ = rand() % 2;
+
+		//•„†‚ð‚Â‚¯‚é
+		if (signX == 1)
+			x = x * -1;
+		if (signZ == 1)
+			z = z * -1;
+
 		e->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
 		e->SetEnemyNumber(number_);
 		EnemyList_.push_back(e);

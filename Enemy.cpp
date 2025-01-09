@@ -23,7 +23,7 @@ Enemy::~Enemy()
 
 void Enemy::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\Player.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Enemy.fbx");
 	assert(hModel_ >= 0);
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 3.0f);

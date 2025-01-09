@@ -7,7 +7,7 @@
 //インスタンスを持たない仮想クラス
 class EXPManager :public GameObject
 {
-	std::vector<EXP> EXPList_;
+	std::vector<EXP*> EXPList_;
 
 	int EXPStorage_;	//出現させれなかった経験値をためておく
 

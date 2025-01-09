@@ -1,10 +1,12 @@
 #pragma once
 #include "Engine/GameObject.h"
-
+namespace {
+	const int FBXNUM{ 4 };
+}
 //経験値
 class EXP :public GameObject
 {
-	int hModel_;	
+	int hModel_;
 	int expValue_;	//経験値量
 
 	bool dead_;	//取得された
@@ -16,6 +18,11 @@ class EXP :public GameObject
 		LARGE = 23,
 		MAX,
 	};
+
+	/// <summary>
+	/// モデルをロードする
+	/// </summary>
+	void LoadModel();
 
 public:
 	EXP(GameObject* parent);

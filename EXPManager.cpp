@@ -23,8 +23,9 @@ void EXPManager::Update()
 {
 
 	for (int i = 0; i < EXPList_.size(); i++) {
-		if (EXPList_[i].isGet())
-			EXPList_[i].KillMe();
+		if (EXPList_[i]->isGet()) {
+			EXPList_[i]->KillMe();
+		}
 	}
 
 
@@ -38,11 +39,11 @@ void EXPManager::Update()
 			int num = rand() % SPAWNMAX;	//乱数で分配先を決める
 			//分配値が残りの値より大きいならすべて渡す
 			if (EXPStorage_ < distriVal) {
-				EXPList_[num].AddEXP(EXPStorage_);
+				EXPList_[num]->AddEXP(EXPStorage_);
 				EXPStorage_ = 0;
 			}
 			else {
-				EXPList_[num].AddEXP(distriVal);
+				EXPList_[num]->AddEXP(distriVal);
 				EXPStorage_ -= distriVal;
 			}
 		}
@@ -59,7 +60,7 @@ void EXPManager::Release()
 
 void EXPManager::SpawnEXP(XMFLOAT3 pos, int _exp)
 {
-	if (EXPList_.size() > SPAWNMAX) {
+	if (EXPList_.size() >= SPAWNMAX) {
 		EXPStorage_ += _exp;
 		return;
 	}

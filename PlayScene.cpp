@@ -4,6 +4,7 @@
 #include "Player.h"
 #include "Field.h"
 #include "EnemySpawn.h"
+#include "EXPManager.h"
 #include "HUD.h"
 
 PlayScene::PlayScene(GameObject* parent)
@@ -17,7 +18,7 @@ void PlayScene::Initialize()
 	
 	Instantiate<EnemySpawn>(this);
 	Instantiate<Player>(this);
-
+	Instantiate<EXPManager>(this);
 	Instantiate<HUD>(this);
 }
 
