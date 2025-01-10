@@ -19,6 +19,8 @@ public:
 	//‰Šú‰»
 	void Initialize() override;
 
+	void SuperUpdate() override;
+
 	//XV
 	void Update() override;
 

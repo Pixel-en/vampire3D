@@ -19,14 +19,19 @@ void EXPManager::Initialize()
 {
 }
 
-void EXPManager::Update()
+void EXPManager::SuperUpdate()
 {
-
 	for (int i = 0; i < EXPList_.size(); i++) {
 		if (EXPList_[i]->isGet()) {
 			EXPList_[i]->KillMe();
 		}
 	}
+}
+
+void EXPManager::Update()
+{
+
+
 
 
 	//経験値を出現させれなくなったら出現してるところに分配する

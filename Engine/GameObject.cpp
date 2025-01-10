@@ -9,19 +9,19 @@ GameObject::GameObject(void) :
 }
 
 //コンストラクタ（名前なし）
-GameObject::GameObject(GameObject * parent) :
+GameObject::GameObject(GameObject* parent) :
 	GameObject(parent, "")
 {
 }
 
 //コンストラクタ（標準）
-GameObject::GameObject(GameObject * parent, const std::string& name)
-	: pParent_(parent),objectName_(name)
+GameObject::GameObject(GameObject* parent, const std::string& name)
+	: pParent_(parent), objectName_(name)
 {
 	childList_.clear();
 	state_ = { 0, 1, 1, 0, 1 };
 
-	if(parent)
+	if (parent)
 		transform_.pParent_ = &parent->transform_;
 
 	screenWidth = Direct3D::screenWidth_;
@@ -113,6 +113,82 @@ bool GameObject::IsClash()
 	return (state_.clash != 0);
 }
 
+void GameObject::SetChildFlags(char _bit)
+{
+	//子供がいないなら終わり
+	if (childList_.empty())
+		return;
+
+	//イテレータ
+	auto it = childList_.begin();	//先頭
+	auto end = childList_.end();	//末尾
+
+	while (it != end) {
+		{
+			//初期化
+			if (_bit & 0b10000)
+				(*it)->SetInitialized();
+			else
+				(*it)->state_.initialized = 0;
+			//更新
+			if (_bit & 0b01000)
+				(*it)->Enter();
+			else
+				(*it)->Leave();
+			//描画
+			if (_bit & 0b00100)
+				(*it)->Visible();
+			else
+				(*it)->Invisible();
+			//削除
+			if (_bit & 0b00010)
+				(*it)->KillMe();
+			else
+				(*it)->state_.dead = 0;
+			//判定
+			if (_bit & 0b00001)
+				(*it)->Clash();
+			else
+				(*it)->NonClash();
+		}
+		(*it)->SetChildFlags(_bit);
+
+		//次の子へ
+		it++;
+	}
+}
+
+void GameObject::SetFlags(char _bit)
+{
+	//初期化
+	if (_bit & 0b10000)
+		state_.initialized = 1;
+	else
+		state_.initialized = 0;
+	//更新
+	if (_bit & 0b01000)
+		state_.entered = 1;
+	else
+		state_.entered = 0;
+	//描画
+	if (_bit & 0b00100)
+		state_.visible = 1;
+	else
+		state_.visible = 0;
+	//削除
+	if (_bit & 0b00010)
+		state_.dead = 1;
+	else
+		state_.dead = 0;
+	//判定
+	if (_bit & 0b00001)
+		state_.clash = 1;
+	else
+		state_.clash = 0;
+
+	SetChildFlags(_bit);
+}
+
 //子オブジェクトリストを取得
 std::list<GameObject*>* GameObject::GetChildList()
 {
@@ -120,13 +196,13 @@ std::list<GameObject*>* GameObject::GetChildList()
 }
 
 //親オブジェクトを取得
-GameObject * GameObject::GetParent(void)
+GameObject* GameObject::GetParent(void)
 {
 	return pParent_;
 }
 
 //名前でオブジェクトを検索（対象は自分の子供以下）
-GameObject * GameObject::FindChildObject(const std::string & name)
+GameObject* GameObject::FindChildObject(const std::string& name)
 {
 	//子供がいないなら終わり
 	if (childList_.empty())
@@ -164,7 +240,7 @@ const std::string& GameObject::GetObjectName(void) const
 }
 
 //子オブジェクトを追加（リストの最後へ）
-void GameObject::PushBackChild(GameObject * obj)
+void GameObject::PushBackChild(GameObject* obj)
 {
 	assert(obj != nullptr);
 
@@ -173,7 +249,7 @@ void GameObject::PushBackChild(GameObject * obj)
 }
 
 //子オブジェクトを追加（リストの先頭へ）
-void GameObject::PushFrontChild(GameObject * obj)
+void GameObject::PushFrontChild(GameObject* obj)
 {
 	assert(obj != nullptr);
 
@@ -196,7 +272,7 @@ void GameObject::KillAllChildren(void)
 	while (it != end)
 	{
 		KillObjectSub(*it);
-		delete *it;
+		delete* it;
 		it = childList_.erase(it);
 	}
 
@@ -205,7 +281,7 @@ void GameObject::KillAllChildren(void)
 }
 
 //オブジェクト削除（再帰）
-void GameObject::KillObjectSub(GameObject * obj)
+void GameObject::KillObjectSub(GameObject* obj)
 {
 	if (!childList_.empty())
 	{
@@ -215,7 +291,7 @@ void GameObject::KillObjectSub(GameObject * obj)
 		while (it != end)
 		{
 			KillObjectSub(*it);
-			delete *it;
+			delete* it;
 			it = list->erase(it);
 		}
 		list->clear();
@@ -243,7 +319,7 @@ void GameObject::ClearCollider()
 }
 
 //衝突判定
-void GameObject::Collision(GameObject * pTarget)
+void GameObject::Collision(GameObject* pTarget)
 {
 	//自分同士の当たり判定はしない
 	if (pTarget == nullptr || this == pTarget)
@@ -294,7 +370,7 @@ void GameObject::CollisionDraw()
 }
 
 //RootJobを取得
-GameObject * GameObject::GetRootJob()
+GameObject* GameObject::GetRootJob()
 {
 	if (GetParent() == nullptr)
 	{
@@ -310,7 +386,7 @@ void GameObject::UpdateSub()
 {
 	SuperUpdate();
 
-	if(IsEntered())
+	if (IsEntered())
 		Update();
 
 	Transform();

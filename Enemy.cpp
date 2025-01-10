@@ -15,6 +15,7 @@ Enemy::Enemy(GameObject* parent)
 {
 	status_.speed_ = MOVESPEED;
 	transform_.position_ = { 0,0,0 };
+	status_.exp_ = 2;
 }
 
 Enemy::~Enemy()

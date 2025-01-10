@@ -64,7 +64,7 @@ void Knife::OnCollision(GameObject* pTarget)
 			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
 
 				EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
-				EManager->SpawnEXP(transform_.position_, 2);
+				EManager->SpawnEXP(transform_.position_, List[i]->GetEnemyEXP());
 
 				List[i]->KillMe();
 				pTarget->KillMe();

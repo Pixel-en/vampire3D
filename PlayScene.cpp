@@ -15,7 +15,6 @@ PlayScene::PlayScene(GameObject* parent)
 void PlayScene::Initialize()
 {
 	Instantiate<Field>(this);
-	
 	Instantiate<EnemySpawn>(this);
 	Instantiate<Player>(this);
 	Instantiate<EXPManager>(this);

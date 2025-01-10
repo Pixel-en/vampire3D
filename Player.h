@@ -28,6 +28,7 @@ class Player :public GameObject
 
 	bool onGround_;	//地面についているか
 	float gravity;	//重力
+	bool PauseON_;
 
 	int hModel_;			//モデルハンドル
 	float lookHeight_;	//視点の高さ
@@ -48,6 +49,8 @@ public:
 
 	//初期化
 	void Initialize() override;
+
+	void SuperUpdate() override;
 
 	//更新
 	void Update() override;

@@ -43,8 +43,10 @@ Player::Player(GameObject* parent)
 	status_.resist_ = 0.0;
 	status_.level_ = 1;
 	status_.currentExp_ = 0;
-	status_.nextLvExp_ = 0;
+	status_.nextLvExp_ = 5;
 	status_.totalExp_ = 0;
+
+	PauseON_ = false;
 }
 
 Player::~Player()
@@ -64,6 +66,12 @@ void Player::Initialize()
 
 	Knife* k = Instantiate<Knife>(GetParent());
 	weaponList_.push_back(k);
+}
+
+void Player::SuperUpdate()
+{
+	if (PauseON_) {
+	}
 }
 
 void Player::Update()
@@ -186,4 +194,22 @@ void Player::OnCollision(GameObject* pTarget)
 void Player::AcquisitionEXP(int _exp)
 {
 	status_.currentExp_ += _exp;
+
+	if (status_.currentExp_ >= status_.nextLvExp_) {
+		status_.level_++;							//レベルアップ
+		status_.totalExp_ += status_.currentExp_;	//トータルに加算
+		status_.currentExp_ -= status_.nextLvExp_;	//余剰分を算出
+
+		//次のレベルに必要な経験値を計算
+		if (status_.level_ <= 20)
+			status_.nextLvExp_ += 10;
+		else if (status_.level_ <= 40) {
+			status_.nextLvExp_ += 13;
+		}
+		else {
+			status_.nextLvExp_ += 16;
+		}
+		GetParent()->SetChildFlags(0b10100);
+		PauseON_ = true;
+	}
 }

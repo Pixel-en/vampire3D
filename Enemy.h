@@ -14,6 +14,7 @@ class Enemy :public GameObject
 		int power_;		//UŒ‚—Í
 		float speed_;	//ƒXƒs[ƒh
 		int hp_;		//‘Ì—Í
+		int exp_;
 	};
 
 	Status status_;
@@ -51,6 +52,8 @@ public:
 	/// </summary>
 	/// <returns>“G‚Ì”Ô†</returns>
 	unsigned int GetEnemyNumber() { return number_; };
+
+	int GetEnemyEXP() { return status_.exp_; };
 
 };
 

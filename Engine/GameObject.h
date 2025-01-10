@@ -85,6 +85,17 @@ public:
 	bool IsVisibled();		// Draw実行していいか
 	bool IsClash();			//当たり判定を許可するかどうか
 
+	/// <summary>
+	/// 自分を除いた子供のフラグをセットする
+	/// </summary>
+	/// <param name="_bit">左から初期化、更新、描画、削除、判定</param>
+	void SetChildFlags(char _bit);
+
+	/// <summary>
+	/// 自分と子供のフラグをセットする
+	/// </summary>
+	/// <param name="_bit">左から初期化、更新、描画、削除、判定</param>
+	void SetFlags(char _bit);
 
 	//子オブジェクトリストを取得
 	//戻値：子オブジェクトリスト
