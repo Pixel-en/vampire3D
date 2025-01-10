@@ -308,8 +308,11 @@ GameObject * GameObject::GetRootJob()
 
 void GameObject::UpdateSub()
 {
+	SuperUpdate();
+
 	if(IsEntered())
 		Update();
+
 	Transform();
 
 	for (auto it = childList_.begin(); it != childList_.end(); it++)

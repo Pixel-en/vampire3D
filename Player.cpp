@@ -113,7 +113,7 @@ void Player::Move()
 		lookHeight_ += 1.0f * Time::DeltaTime();
 	if (Input::IsKey(DIK_DOWN))
 		lookHeight_ -= 1.0f * Time::DeltaTime();
-	lookHeight_ = std::clamp(lookHeight_, 0.0f, 2.0f);
+	lookHeight_ = std::clamp(lookHeight_, PLAYERHEIGHT - 1.0f, PLAYERHEIGHT + 1.0f);
 
 
 	//ÉJÉÅÉââÒì]

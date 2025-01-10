@@ -8,6 +8,7 @@ class EXP :public GameObject
 {
 	int hModel_;
 	int expValue_;	//ŒoŒ±’l—Ê
+	float speed_;
 
 	bool dead_;	//Žæ“¾‚³‚ê‚½
 

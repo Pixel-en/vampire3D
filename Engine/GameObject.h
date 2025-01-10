@@ -50,6 +50,10 @@ public:
 	virtual void Draw() = 0;
 	virtual void Release(void) = 0;
 
+	//Update‚ª~‚Ü‚Á‚Ä‚àˆ—‚µ‘±‚¯‚é
+	virtual void SuperUpdate() {};
+
+
 	//©•ª‚ÌŠY“–ŠÖ”‚ğ“Ç‚ñ‚¾ŒãAq‹Ÿ‚ÌŠÖ”‚àŒÄ‚Ô
 	void UpdateSub();
 	void DrawSub();

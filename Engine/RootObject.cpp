@@ -16,6 +16,10 @@ void RootObject::Initialize()
 	Instantiate<SceneManager>(this);
 }
 
+void RootObject::SuperUpdate()
+{
+}
+
 void RootObject::Update()
 {
 }

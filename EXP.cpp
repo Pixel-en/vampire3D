@@ -4,6 +4,11 @@
 #include "Player.h"
 #include "Field.h"
 
+namespace {
+	const float DISMAX{ 10.0f };
+	const float MOVESPEED{ 70.0f };
+}
+
 void EXP::LoadModel()
 {
 	if (expValue_ <= SMALL) {
@@ -26,6 +31,7 @@ EXP::EXP(GameObject* parent)
 {
 	dead_ = false;
 	expValue_ = 0;
+	speed_ = MOVESPEED;
 }
 
 EXP::~EXP()
@@ -44,7 +50,19 @@ void EXP::Update()
 {
 	//ˆê’è”ÍˆÍ“à‚ÉƒvƒŒƒCƒ„[‚ª‚¢‚½‚ç‹ß‚Ã‚­
 	Player* player = GetParent()->FindGameObject<Player>();
-	float distance = transform_.position_ - player->GetPosition();
+	XMFLOAT3 pPos = player->GetPosition();
+	float distance = transform_.position_ - pPos;
+
+	if (distance > DISMAX)
+		return;
+	XMVECTOR pPosVec = XMLoadFloat3(&pPos);
+	XMVECTOR PosVec = XMLoadFloat3(&transform_.position_);
+
+	XMVECTOR direction = pPosVec - PosVec;
+
+	direction = XMVector3Normalize(direction);
+
+	transform_.position_ += direction * speed_ * Time::DeltaTime();
 
 }
 
