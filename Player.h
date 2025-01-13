@@ -25,6 +25,9 @@ class Player :public GameObject
 	};
 
 	Status status_;
+public:
+private:
+
 
 	bool onGround_;	//’n–Ê‚É‚Â‚¢‚Ä‚¢‚é‚©
 	float gravity;	//d—Í

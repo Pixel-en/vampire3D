@@ -4,7 +4,7 @@
 
 class HUD :public GameObject
 {
-	
+	/*------レーダー-----*/
 	int hRadar_;	//レーダー用の画像ハンドル
 	int hREnemy_;	//レーダー上の敵用画像ハンドル
 	int hRPlayer_;	//レーダー上のプレイヤー用画像ハンドル
@@ -17,6 +17,18 @@ class HUD :public GameObject
 	void RadarUpdate();
 	void RadarDraw();
 
+	/*------レベルアップ用------*/
+	int hLevelBack_;			//レベルアップの背景用画像
+	int hLevelGaugeFrame_;
+	int hLevelGaugeBar_;
+
+	Transform LBackTransform_;
+	Transform LGFrameTransform_;
+	Transform LGBarTransform_;
+	void LevelInitialize();
+	void LevelUpdate();
+	void LevelDraw();
+
 public:
 	HUD(GameObject* parent);
 
@@ -24,6 +36,8 @@ public:
 
 	//初期化
 	void Initialize() override;
+
+	void SuperUpdate() override;
 
 	//更新
 	void Update() override;

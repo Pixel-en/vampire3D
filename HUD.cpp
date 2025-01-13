@@ -6,11 +6,17 @@
 #include "EnemySpawn.h"
 #include "Enemy.h"
 
-namespace RADAR{
-	const float RADARSCALE{ 1000.0f };			//レーダーのサイズに縮小
-	const float RADARRANGE{ 14.0f / 100.0f };	//レーダーの感知範囲
-	const XMFLOAT3 RADARPOS{ 0.84f,-0.72f,0.0f };
-	const int RADARALPHA{ 200 };
+namespace {
+	namespace RADAR{
+		const float RADARSCALE{ 1000.0f };			//レーダーのサイズに縮小
+		const float RADARRANGE{ 14.0f / 100.0f };	//レーダーの感知範囲
+		const XMFLOAT3 RADARPOS{ 0.84f,-0.72f,0.0f };
+		const int RADARALPHA{ 200 };
+	}
+	namespace LEVEL {
+		const float LEVELGAUGEYPOS{ 0.95f };
+		const float LEVELGAUGEBARXPOS{ -1.0f };
+	}
 }
 
 HUD::HUD(GameObject* parent)
@@ -25,16 +31,26 @@ HUD::~HUD()
 void HUD::Initialize()
 {
 	RadarInitialize();
+	LevelInitialize();
+}
+
+void HUD::SuperUpdate()
+{
 }
 
 void HUD::Update()
 {
+
+	LevelUpdate();
+
 	RadarUpdate();
 }
 
 void HUD::Draw()
 {
 	RadarDraw();
+
+	LevelDraw();
 }
 
 void HUD::Release()
@@ -96,7 +112,6 @@ void HUD::RadarUpdate()
 	RPlayerTransform_.rotate_.z = -player->GetRotate().y;
 }
 
-
 void HUD::RadarDraw()
 {
 	//透明度変更
@@ -123,4 +138,39 @@ void HUD::RadarDraw()
 		Image::Draw(hREnemy_);
 	}
 
+}
+
+void HUD::LevelInitialize()
+{
+	hLevelBack_ = -1;
+	hLevelGaugeFrame_ = -1;
+	hLevelGaugeBar_ = -1;
+
+	LBackTransform_ = transform_;
+	LGFrameTransform_ = transform_;
+	LGBarTransform_ = transform_;
+	
+	LGFrameTransform_.position_ = { 0,LEVEL::LEVELGAUGEYPOS,0 };
+	LGBarTransform_.position_ = { LEVEL::LEVELGAUGEBARXPOS,LEVEL::LEVELGAUGEYPOS,0 };
+	hLevelBack_ = Image::Load("Assets\\Image\\test.png");
+	assert(hLevelBack_ >= 0);
+	hLevelGaugeFrame_ = Image::Load("Assets\\Image\\LevelFrame.png");
+	assert(hLevelGaugeFrame_ >= 0);
+	hLevelGaugeBar_ = Image::Load("Assets\\Image\\LevelBar.png");
+}
+
+void HUD::LevelUpdate()
+{
+}
+
+void HUD::LevelDraw()
+{
+	Image::SetTransform(hLevelGaugeFrame_, LGFrameTransform_);
+	Image::Draw(hLevelGaugeFrame_);
+
+	Image::SetTransform(hLevelGaugeBar_, LGBarTransform_);
+	Image::Draw(hLevelGaugeBar_);
+
+	Image::SetTransform(hLevelBack_, LBackTransform_);
+	Image::Draw(hLevelBack_);
 }
