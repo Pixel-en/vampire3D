@@ -1,6 +1,9 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include <vector>
+#include <string>
+#include <map>
+#include <set>
 
 class HUD :public GameObject
 {
@@ -17,17 +20,29 @@ class HUD :public GameObject
 	void RadarUpdate();
 	void RadarDraw();
 
-	/*------レベルアップ用------*/
+	/*------レベル用------*/
+
 	int hLevelBack_;			//レベルアップの背景用画像
-	int hLevelGaugeFrame_;
-	int hLevelGaugeBar_;
+	int hLevelGaugeFrame_;		//経験値のフレーム
+	int hLevelGaugeBar_;		//経験値のバー
+
+	std::set<int> choiceWeapon_;
+
+	std::map<int, std::string> WeaponList_;	//出ていない武器のリスト
+
+	int weaponNum_;	//取得する武器
+
+	bool Pause_;						//ポーズ中かどうか
 
 	Transform LBackTransform_;
 	Transform LGFrameTransform_;
 	Transform LGBarTransform_;
 	void LevelInitialize();
+	void LevelSuperUpdate();
 	void LevelUpdate();
 	void LevelDraw();
+	void ObtainWeapon(int _num);
+
 
 public:
 	HUD(GameObject* parent);
@@ -47,5 +62,10 @@ public:
 
 	//開放
 	void Release() override;
+
+	/// <summary>
+	/// レベルが上がった時に行う
+	/// </summary>
+	void LevelUP();
 };
 

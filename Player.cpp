@@ -8,8 +8,8 @@
 
 #include "Field.h"
 #include "EnemySpawn.h"
-#include "Enemy.h"
 #include "Knife.h"
+#include "HUD.h"
 
 //とりあえず攻撃は3つ作る
 //通常射撃
@@ -65,12 +65,16 @@ void Player::Initialize()
 	AddCollider(collision);
 
 	Knife* k = Instantiate<Knife>(GetParent());
-	weaponList_.push_back(k);
+	MyWeaponList_.push_back(k);
 }
 
 void Player::SuperUpdate()
 {
 	if (PauseON_) {
+		if (Input::IsKeyDown(DIK_RETURN)) {
+			GetParent()->SetChildFlags(0b11101);
+			PauseON_ = false;
+		}
 	}
 }
 
@@ -196,9 +200,13 @@ void Player::AcquisitionEXP(int _exp)
 	status_.currentExp_ += _exp;
 
 	if (status_.currentExp_ >= status_.nextLvExp_) {
+		GetParent()->SetChildFlags(0b10101);
 		status_.level_++;							//レベルアップ
 		status_.totalExp_ += status_.currentExp_;	//トータルに加算
 		status_.currentExp_ -= status_.nextLvExp_;	//余剰分を算出
+
+		HUD* hud = GetRootJob()->FindGameObject<HUD>();
+		hud->LevelUP();
 
 		//次のレベルに必要な経験値を計算
 		if (status_.level_ <= 20)
@@ -209,7 +217,6 @@ void Player::AcquisitionEXP(int _exp)
 		else {
 			status_.nextLvExp_ += 16;
 		}
-		GetParent()->SetChildFlags(0b10100);
 		PauseON_ = true;
 	}
 }

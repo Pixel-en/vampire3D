@@ -21,19 +21,20 @@ void EXPManager::Initialize()
 
 void EXPManager::SuperUpdate()
 {
-	for (int i = 0; i < EXPList_.size(); i++) {
-		if (EXPList_[i]->isGet()) {
-			EXPList_[i]->KillMe();
+	for (auto it = EXPList_.begin(); it != EXPList_.end();) {
+		if ((*it)->isGet()) {
+			(*it)->KillMe();
+			it = EXPList_.erase(it);
 		}
+		else
+			it++;
 	}
 }
 
 void EXPManager::Update()
 {
-
-
-
-
+	int a = EXPList_.size();
+	Debug::Log(a, true);
 	//経験値を出現させれなくなったら出現してるところに分配する
 	if (EXPStorage_ >= 20) {
 		int distriVal = EXPStorage_ / EXPDISTRIBUTION;	//分配する値を決める

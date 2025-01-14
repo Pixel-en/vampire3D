@@ -3,6 +3,7 @@
 #include "Engine/SphereCollider.h"
 #include "Player.h"
 #include "Field.h"
+#include "Knife.h"
 
 namespace {
 	const float DISMAX{ 10.0f };
@@ -11,6 +12,7 @@ namespace {
 
 void EXP::LoadModel()
 {
+
 	if (expValue_ <= SMALL) {
 		hModel_ = Model::Load("Assets\\Model\\EXP_Blue.fbx");
 	}

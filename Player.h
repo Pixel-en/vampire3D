@@ -6,8 +6,10 @@
 //プレイヤー
 class Player :public GameObject
 {
-	std::vector<WeaponObject*> weaponList_;
+public:
+	std::vector<WeaponObject*> MyWeaponList_;
 
+private:
 	struct Status
 	{
 		int hp_;				//体力
@@ -25,9 +27,12 @@ class Player :public GameObject
 	};
 
 	Status status_;
-public:
-private:
 
+public:
+	unsigned int GetLevel() { return status_.level_; };
+	unsigned int GetCurrentExp() { return status_.currentExp_; };
+	unsigned int GetnextLvExp() { return status_.nextLvExp_; };
+private:
 
 	bool onGround_;	//地面についているか
 	float gravity;	//重力

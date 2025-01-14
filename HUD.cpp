@@ -1,10 +1,11 @@
 #include "HUD.h"
 #include "Engine/Image.h"
 #include "Engine/Input.h"
+#include "Engine/CsvReader.h"
 
 #include "Player.h"
 #include "EnemySpawn.h"
-#include "Enemy.h"
+#include "Knife.h"
 
 namespace {
 	namespace RADAR{
@@ -16,6 +17,7 @@ namespace {
 	namespace LEVEL {
 		const float LEVELGAUGEYPOS{ 0.95f };
 		const float LEVELGAUGEBARXPOS{ -1.0f };
+		const int WEAPONCHOICEVAL{ 3 };
 	}
 }
 
@@ -40,16 +42,13 @@ void HUD::SuperUpdate()
 
 void HUD::Update()
 {
-
 	LevelUpdate();
-
 	RadarUpdate();
 }
 
 void HUD::Draw()
 {
 	RadarDraw();
-
 	LevelDraw();
 }
 
@@ -82,7 +81,7 @@ void HUD::RadarUpdate()
 	//敵のリストを取得
 	EnemySpawn* ep = GetParent()->FindGameObject<EnemySpawn>();
 	assert(ep != nullptr);
-	std::vector<Enemy*> EnemyList = ep->GetEnemyList();
+	auto EnemyList = ep->GetEnemyList();
 
 	//敵がいないなら戻る
 	if (EnemyList.empty())
@@ -140,6 +139,26 @@ void HUD::RadarDraw()
 
 }
 
+void HUD::LevelUP()
+{
+	Pause_ = true;
+
+	LGBarTransform_.scale_ = { 1,1,1 };
+
+	//選べる武器を選択(まだ未完成)
+	if (WeaponList_.size() >= LEVEL::WEAPONCHOICEVAL) {
+		while (true)
+		{
+			choiceWeapon_.clear();
+			for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
+				choiceWeapon_.insert(rand() % WeaponList_.size());
+			}
+			if (choiceWeapon_.size() == LEVEL::WEAPONCHOICEVAL)
+				break;
+		}
+	}
+}
+
 void HUD::LevelInitialize()
 {
 	hLevelBack_ = -1;
@@ -152,15 +171,47 @@ void HUD::LevelInitialize()
 	
 	LGFrameTransform_.position_ = { 0,LEVEL::LEVELGAUGEYPOS,0 };
 	LGBarTransform_.position_ = { LEVEL::LEVELGAUGEBARXPOS,LEVEL::LEVELGAUGEYPOS,0 };
-	hLevelBack_ = Image::Load("Assets\\Image\\test.png");
+	
+	hLevelBack_ = Image::Load("Assets\\Image\\LevelUpBackGround.png");
 	assert(hLevelBack_ >= 0);
 	hLevelGaugeFrame_ = Image::Load("Assets\\Image\\LevelFrame.png");
 	assert(hLevelGaugeFrame_ >= 0);
 	hLevelGaugeBar_ = Image::Load("Assets\\Image\\LevelBar.png");
+	assert(hLevelGaugeBar_ >= 0);
+	
+	WeaponList_.clear();
+	
+	//武器リストを作成
+	CsvReader* csv = new CsvReader();
+	csv->Load("Assets\\CSV\\WeaponList.csv");
+	for (int i = 0; i < csv->GetHeight(); i++) {
+		GameObject* obj = GetParent()->FindChildObject(csv->GetString(1, i));
+		if (obj == nullptr)
+			WeaponList_.insert({ csv->GetValue(2,i),csv->GetString(1,i) });
+	}
+
+}
+
+void HUD::LevelSuperUpdate()
+{
+	if (Pause_) {
+		if (Input::IsKeyDown(DIK_RETURN)) {
+			ObtainWeapon(weaponNum_);
+		}
+	}
 }
 
 void HUD::LevelUpdate()
 {
+	Pause_ = false;
+
+	Player* player = GetParent()->FindGameObject<Player>();
+	float current = player->GetCurrentExp();
+	float next = player->GetnextLvExp();
+
+	float ratio = current / next;
+
+	LGBarTransform_.scale_ = { ratio,1,1 };
 }
 
 void HUD::LevelDraw()
@@ -171,6 +222,24 @@ void HUD::LevelDraw()
 	Image::SetTransform(hLevelGaugeBar_, LGBarTransform_);
 	Image::Draw(hLevelGaugeBar_);
 
-	Image::SetTransform(hLevelBack_, LBackTransform_);
-	Image::Draw(hLevelBack_);
+	if (Pause_) {
+		Image::SetTransform(hLevelBack_, LBackTransform_);
+		Image::Draw(hLevelBack_);
+	}
+}
+
+void HUD::ObtainWeapon(int _num)
+{
+	Player* player = GetParent()->FindGameObject<Player>();
+
+	switch (_num)
+	{
+	case 0: {
+		Knife* knife = Instantiate<Knife>(GetParent());
+		player->MyWeaponList_.push_back(knife);
+		break;
+	}
+	default:
+		break;
+	}
 }
