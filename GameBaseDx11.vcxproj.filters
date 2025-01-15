@@ -27,6 +27,9 @@
     <Filter Include="PlayScene">
       <UniqueIdentifier>{ee7a4cc1-0898-4814-a435-c90b814922bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayScene\Weapon">
+      <UniqueIdentifier>{a330cf5e-a0f9-436a-9a6d-37192dde7af0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\BoxCollider.cpp">
@@ -117,12 +120,6 @@
     <ClCompile Include="EnemySpawn.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponObject.cpp">
-      <Filter>PlayScene</Filter>
-    </ClCompile>
-    <ClCompile Include="Knife.cpp">
-      <Filter>PlayScene</Filter>
-    </ClCompile>
     <ClCompile Include="EXP.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
@@ -131,6 +128,15 @@
     </ClCompile>
     <ClCompile Include="HUD.cpp">
       <Filter>PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="WeaponObject.cpp">
+      <Filter>PlayScene\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="Knife.cpp">
+      <Filter>PlayScene\Weapon</Filter>
+    </ClCompile>
+    <ClCompile Include="PoisonThrow.cpp">
+      <Filter>PlayScene\Weapon</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -226,12 +232,6 @@
     <ClInclude Include="EnemySpawn.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponObject.h">
-      <Filter>PlayScene</Filter>
-    </ClInclude>
-    <ClInclude Include="Knife.h">
-      <Filter>PlayScene</Filter>
-    </ClInclude>
     <ClInclude Include="HUD.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
@@ -240,6 +240,15 @@
     </ClInclude>
     <ClInclude Include="EXPManager.h">
       <Filter>PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="WeaponObject.h">
+      <Filter>PlayScene\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Knife.h">
+      <Filter>PlayScene\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="PoisonThrow.h">
+      <Filter>PlayScene\Weapon</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

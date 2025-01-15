@@ -6,9 +6,6 @@
 void Knife::Move()
 {
 
-	if (!allowsMove_)
-		return;
-
 	XMVECTOR pFront = { 0,0,1,0 };
 
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);

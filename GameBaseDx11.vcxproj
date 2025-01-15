@@ -160,6 +160,7 @@
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
+    <ClCompile Include="PoisonThrow.cpp" />
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="WeaponObject.cpp" />
   </ItemGroup>
@@ -198,6 +199,7 @@
     <ClInclude Include="Knife.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
+    <ClInclude Include="PoisonThrow.h" />
     <ClInclude Include="TestObject.h" />
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="WeaponObject.h" />

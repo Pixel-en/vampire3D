@@ -108,8 +108,10 @@ std::string CsvReader::GetString(DWORD x, DWORD y)
 {
 	if (x < 0 || x >= GetWidth() || y < 0 || y >= GetHeight())
 		return "";
+	std::string str = data_[y][x];
+	str = str.erase(str.size() - 1);
 
-	return data_[y][x];
+	return str;
 }
 
 //指定した位置のデータを整数で取得

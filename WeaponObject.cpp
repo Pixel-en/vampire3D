@@ -54,7 +54,8 @@ void WeaponObject::Update()
 		attackTimer_ -= Time::DeltaTime();
 	}
 
-	Move();
+	if(allowsMove_)
+		Move();
 }
 
 void WeaponObject::Draw()

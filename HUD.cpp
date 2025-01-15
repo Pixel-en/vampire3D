@@ -6,18 +6,19 @@
 #include "Player.h"
 #include "EnemySpawn.h"
 #include "Knife.h"
+#include "PoisonThrow.h"
 
 namespace {
-	namespace RADAR{
+	namespace RADAR {
 		const float RADARSCALE{ 1000.0f };			//レーダーのサイズに縮小
 		const float RADARRANGE{ 14.0f / 100.0f };	//レーダーの感知範囲
 		const XMFLOAT3 RADARPOS{ 0.84f,-0.72f,0.0f };
 		const int RADARALPHA{ 200 };
 	}
 	namespace LEVEL {
-		const float LEVELGAUGEYPOS{ 0.95f };
+		const float LEVELGAUGEYPOS{ 0.955f };
 		const float LEVELGAUGEBARXPOS{ -1.0f };
-		const int WEAPONCHOICEVAL{ 3 };
+		const int WEAPONCHOICEVAL{ 4 };
 	}
 }
 
@@ -34,10 +35,14 @@ void HUD::Initialize()
 {
 	RadarInitialize();
 	LevelInitialize();
+
+	ptext_ = new Text;
+	ptext_->Initialize();
 }
 
 void HUD::SuperUpdate()
 {
+	LevelSuperUpdate();
 }
 
 void HUD::Update()
@@ -54,6 +59,7 @@ void HUD::Draw()
 
 void HUD::Release()
 {
+	ptext_->Release();
 }
 
 void HUD::RadarInitialize()
@@ -168,35 +174,53 @@ void HUD::LevelInitialize()
 	LBackTransform_ = transform_;
 	LGFrameTransform_ = transform_;
 	LGBarTransform_ = transform_;
-	
+
 	LGFrameTransform_.position_ = { 0,LEVEL::LEVELGAUGEYPOS,0 };
 	LGBarTransform_.position_ = { LEVEL::LEVELGAUGEBARXPOS,LEVEL::LEVELGAUGEYPOS,0 };
-	
-	hLevelBack_ = Image::Load("Assets\\Image\\LevelUpBackGround.png");
+
+	hLevelBack_ = Image::Load("Assets\\Image\\LevelUpBackGround0.6.png");
 	assert(hLevelBack_ >= 0);
 	hLevelGaugeFrame_ = Image::Load("Assets\\Image\\LevelFrame.png");
 	assert(hLevelGaugeFrame_ >= 0);
 	hLevelGaugeBar_ = Image::Load("Assets\\Image\\LevelBar.png");
 	assert(hLevelGaugeBar_ >= 0);
-	
-	WeaponList_.clear();
-	
-	//武器リストを作成
-	CsvReader* csv = new CsvReader();
-	csv->Load("Assets\\CSV\\WeaponList.csv");
-	for (int i = 0; i < csv->GetHeight(); i++) {
-		GameObject* obj = GetParent()->FindChildObject(csv->GetString(1, i));
-		if (obj == nullptr)
-			WeaponList_.insert({ csv->GetValue(2,i),csv->GetString(1,i) });
-	}
 
+	WeaponList_.clear();
+
+	//武器リストを作成
+	CsvReader csv;
+	csv.Load("Assets\\CSV\\WeaponList.csv");
+	for (int i = 1; i < csv.GetHeight(); i++) {
+		std::string str = csv.GetString(0, i);
+		GameObject* obj = GetParent()->FindChildObject(str);
+		if (obj == nullptr)
+			WeaponList_.push_back({ csv.GetValue(1,i),csv.GetString(0,i) });
+
+	}
+	int a;
 }
 
 void HUD::LevelSuperUpdate()
 {
+
+
 	if (Pause_) {
+		if (Input::IsKeyDown(DIK_UP))
+			choice_--;
+		if (Input::IsKeyDown(DIK_DOWN))
+			choice_++;
+
+		choice_ = choice_ % LEVEL::WEAPONCHOICEVAL;
+		if (choice_ < 0)
+			choice_ = 3;
+
+		auto itr = choiceWeapon_.begin();
+		std::advance(itr, choice_);
+
+
 		if (Input::IsKeyDown(DIK_RETURN)) {
-			ObtainWeapon(weaponNum_);
+
+			ObtainWeapon((*itr));
 		}
 	}
 }
@@ -204,6 +228,7 @@ void HUD::LevelSuperUpdate()
 void HUD::LevelUpdate()
 {
 	Pause_ = false;
+	choice_ = 0;
 
 	Player* player = GetParent()->FindGameObject<Player>();
 	float current = player->GetCurrentExp();
@@ -225,18 +250,29 @@ void HUD::LevelDraw()
 	if (Pause_) {
 		Image::SetTransform(hLevelBack_, LBackTransform_);
 		Image::Draw(hLevelBack_);
+
+		int count = 1;
+		for (auto I : choiceWeapon_) {
+			ptext_->Draw(900, 30 + (count * 50), WeaponList_[I].second.c_str());
+			count++;
+		}
 	}
 }
 
 void HUD::ObtainWeapon(int _num)
 {
 	Player* player = GetParent()->FindGameObject<Player>();
-
+	Debug::Log(_num);
 	switch (_num)
 	{
-	case 0: {
+	case 1: {
 		Knife* knife = Instantiate<Knife>(GetParent());
 		player->MyWeaponList_.push_back(knife);
+		break;
+	}
+	case 2: {
+		PoisonThrow* poison = Instantiate<PoisonThrow>(GetParent());
+		player->MyWeaponList_.push_back(poison);
 		break;
 	}
 	default:

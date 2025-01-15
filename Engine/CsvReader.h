@@ -29,7 +29,6 @@ public:
 	//戻値：成功→true　失敗→false
 	bool Load(std::string fileName);
 
-
 	//指定した位置のデータを文字列で取得
 	//引数：x,y　取得したい位置
 	//戻値：取得した文字列

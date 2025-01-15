@@ -33,8 +33,6 @@ void EXPManager::SuperUpdate()
 
 void EXPManager::Update()
 {
-	int a = EXPList_.size();
-	Debug::Log(a, true);
 	//経験値を出現させれなくなったら出現してるところに分配する
 	if (EXPStorage_ >= 20) {
 		int distriVal = EXPStorage_ / EXPDISTRIBUTION;	//分配する値を決める

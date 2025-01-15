@@ -10,6 +10,7 @@
 #include "EnemySpawn.h"
 #include "Knife.h"
 #include "HUD.h"
+#include "PoisonThrow.h"
 
 //‚Æ‚è‚ ‚¦‚¸UŒ‚‚Í3‚Âì‚é
 //’ÊíËŒ‚
@@ -64,8 +65,10 @@ void Player::Initialize()
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
 	AddCollider(collision);
 
-	Knife* k = Instantiate<Knife>(GetParent());
-	MyWeaponList_.push_back(k);
+	//Knife* k = Instantiate<Knife>(GetParent());
+	//MyWeaponList_.push_back(k);
+
+	Instantiate<PoisonThrow>(GetParent());
 }
 
 void Player::SuperUpdate()
