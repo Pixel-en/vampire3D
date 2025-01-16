@@ -1,6 +1,7 @@
 #include "PoisonThrow.h"
 #include "Player.h"
 #include "Field.h"
+#include "EnemySpawn.h"
 
 namespace {
 	const int THROWANGLE{ -45 };
@@ -61,10 +62,12 @@ void PoisonThrow::ResetSub()
 	move_ = XMVector3Normalize(move_);
 
 	AttackTime_ = ATTACKTIME;
+
+	status_.damege_ = 1;
 }
 
 PoisonThrow::PoisonThrow(GameObject* parent)
-	:WeaponObject(parent,"PoisonThrow")
+	:WeaponObject(parent,"PoisonThrow"),hCapsule_(-1)
 {
 }
 
@@ -74,8 +77,11 @@ PoisonThrow::~PoisonThrow()
 
 void PoisonThrow::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\Box.fbx");
+	hModel_ = Model::Load("Assets\\Model\\PoisonArea.fbx");
 	assert(hModel_ >= 0);
+
+	hCapsule_ = Model::Load("Assets\\Model\\Capsule_Blue.fbx");
+	assert(hCapsule_ >= 0);
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), ATTACKAREA);
 	AddCollider(collision);
@@ -83,8 +89,14 @@ void PoisonThrow::Initialize()
 
 void PoisonThrow::Draw()
 {
-	Model::SetTransform(hModel_, transform_);
-	Model::Draw(hModel_);
+	if (IsClash()) {
+		Model::SetTransform(hModel_, transform_);
+		Model::Draw(hModel_);
+	}
+	else {
+		Model::SetTransform(hCapsule_, transform_);
+		Model::Draw(hCapsule_);
+	}
 }
 
 void PoisonThrow::Release()
@@ -93,4 +105,15 @@ void PoisonThrow::Release()
 
 void PoisonThrow::OnCollision(GameObject* pTarget)
 {
+	if (pTarget->GetObjectName() == "Enemy")
+	{
+		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
+		std::vector<Enemy*> List = ep->GetEnemyList();
+		for (int i = 0; i < List.size(); i++) {
+			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
+				List[i]->HitDamege(status_.damege_);
+				break;
+			}
+		}
+	}
 }

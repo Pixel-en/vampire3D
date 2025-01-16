@@ -19,6 +19,8 @@ class Enemy :public GameObject
 
 	Status status_;
 
+	float InvincibleTimer_;	//無敵時間
+
 	/// <summary>
 	/// 動き
 	/// </summary>
@@ -54,6 +56,18 @@ public:
 	unsigned int GetEnemyNumber() { return number_; };
 
 	int GetEnemyEXP() { return status_.exp_; };
+
+	/// <summary>
+	/// ダメージを受けた時
+	/// </summary>
+	/// <param name="_damege">受けたダメージ</param>
+	void HitDamege(int _damege);
+
+	/// <summary>
+	/// ダメージを与えた
+	/// </summary>
+	/// <returns>ダメージ</returns>
+	int CausedDamege();
 
 };
 

@@ -23,6 +23,8 @@ void PlayScene::Initialize()
 
 void PlayScene::Update()
 {
+	int num = GetChildList()->size();
+	SwapChildList("HUD", num);
 }
 
 void PlayScene::Draw()

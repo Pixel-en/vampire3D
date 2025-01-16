@@ -52,6 +52,7 @@ void EXPManager::Update()
 			}
 		}
 	}
+
 }
 
 void EXPManager::Draw()

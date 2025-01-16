@@ -1,7 +1,5 @@
 #include "Knife.h"
 #include "EnemySpawn.h"
-#include "Enemy.h"
-#include "EXPManager.h"
 #include "Player.h"
 
 namespace {
@@ -31,6 +29,7 @@ void Knife::ResetSub()
 {
 	AttackTime_ = ATTACKTIME;
 	status_.speed_ = ATTACKDISTANCE / AttackTime_;
+
 }
 
 Knife::Knife(GameObject* parent)
@@ -44,6 +43,8 @@ Knife::~Knife()
 
 void Knife::Initialize()
 {
+	Reset();
+
 	hModel_ = Model::Load("Assets\\Model\\Knife.fbx");
 	assert(hModel_ >= 0);
 
@@ -70,13 +71,8 @@ void Knife::OnCollision(GameObject* pTarget)
 		std::vector<Enemy*> List = ep->GetEnemyList();
 		for (int i = 0; i < List.size(); i++) {
 			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
-
-				EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
-				EManager->SpawnEXP(transform_.position_, List[i]->GetEnemyEXP());
-
-				List[i]->KillMe();
-				pTarget->KillMe();
-				Stop();
+				List[i]->HitDamege(status_.damege_);
+				Penetration();
 				break;
 			}
 		}

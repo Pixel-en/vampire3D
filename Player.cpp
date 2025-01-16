@@ -65,10 +65,10 @@ void Player::Initialize()
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
 	AddCollider(collision);
 
-	//Knife* k = Instantiate<Knife>(GetParent());
-	//MyWeaponList_.push_back(k);
+	Knife* k = Instantiate<Knife>(GetParent());
+	MyWeaponList_.push_back(k);
 
-	Instantiate<PoisonThrow>(GetParent());
+	//Instantiate<PoisonThrow>(GetParent());
 }
 
 void Player::SuperUpdate()
@@ -176,7 +176,6 @@ void Player::Move()
 
 void Player::Attack()
 {
-
 }
 
 void Player::Draw()

@@ -101,6 +101,12 @@ public:
 	//戻値：子オブジェクトリスト
 	std::list<GameObject*>* GetChildList();
 
+	//子オブジェクトのリストの要素を入れ替える
+	//引数：name	検索する名前(単一オブジェクト)
+	//引数：num		入れ替える場所
+	//戻値：trueで成功
+	bool SwapChildList(std::string name,int num);
+
 	//親オブジェクトを取得
 	//戻値：親オブジェクトのアドレス
 	GameObject* GetParent();

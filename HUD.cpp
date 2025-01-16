@@ -151,6 +151,18 @@ void HUD::LevelUP()
 
 	LGBarTransform_.scale_ = { 1,1,1 };
 
+	//リストを調べる
+	for (auto I = WeaponList_.begin(); I != WeaponList_.end(); I++) {
+
+		GameObject* obj = GetParent()->FindChildObject((*I).second);
+		if (obj != nullptr) {
+			I = WeaponList_.erase(I);
+		}
+		else
+			I++;
+
+	}
+
 	//選べる武器を選択(まだ未完成)
 	if (WeaponList_.size() >= LEVEL::WEAPONCHOICEVAL) {
 		while (true)
@@ -197,7 +209,6 @@ void HUD::LevelInitialize()
 			WeaponList_.push_back({ csv.GetValue(1,i),csv.GetString(0,i) });
 
 	}
-	int a;
 }
 
 void HUD::LevelSuperUpdate()
@@ -216,11 +227,11 @@ void HUD::LevelSuperUpdate()
 
 		auto itr = choiceWeapon_.begin();
 		std::advance(itr, choice_);
-
+		int num = WeaponList_[(*itr)].first;
 
 		if (Input::IsKeyDown(DIK_RETURN)) {
 
-			ObtainWeapon((*itr));
+			ObtainWeapon(num);
 		}
 	}
 }
@@ -265,12 +276,12 @@ void HUD::ObtainWeapon(int _num)
 	Debug::Log(_num);
 	switch (_num)
 	{
-	case 1: {
+	case 0: {
 		Knife* knife = Instantiate<Knife>(GetParent());
 		player->MyWeaponList_.push_back(knife);
 		break;
 	}
-	case 2: {
+	case 1: {
 		PoisonThrow* poison = Instantiate<PoisonThrow>(GetParent());
 		player->MyWeaponList_.push_back(poison);
 		break;

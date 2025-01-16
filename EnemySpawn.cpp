@@ -30,6 +30,8 @@ void EnemySpawn::Update()
 		return;
 
 	if (timer <= 0.0) {
+		if (EnemyList_.size() > 200)
+			return;
 
 		Enemy* e = Instantiate<Enemy>(this);
 		//oŒ»êŠ‚ğŒˆ‚ß‚é

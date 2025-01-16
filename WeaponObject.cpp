@@ -17,6 +17,10 @@ void WeaponObject::Reset()
 	Clash();
 	allowsMove_ = true;
 
+	status_.damege_ = 5;
+	status_.hp_ = 1;
+	status_.speed_ = 20.0f;
+
 	ResetSub();
 }
 
@@ -25,6 +29,13 @@ void WeaponObject::Stop()
 	Invisible();
 	NonClash();
 	allowsMove_ = false;
+}
+
+void WeaponObject::Penetration()
+{
+	status_.hp_--;
+	if (status_.hp_ <= 0)
+		Stop();
 }
 
 WeaponObject::WeaponObject(GameObject* parent)

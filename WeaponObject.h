@@ -42,6 +42,8 @@ protected:
 	//Œp³æ‚ÅŒÄ‚Î‚È‚¢‚Æ~‚Ü‚ç‚È‚¢
 	virtual void Stop();
 
+	virtual void Penetration();	//ŠÑ’Ê
+
 public:
 	WeaponObject(GameObject* parent);
 

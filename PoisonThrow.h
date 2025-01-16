@@ -9,6 +9,8 @@ class PoisonThrow :public WeaponObject
 	float gravity_;
 	XMVECTOR move_;
 
+	int hCapsule_;
+
 	void Move() override;
 
 	//UŒ‚‚ğo‚·

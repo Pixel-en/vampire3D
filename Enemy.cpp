@@ -5,17 +5,26 @@
 
 #include "Player.h"
 #include "Field.h"
+#include "EXPManager.h"
 
 namespace {
-	float MOVESPEED{ 5.0f };
+	const float MOVESPEED{ 5.0f };
+	const float INVICIBLETIME{ 0.5f };
+	const float KNOCKBACKRATE{ 0.5f };
 }
 
 Enemy::Enemy(GameObject* parent)
 	:GameObject(parent,"Enemy"),hModel_(-1)
 {
+	
+	status_.power_ = 5;
+	status_.speed_ = 5.0f;
+	status_.hp_ = 5;
+	status_.exp_ = 2;
+
+
 	status_.speed_ = MOVESPEED;
 	transform_.position_ = { 0,0,0 };
-	status_.exp_ = 2;
 }
 
 Enemy::~Enemy()
@@ -33,6 +42,12 @@ void Enemy::Initialize()
 
 void Enemy::Update()
 {
+	if (InvincibleTimer_ <= 0.0f)
+		Clash();
+	else {
+		InvincibleTimer_ -= Time::DeltaTime();
+	}
+
 	Move();
 }
 
@@ -92,5 +107,41 @@ void Enemy::Draw()
 
 void Enemy::Release()
 {
+}
+
+void Enemy::HitDamege(int _damege)
+{
+	status_.hp_ -= _damege;
+	InvincibleTimer_ = INVICIBLETIME;
+	NonClash();
+
+	if (status_.hp_ <= 0) {
+		EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
+		EManager->SpawnEXP(transform_.position_,status_.exp_);
+
+		KillMe();
+	}
+	else {
+		Player* player = GetRootJob()->FindGameObject<Player>();
+		if (player == nullptr)
+			assert(false);
+
+		XMFLOAT3 pPos = player->GetPosition();
+		XMFLOAT3 ePos = transform_.position_;
+
+		XMVECTOR pPosVec = XMLoadFloat3(&pPos);
+		XMVECTOR ePosVec = XMLoadFloat3(&ePos);
+
+		//プレイヤーと敵の距離のベクトル
+		XMVECTOR epDistance = pPosVec - ePosVec;
+
+		//ノックバック
+		XMVECTOR knockVec = epDistance;
+
+		knockVec = XMVectorSetY(knockVec, 0);
+		knockVec = XMVector3Normalize(knockVec);
+
+		transform_.position_ += -knockVec * status_.speed_ * KNOCKBACKRATE;
+	}
 }
 

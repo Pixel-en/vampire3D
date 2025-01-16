@@ -189,6 +189,24 @@ void GameObject::SetFlags(char _bit)
 	SetChildFlags(_bit);
 }
 
+bool GameObject::SwapChildList(std::string name, int num)
+{
+	for (auto itr = childList_.begin(); itr != childList_.end(); itr++) {
+		if ((*itr)->objectName_ == name) {
+			GameObject* obj = (*itr);
+			if (obj == nullptr)
+				return false;
+			childList_.erase(itr);
+
+			auto it = childList_.begin();
+			std::advance(it, num-1);
+			childList_.insert(it, obj);
+			return true;
+		}
+	}
+	return false;
+}
+
 //子オブジェクトリストを取得
 std::list<GameObject*>* GameObject::GetChildList()
 {
