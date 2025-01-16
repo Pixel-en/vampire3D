@@ -6,6 +6,9 @@
 //武器の継承元
 //継承元なだけで実際にインスタンスは作らない
 //仮想クラス
+
+//動きの流れ↓
+//初期化(init->Move->Stop->Reset->Move->
 class WeaponObject :public GameObject
 {
 protected:
@@ -13,7 +16,8 @@ protected:
 	int hModel_;
 
 	XMFLOAT3 originPos;	//攻撃開始原点
-	float attackTimer_;
+	float ReStartTimer_;
+	float AttackTime_;		//攻撃時間
 	bool allowsMove_;	//moveを許可するか
 
 	struct Status
@@ -28,11 +32,14 @@ protected:
 	//動き方を書く
 	virtual void Move() {};
 
-	//攻撃を出す
-	virtual void Reset();
+	//攻撃のリセット
+	void Reset();
+	//継承先で追加でリセットしたいことがあるとき用
+	virtual void ResetSub() {};
 
 	//攻撃を止める
 	//当たった時など
+	//継承先で呼ばないと止まらない
 	virtual void Stop();
 
 public:

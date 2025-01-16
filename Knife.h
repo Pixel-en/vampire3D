@@ -6,6 +6,8 @@ class Knife :public WeaponObject
 {
 
 	void Move() override;
+
+	void ResetSub() override;
 public:
 	Knife(GameObject* parent);
 

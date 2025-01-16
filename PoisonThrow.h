@@ -6,11 +6,13 @@ class PoisonThrow :public WeaponObject
 {
 
 	int angle_;
+	float gravity_;
+	XMVECTOR move_;
 
 	void Move() override;
 
 	//UŒ‚‚ğo‚·
-	void Reset() override;
+	void ResetSub() override;
 
 public:
 	PoisonThrow(GameObject* parent);

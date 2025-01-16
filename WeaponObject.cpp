@@ -2,7 +2,7 @@
 #include "Player.h"
 
 namespace {
-	const float ATTACKTIME{ 1.0f };
+	const float RESTARTTIME{ 1.0f };
 }
 
 void WeaponObject::Reset()
@@ -11,11 +11,13 @@ void WeaponObject::Reset()
 
 	transform_ = player->GetTransform();
 	originPos = player->GetPosition();
-	attackTimer_ = ATTACKTIME;
+	ReStartTimer_ = RESTARTTIME;
 
 	Visible();
 	Clash();
 	allowsMove_ = true;
+
+	ResetSub();
 }
 
 void WeaponObject::Stop()
@@ -28,7 +30,7 @@ void WeaponObject::Stop()
 WeaponObject::WeaponObject(GameObject* parent)
 	:GameObject(parent, ""), hModel_(-1),allowsMove_(true)
 {
-	attackTimer_ = ATTACKTIME;
+	ReStartTimer_ = RESTARTTIME;
 }
 
 WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
@@ -47,15 +49,17 @@ void WeaponObject::Initialize()
 
 void WeaponObject::Update()
 {
-	if (attackTimer_ < 0.0f) {
-		Reset();
-	}
-	else {
-		attackTimer_ -= Time::DeltaTime();
-	}
-
 	if(allowsMove_)
 		Move();
+	else {
+		if (ReStartTimer_ < 0.0f) {
+			Reset();
+		}
+		else {
+			ReStartTimer_ -= Time::DeltaTime();
+		}
+	}
+
 }
 
 void WeaponObject::Draw()

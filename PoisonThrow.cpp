@@ -1,13 +1,51 @@
 #include "PoisonThrow.h"
 #include "Player.h"
+#include "Field.h"
 
 namespace {
 	const int THROWANGLE{ -45 };
-	const float ATTACKTIME{ 5.0f };
+	const float RESTARTTIME{ 1.5f };	//次に投げ始めるまでの時間
+	const float ATTACKTIME{ 3.0f };		//展開時間
+	const float RAYHEIGHT{ 5.0f };
+	const float RAYLIMIT{ 1.0f };
+	const float GRAVITY{ 0.0001f };
+	const float THROWHEIGHT{ 2.0f };	//投げ始めの高さ
+	const float MOVESPEED{ 30.0f };
+	const float ATTACKAREA{ 10.0f };	//攻撃エリアの半径
 }
 
 void PoisonThrow::Move()
 {
+	Field* field = GetParent()->FindGameObject<Field>();
+	if (field->RayCastField(transform_.position_, RAYHEIGHT, RAYLIMIT)) {
+		//地面着地後のプログラム
+		Clash();
+		if (AttackTime_ < 0.0f)
+			Stop();
+		else {
+			AttackTime_ -= Time::DeltaTime();
+		}
+
+		return;
+	}
+
+	NonClash();
+	move_ += XMVectorSet(0, gravity_, 0, 0);
+	gravity_ -= GRAVITY;
+
+	transform_.position_ += move_ * MOVESPEED * Time::DeltaTime();
+	if (transform_.position_.y <= -10.0f)
+		Stop();
+
+}
+
+void PoisonThrow::ResetSub()
+{
+	transform_.position_.y += 2.0f;
+
+	gravity_ = 0;
+	angle_ = rand() % 360;
+
 	XMVECTOR frontVec{ 0,0,1,0 };
 
 	//角度分ベクトルを上に向けるマトリクスを作る
@@ -19,27 +57,10 @@ void PoisonThrow::Move()
 
 	XMMATRIX rotM = XMMatrixRotationY(XMConvertToRadians(angle_));
 
-	dirVec = XMVector3Transform(dirVec, rotM);
-	dirVec = XMVector3Normalize(dirVec);
+	move_ = XMVector3Transform(dirVec, rotM);
+	move_ = XMVector3Normalize(move_);
 
-	transform_.position_ += dirVec * 30.0f * Time::DeltaTime();
-
-}
-
-void PoisonThrow::Reset()
-{
-	Player* player = GetRootJob()->FindGameObject<Player>();
-
-	transform_ = player->GetTransform();
-	originPos = player->GetPosition();
-	attackTimer_ = ATTACKTIME;
-
-	Visible();
-	Clash();
-	allowsMove_ = true;
-
-
-	angle_ = rand() % 360;
+	AttackTime_ = ATTACKTIME;
 }
 
 PoisonThrow::PoisonThrow(GameObject* parent)
@@ -56,10 +77,9 @@ void PoisonThrow::Initialize()
 	hModel_ = Model::Load("Assets\\Model\\Box.fbx");
 	assert(hModel_ >= 0);
 
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 5.0f);
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), ATTACKAREA);
 	AddCollider(collision);
 }
-
 
 void PoisonThrow::Draw()
 {

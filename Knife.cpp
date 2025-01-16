@@ -2,6 +2,12 @@
 #include "EnemySpawn.h"
 #include "Enemy.h"
 #include "EXPManager.h"
+#include "Player.h"
+
+namespace {
+	const float ATTACKDISTANCE{ 50.0f };
+	const float ATTACKTIME{ 1.0f };
+}
 
 void Knife::Move()
 {
@@ -16,15 +22,20 @@ void Knife::Move()
 	transform_.position_ += dir * status_.speed_ * Time::DeltaTime();
 
 	float distance = transform_.position_ - originPos;
-	if (distance >= 100.0f) {
+	if (distance >= ATTACKDISTANCE) {
 		Stop();
 	}
+}
+
+void Knife::ResetSub()
+{
+	AttackTime_ = ATTACKTIME;
+	status_.speed_ = ATTACKDISTANCE / AttackTime_;
 }
 
 Knife::Knife(GameObject* parent)
 	:WeaponObject(parent,"Knife")
 {
-	status_.speed_ = 50.0f;
 }
 
 Knife::~Knife()
