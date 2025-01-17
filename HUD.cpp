@@ -147,34 +147,7 @@ void HUD::RadarDraw()
 
 void HUD::LevelUP()
 {
-	Pause_ = true;
-
 	LGBarTransform_.scale_ = { 1,1,1 };
-
-	//リストを調べる
-	for (auto I = WeaponList_.begin(); I != WeaponList_.end(); I++) {
-
-		GameObject* obj = GetParent()->FindChildObject((*I).second);
-		if (obj != nullptr) {
-			I = WeaponList_.erase(I);
-		}
-		else
-			I++;
-
-	}
-
-	//選べる武器を選択(まだ未完成)
-	if (WeaponList_.size() >= LEVEL::WEAPONCHOICEVAL) {
-		while (true)
-		{
-			choiceWeapon_.clear();
-			for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
-				choiceWeapon_.insert(rand() % WeaponList_.size());
-			}
-			if (choiceWeapon_.size() == LEVEL::WEAPONCHOICEVAL)
-				break;
-		}
-	}
 }
 
 void HUD::LevelInitialize()
@@ -196,19 +169,6 @@ void HUD::LevelInitialize()
 	assert(hLevelGaugeFrame_ >= 0);
 	hLevelGaugeBar_ = Image::Load("Assets\\Image\\LevelBar.png");
 	assert(hLevelGaugeBar_ >= 0);
-
-	WeaponList_.clear();
-
-	//武器リストを作成
-	CsvReader csv;
-	csv.Load("Assets\\CSV\\WeaponList.csv");
-	for (int i = 1; i < csv.GetHeight(); i++) {
-		std::string str = csv.GetString(0, i);
-		GameObject* obj = GetParent()->FindChildObject(str);
-		if (obj == nullptr)
-			WeaponList_.push_back({ csv.GetValue(1,i),csv.GetString(0,i) });
-
-	}
 }
 
 void HUD::LevelSuperUpdate()
@@ -216,30 +176,12 @@ void HUD::LevelSuperUpdate()
 
 
 	if (Pause_) {
-		if (Input::IsKeyDown(DIK_UP))
-			choice_--;
-		if (Input::IsKeyDown(DIK_DOWN))
-			choice_++;
-
-		choice_ = choice_ % LEVEL::WEAPONCHOICEVAL;
-		if (choice_ < 0)
-			choice_ = 3;
-
-		auto itr = choiceWeapon_.begin();
-		std::advance(itr, choice_);
-		int num = WeaponList_[(*itr)].first;
-
-		if (Input::IsKeyDown(DIK_RETURN)) {
-
-			ObtainWeapon(num);
-		}
 	}
 }
 
 void HUD::LevelUpdate()
 {
 	Pause_ = false;
-	choice_ = 0;
 
 	Player* player = GetParent()->FindGameObject<Player>();
 	float current = player->GetCurrentExp();
@@ -262,31 +204,10 @@ void HUD::LevelDraw()
 		Image::SetTransform(hLevelBack_, LBackTransform_);
 		Image::Draw(hLevelBack_);
 
-		int count = 1;
-		for (auto I : choiceWeapon_) {
-			ptext_->Draw(900, 30 + (count * 50), WeaponList_[I].second.c_str());
-			count++;
-		}
 	}
 }
 
 void HUD::ObtainWeapon(int _num)
 {
-	Player* player = GetParent()->FindGameObject<Player>();
-	Debug::Log(_num);
-	switch (_num)
-	{
-	case 0: {
-		Knife* knife = Instantiate<Knife>(GetParent());
-		player->MyWeaponList_.push_back(knife);
-		break;
-	}
-	case 1: {
-		PoisonThrow* poison = Instantiate<PoisonThrow>(GetParent());
-		player->MyWeaponList_.push_back(poison);
-		break;
-	}
-	default:
-		break;
-	}
+
 }

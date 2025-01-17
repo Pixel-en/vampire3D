@@ -28,14 +28,6 @@ class HUD :public GameObject
 	int hLevelGaugeFrame_;		//経験値のフレーム
 	int hLevelGaugeBar_;		//経験値のバー
 
-	int choice_;				//どの武器を選択しているか
-
-	std::set<int> choiceWeapon_;
-
-	std::vector<std::pair<int,std::string>> WeaponList_;	//出ていない武器のリスト
-
-	int weaponNum_;	//取得する武器
-
 	bool Pause_;						//ポーズ中かどうか
 
 	Transform LBackTransform_;

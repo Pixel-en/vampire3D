@@ -9,6 +9,7 @@ void WeaponObject::Reset()
 {
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
+	transform_ = player->GetTransform();
 	varia_.originPos_ = player->GetPosition();
 	varia_.ReStartTimer_ = RESTARTTIME;
 

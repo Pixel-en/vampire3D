@@ -71,5 +71,7 @@ public:
 	virtual void Release() override;
 
 	virtual void OnCollision(GameObject* pTarget) override;
+
+	int GetLv() { return status_.Lv_; }
 };
 
