@@ -15,16 +15,45 @@ namespace {
 	const float ATTACKAREA{ 10.0f };	//攻撃エリアの半径
 }
 
-void PoisonThrow::Move()
+PoisonThrow::PoisonThrow(GameObject* parent)
+	:WeaponObject(parent,"PoisonThrow")
+{
+	cPoisonThrow* c = Instantiate<cPoisonThrow>(this);
+	List_.push_back(c);
+}
+
+PoisonThrow::~PoisonThrow()
+{
+}
+
+void PoisonThrow::Initialize()
+{
+}
+
+void PoisonThrow::Update()
+{
+}
+
+void PoisonThrow::Draw()
+{
+}
+
+void PoisonThrow::Release()
+{
+}
+
+/*------------ここからcPoisonThrow-----------*/
+
+void cPoisonThrow::Move()
 {
 	Field* field = GetParent()->FindGameObject<Field>();
 	if (field->RayCastField(transform_.position_, RAYHEIGHT, RAYLIMIT)) {
 		//地面着地後のプログラム
 		Clash();
-		if (AttackTime_ < 0.0f)
+		if (varia_.AttackTime_ < 0.0f)
 			Stop();
 		else {
-			AttackTime_ -= Time::DeltaTime();
+			varia_.AttackTime_ -= Time::DeltaTime();
 		}
 
 		return;
@@ -37,10 +66,9 @@ void PoisonThrow::Move()
 	transform_.position_ += move_ * MOVESPEED * Time::DeltaTime();
 	if (transform_.position_.y <= -10.0f)
 		Stop();
-
 }
 
-void PoisonThrow::ResetSub()
+void cPoisonThrow::ResetSub()
 {
 	transform_.position_.y += 2.0f;
 
@@ -61,21 +89,21 @@ void PoisonThrow::ResetSub()
 	move_ = XMVector3Transform(dirVec, rotM);
 	move_ = XMVector3Normalize(move_);
 
-	AttackTime_ = ATTACKTIME;
+	varia_.AttackTime_ = ATTACKTIME;
 
-	status_.damege_ = 1;
+	status_ = nextStatus_;
 }
 
-PoisonThrow::PoisonThrow(GameObject* parent)
-	:WeaponObject(parent,"PoisonThrow"),hCapsule_(-1)
+cPoisonThrow::cPoisonThrow(GameObject* parent)
+	:WeaponObject(parent,"cPoisonThrow")
 {
 }
 
-PoisonThrow::~PoisonThrow()
+cPoisonThrow::~cPoisonThrow()
 {
 }
 
-void PoisonThrow::Initialize()
+void cPoisonThrow::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Model\\PoisonArea.fbx");
 	assert(hModel_ >= 0);
@@ -87,7 +115,7 @@ void PoisonThrow::Initialize()
 	AddCollider(collision);
 }
 
-void PoisonThrow::Draw()
+void cPoisonThrow::Draw()
 {
 	if (IsClash()) {
 		Model::SetTransform(hModel_, transform_);
@@ -99,11 +127,11 @@ void PoisonThrow::Draw()
 	}
 }
 
-void PoisonThrow::Release()
+void cPoisonThrow::Release()
 {
 }
 
-void PoisonThrow::OnCollision(GameObject* pTarget)
+void cPoisonThrow::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Enemy")
 	{

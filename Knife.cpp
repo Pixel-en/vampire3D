@@ -7,9 +7,38 @@ namespace {
 	const float ATTACKTIME{ 1.0f };
 }
 
-void Knife::Move()
+Knife::Knife(GameObject* parent)
+	:WeaponObject(parent,"Knife")
 {
+	cKnife* c = Instantiate<cKnife>(GetParent());
+	List_.push_back(c);
+}
 
+Knife::~Knife()
+{
+}
+
+void Knife::Initialize()
+{
+}
+
+void Knife::Update()
+{
+	nextStatus_ = status_;
+}
+
+void Knife::Draw()
+{
+}
+
+void Knife::Release()
+{
+}
+
+/*-----------‚±‚±‚©‚çcKnife---------*/
+
+void cKnife::Move()
+{
 	XMVECTOR pFront = { 0,0,1,0 };
 
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
@@ -19,29 +48,27 @@ void Knife::Move()
 
 	transform_.position_ += dir * status_.speed_ * Time::DeltaTime();
 
-	float distance = transform_.position_ - originPos;
+	float distance = transform_.position_ - varia_.originPos_;
 	if (distance >= ATTACKDISTANCE) {
 		Stop();
 	}
 }
 
-void Knife::ResetSub()
+void cKnife::ResetSub()
 {
-	AttackTime_ = ATTACKTIME;
-	status_.speed_ = ATTACKDISTANCE / AttackTime_;
-
+	status_ = nextStatus_;
 }
 
-Knife::Knife(GameObject* parent)
-	:WeaponObject(parent,"Knife")
+cKnife::cKnife(GameObject* parent)
+	:WeaponObject(parent,"cKnife")
 {
 }
 
-Knife::~Knife()
+cKnife::~cKnife()
 {
 }
 
-void Knife::Initialize()
+void cKnife::Initialize()
 {
 	Reset();
 
@@ -52,18 +79,18 @@ void Knife::Initialize()
 	AddCollider(collision);
 }
 
-
-void Knife::Draw()
+void cKnife::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
+	
 }
 
-void Knife::Release()
+void cKnife::Release()
 {
 }
 
-void Knife::OnCollision(GameObject* pTarget)
+void cKnife::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Enemy")
 	{

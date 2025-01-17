@@ -67,7 +67,6 @@ void Player::Initialize()
 
 	Knife* k = Instantiate<Knife>(GetParent());
 	MyWeaponList_.push_back(k);
-
 	//Instantiate<PoisonThrow>(GetParent());
 }
 

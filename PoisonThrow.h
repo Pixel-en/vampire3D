@@ -1,10 +1,33 @@
 #pragma once
 #include "WeaponObject.h"
 
+class cPoisonThrow;
 
 class PoisonThrow :public WeaponObject
 {
+	std::vector<cPoisonThrow*> List_;
 
+public:
+	PoisonThrow(GameObject* parent);
+
+	~PoisonThrow();
+
+	//初期化
+	void Initialize() override;
+
+	//更新
+	void Update() override;
+
+	//描画
+	void Draw() override;
+
+	//開放
+	void Release() override;
+};
+
+
+class cPoisonThrow : public WeaponObject
+{
 	int angle_;
 	float gravity_;
 	XMVECTOR move_;
@@ -17,9 +40,9 @@ class PoisonThrow :public WeaponObject
 	void ResetSub() override;
 
 public:
-	PoisonThrow(GameObject* parent);
+	cPoisonThrow(GameObject* parent);
 
-	~PoisonThrow();
+	~cPoisonThrow();
 
 	//初期化
 	void Initialize() override;
@@ -33,6 +56,6 @@ public:
 	//開放
 	void Release() override;
 
+	//当たり判定
 	void OnCollision(GameObject* pTarget) override;
 };
-

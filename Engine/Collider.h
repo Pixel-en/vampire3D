@@ -69,5 +69,7 @@ public:
 	//セッター
 	void SetGameObject(GameObject* gameObject) { pGameObject_ = gameObject; }
 
+	GameObject* GetGameObject() { return pGameObject_; }
+
 };
 

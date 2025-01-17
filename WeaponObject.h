@@ -2,6 +2,7 @@
 #include "Engine/GameObject.h"
 #include "Engine/Model.h"
 #include "Engine/SphereCollider.h"
+#include <vector>
 
 //武器の継承元
 //継承元なだけで実際にインスタンスは作らない
@@ -11,23 +12,29 @@
 //初期化(init->Move->Stop->Reset->Move->
 class WeaponObject :public GameObject
 {
-protected:
-
-	int hModel_;
-
-	XMFLOAT3 originPos;	//攻撃開始原点
-	float ReStartTimer_;
-	float AttackTime_;		//攻撃時間
-	bool allowsMove_;	//moveを許可するか
+	struct WeaponVariables
+	{
+		XMFLOAT3 originPos_;	//攻撃開始原点
+		float ReStartTimer_;
+		float AttackTime_;		//攻撃時間
+		bool allowsMove_;	//moveを許可するか
+		int peneCount_;		//貫通回数
+	};
 
 	struct Status
 	{
+		int Lv_;		//武器のレベル
 		int damege_;	//攻撃力
 		float speed_;	//移動スピード
 		int hp_;	//貫通などに使う
 	};
 
-	Status status_;
+protected:
+	int hModel_;
+
+	Status status_;		//全体共有のステータス
+	Status nextStatus_;
+	WeaponVariables varia_;	//弾個々の変数
 
 	//動き方を書く
 	virtual void Move() {};

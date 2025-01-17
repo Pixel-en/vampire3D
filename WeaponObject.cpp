@@ -9,17 +9,13 @@ void WeaponObject::Reset()
 {
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
-	transform_ = player->GetTransform();
-	originPos = player->GetPosition();
-	ReStartTimer_ = RESTARTTIME;
+	varia_.originPos_ = player->GetPosition();
+	varia_.ReStartTimer_ = RESTARTTIME;
 
 	Visible();
 	Clash();
-	allowsMove_ = true;
-
-	status_.damege_ = 5;
-	status_.hp_ = 1;
-	status_.speed_ = 20.0f;
+	varia_.allowsMove_ = true;
+	varia_.peneCount_ = status_.hp_;
 
 	ResetSub();
 }
@@ -28,25 +24,41 @@ void WeaponObject::Stop()
 {
 	Invisible();
 	NonClash();
-	allowsMove_ = false;
+	varia_.allowsMove_ = false;
 }
 
 void WeaponObject::Penetration()
 {
-	status_.hp_--;
-	if (status_.hp_ <= 0)
+	varia_.peneCount_--;
+	if (varia_.peneCount_ <= 0)
 		Stop();
 }
 
 WeaponObject::WeaponObject(GameObject* parent)
-	:GameObject(parent, ""), hModel_(-1),allowsMove_(true)
+	:GameObject(parent, ""), hModel_(-1)
 {
-	ReStartTimer_ = RESTARTTIME;
+	varia_.allowsMove_ = true;
+	varia_.ReStartTimer_ = RESTARTTIME;
+
+	status_.Lv_ = 1;
+	status_.damege_ = 1;
+	status_.hp_ = 1;
+	status_.speed_ = 20.0f;
+	nextStatus_ = status_;
+
 }
 
 WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
-	:GameObject(parent, name),hModel_(-1),allowsMove_(true)
+	:GameObject(parent, name),hModel_(-1)
 {
+	varia_.allowsMove_ = true;
+	varia_.ReStartTimer_ = RESTARTTIME;
+
+	status_.Lv_ = 1;
+	status_.damege_ = 1;
+	status_.hp_ = 1;
+	status_.speed_ = 20.0f;
+	nextStatus_ = status_;
 }
 
 WeaponObject::~WeaponObject()
@@ -60,17 +72,16 @@ void WeaponObject::Initialize()
 
 void WeaponObject::Update()
 {
-	if(allowsMove_)
+	if (varia_.allowsMove_)
 		Move();
 	else {
-		if (ReStartTimer_ < 0.0f) {
+		if (varia_.ReStartTimer_ < 0.0f) {
 			Reset();
 		}
 		else {
-			ReStartTimer_ -= Time::DeltaTime();
+			varia_.ReStartTimer_ -= Time::DeltaTime();
 		}
 	}
-
 }
 
 void WeaponObject::Draw()
