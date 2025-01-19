@@ -73,5 +73,7 @@ public:
 	virtual void OnCollision(GameObject* pTarget) override;
 
 	int GetLv() { return status_.Lv_; }
+
+	virtual void LevelUp(std::string str);
 };
 

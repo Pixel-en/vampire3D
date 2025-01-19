@@ -10,7 +10,6 @@
 #include "EnemySpawn.h"
 #include "Knife.h"
 #include "HUD.h"
-#include "PoisonThrow.h"
 
 //‚Æ‚è‚ ‚¦‚¸UŒ‚‚Í3‚Âì‚é
 //’ÊíËŒ‚
@@ -67,7 +66,6 @@ void Player::Initialize()
 
 	Knife* k = Instantiate<Knife>(GetParent());
 	MyWeaponList_.push_back(k);
-	//Instantiate<PoisonThrow>(GetParent());
 }
 
 void Player::SuperUpdate()
