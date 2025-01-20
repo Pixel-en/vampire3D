@@ -138,6 +138,7 @@
     <ClCompile Include="PoisonThrow.cpp">
       <Filter>PlayScene\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="TitleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -250,6 +251,7 @@
     <ClInclude Include="PoisonThrow.h">
       <Filter>PlayScene\Weapon</Filter>
     </ClInclude>
+    <ClInclude Include="TitleScene.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

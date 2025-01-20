@@ -145,9 +145,44 @@ void HUD::RadarDraw()
 
 }
 
+//レベルアップした時の処理
 void HUD::LevelUP()
 {
 	LGBarTransform_.scale_ = { 1,1,1 };
+
+	Pause_ = true;
+
+	//リストの整理
+	for (auto itr = WeaponList_.begin(); itr != WeaponList_.end();) {
+		WeaponObject* obj = (WeaponObject*)GetParent()->FindChildObject((*itr).name_);
+		if (obj != nullptr) {
+			if (obj->GetLv() >= (*itr).MaxLevel_) {
+				itr = WeaponList_.erase(itr);
+				continue;
+			}
+		}
+		itr++;
+	}
+
+	WeaponRoll();
+}
+
+void HUD::WeaponRoll()
+{
+
+	if (WeaponList_.size() >= LEVEL::WEAPONCHOICEVAL) {
+		while (true)
+		{
+			RollListNum_.clear();
+
+			for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
+				RollListNum_.insert(rand() % WeaponList_.size());
+			}
+			if (RollListNum_.size() == LEVEL::WEAPONCHOICEVAL)
+				break;
+		}
+	}
+
 }
 
 void HUD::LevelInitialize()
@@ -159,6 +194,7 @@ void HUD::LevelInitialize()
 	LBackTransform_ = transform_;
 	LGFrameTransform_ = transform_;
 	LGBarTransform_ = transform_;
+	LCursorTransform_ = transform_;
 
 	LGFrameTransform_.position_ = { 0,LEVEL::LEVELGAUGEYPOS,0 };
 	LGBarTransform_.position_ = { LEVEL::LEVELGAUGEBARXPOS,LEVEL::LEVELGAUGEYPOS,0 };
@@ -169,6 +205,19 @@ void HUD::LevelInitialize()
 	assert(hLevelGaugeFrame_ >= 0);
 	hLevelGaugeBar_ = Image::Load("Assets\\Image\\LevelBar.png");
 	assert(hLevelGaugeBar_ >= 0);
+	hLevelCursor_ = Image::Load("Assets\\Image\\LevelCursor.png");
+	assert(hLevelCursor_ >= 0);
+
+	CsvReader csv;
+	csv.Load("Assets\\CSV\\WeaponList.csv");
+
+	for (int i = 1; i < csv.GetHeight(); i++) {
+		WeaponList_.push_back({ csv.GetString(0, i),csv.GetValue(1, i), csv.GetValue(2, i) });
+		//pop_backができるので逆から入れてみる
+		for (int j = WeaponList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
+			WeaponList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));
+		}
+	}
 }
 
 void HUD::LevelSuperUpdate()
@@ -176,12 +225,30 @@ void HUD::LevelSuperUpdate()
 
 
 	if (Pause_) {
+
+		if (Input::IsKeyDown(DIK_UP))
+			levelCursor_--;
+		else if (Input::IsKeyDown(DIK_DOWN))
+			levelCursor_++;
+
+		levelCursor_ = levelCursor_ % LEVEL::WEAPONCHOICEVAL;
+		if (levelCursor_ < 0)
+			levelCursor_ = 3;
+
+		LCursorTransform_.position_.y = 0.6 + -0.1 * levelCursor_;
+
+		if (Input::IsKeyDown(DIK_RETURN)) {
+			auto itr = RollListNum_.begin();
+			std::advance(itr, levelCursor_);
+			ObtainWeapon((*itr));
+		}
 	}
 }
 
 void HUD::LevelUpdate()
 {
 	Pause_ = false;
+	levelCursor_ = 0;
 
 	Player* player = GetParent()->FindGameObject<Player>();
 	float current = player->GetCurrentExp();
@@ -203,11 +270,61 @@ void HUD::LevelDraw()
 	if (Pause_) {
 		Image::SetTransform(hLevelBack_, LBackTransform_);
 		Image::Draw(hLevelBack_);
+		
+		Image::SetTransform(hLevelCursor_, LCursorTransform_);
+		Image::Draw(hLevelCursor_);
 
+		auto itr = RollListNum_.begin();
+		for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
+			ptext_->Draw(900, 150 + (i * 50), WeaponList_[ (*std::next(itr, i)) ].name_.c_str());
+		}
 	}
 }
 
 void HUD::ObtainWeapon(int _num)
 {
+	Player* player = GetParent()->FindGameObject<Player>();
+	if (player == nullptr)
+		return;
 
+
+	switch (WeaponList_[_num].num_)
+	{
+	case 0: {
+		Knife* knife = GetParent()->FindGameObject<Knife>();
+		if (knife == nullptr) {
+			knife = Instantiate<Knife>(GetParent());
+			player->MyWeaponList_.push_back(knife);
+		}
+		else {
+			knife->LevelUp(WeaponList_[_num].instruction_.front());
+		}
+	}
+		break;
+	case 1: {
+		PoisonThrow* poison = GetParent()->FindGameObject<PoisonThrow>();
+		if (poison == nullptr) {
+			poison = Instantiate<PoisonThrow>(GetParent());
+			player->MyWeaponList_.push_back(poison);
+		}
+		else {
+			poison->LevelUp(WeaponList_[_num].instruction_.front());
+		}
+	}
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	case 4:
+		break;
+	case 5:
+		break;
+	case 6:
+		break;
+	default:
+		break;
+	}
+
+	WeaponList_[_num].instruction_.pop_back();
 }

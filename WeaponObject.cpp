@@ -96,3 +96,7 @@ void WeaponObject::Release()
 void WeaponObject::OnCollision(GameObject* pTarget)
 {
 }
+
+void WeaponObject::LevelUp(std::string str)
+{
+}

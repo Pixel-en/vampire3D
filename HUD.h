@@ -4,7 +4,6 @@
 #include "Engine/Text.h"
 #include <vector>
 #include <string>
-#include <utility>
 #include <set>
 
 class HUD :public GameObject
@@ -27,12 +26,28 @@ class HUD :public GameObject
 	int hLevelBack_;			//レベルアップの背景用画像
 	int hLevelGaugeFrame_;		//経験値のフレーム
 	int hLevelGaugeBar_;		//経験値のバー
+	int hLevelCursor_;
 
 	bool Pause_;						//ポーズ中かどうか
+
+	struct WeaponLevel
+	{
+		std::string name_;						//武器の名前
+		int num_;								//武器の番号
+		int MaxLevel_;							//最大レベル
+		std::vector<std::string> instruction_;	//レベルアップ内容
+	};
+
+	std::vector<WeaponLevel> WeaponList_;	//出現していないorレベルが最大ではない武器のリスト
+	std::set<int> RollListNum_;				//ロールされた武器
+	int levelCursor_;
+
+	void WeaponRoll();	//武器のロール
 
 	Transform LBackTransform_;
 	Transform LGFrameTransform_;
 	Transform LGBarTransform_;
+	Transform LCursorTransform_;
 	void LevelInitialize();
 	void LevelSuperUpdate();
 	void LevelUpdate();
