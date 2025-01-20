@@ -18,7 +18,7 @@ namespace {
 PoisonThrow::PoisonThrow(GameObject* parent)
 	:WeaponObject(parent,"PoisonThrow")
 {
-	cPoisonThrow* c = Instantiate<cPoisonThrow>(this);
+	cPoisonThrow* c = Instantiate<cPoisonThrow>(GetParent());
 	List_.push_back(c);
 }
 

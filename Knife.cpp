@@ -78,7 +78,7 @@ void cKnife::Initialize()
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.2f);
 	AddCollider(collision);
 	status_.damege_ = 5;
-	status_.hp_ = 5;
+	status_.hp_ = 1;
 	status_.speed_ = ATTACKDISTANCE / ATTACKTIME;
 	nextStatus_ = status_;
 }
