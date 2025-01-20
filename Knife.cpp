@@ -2,15 +2,10 @@
 #include "EnemySpawn.h"
 #include "Player.h"
 
-namespace {
-	const float ATTACKDISTANCE{ 50.0f };
-	const float ATTACKTIME{ 1.0f };
-}
-
 Knife::Knife(GameObject* parent)
 	:WeaponObject(parent,"Knife")
 {
-	cKnife* c = Instantiate<cKnife>(GetParent());
+	Knife::cKnife* c = Instantiate<Knife::cKnife>(GetParent());
 	List_.push_back(c);
 }
 
@@ -25,6 +20,11 @@ void Knife::Initialize()
 
 void Knife::Update()
 {
+	for (int i = 0; i < List_.size(); i++) {
+		if (nextStatus_.Lv_ != List_[i]->GetLv()) {
+			//List_[i].
+		}
+	}
 }
 
 void Knife::Draw()
@@ -37,7 +37,7 @@ void Knife::Release()
 
 /*-----------‚±‚±‚©‚çcKnife---------*/
 
-void cKnife::Move()
+void Knife::cKnife::Move()
 {
 	XMVECTOR pFront = { 0,0,1,0 };
 
@@ -49,52 +49,52 @@ void cKnife::Move()
 	transform_.position_ += dir * status_.speed_ * Time::DeltaTime();
 
 	float distance = transform_.position_ - varia_.originPos_;
-	if (distance >= ATTACKDISTANCE) {
+	if (distance >= status_.Range_) {
 		Stop();
 	}
 }
 
-void cKnife::ResetSub()
+void Knife::cKnife::ResetSub()
 {
 	status_ = nextStatus_;
 }
 
-cKnife::cKnife(GameObject* parent)
+Knife::cKnife::cKnife(GameObject* parent)
 	:WeaponObject(parent,"cKnife")
 {
 }
 
-cKnife::~cKnife()
+Knife::cKnife::~cKnife()
 {
 }
 
-void cKnife::Initialize()
+void Knife::cKnife::Initialize()
 {
 	Reset();
 
 	hModel_ = Model::Load("Assets\\Model\\Knife.fbx");
 	assert(hModel_ >= 0);
 
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1.2f);
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
 	AddCollider(collision);
-	status_.damege_ = 5;
-	status_.hp_ = 1;
-	status_.speed_ = ATTACKDISTANCE / ATTACKTIME;
+
+
+	status_.speed_ = status_.Range_ / status_.duration_;
 	nextStatus_ = status_;
 }
 
-void cKnife::Draw()
+void Knife::cKnife::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
 	
 }
 
-void cKnife::Release()
+void Knife::cKnife::Release()
 {
 }
 
-void cKnife::OnCollision(GameObject* pTarget)
+void Knife::cKnife::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Enemy")
 	{

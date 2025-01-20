@@ -209,7 +209,8 @@ void HUD::LevelInitialize()
 	assert(hLevelCursor_ >= 0);
 
 	CsvReader csv;
-	csv.Load("Assets\\CSV\\WeaponList.csv");
+	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
+		return;
 
 	for (int i = 1; i < csv.GetHeight(); i++) {
 		WeaponList_.push_back({ csv.GetString(0, i),csv.GetValue(1, i), csv.GetValue(2, i) });

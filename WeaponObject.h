@@ -27,6 +27,10 @@ class WeaponObject :public GameObject
 		int damege_;	//攻撃力
 		float speed_;	//移動スピード
 		int hp_;	//貫通などに使う
+		float restart_;	//リスタートまでの時間を減らす
+		int Range_;
+		float duration_;	//持続時間
+		float size_;	//当たり判定のサイズ
 	};
 
 protected:
@@ -50,6 +54,10 @@ protected:
 	virtual void Stop();
 
 	virtual void Penetration();	//貫通時
+
+	virtual void AddBullet();
+
+	virtual void StatusCSVRead();
 
 public:
 	WeaponObject(GameObject* parent);
@@ -75,5 +83,7 @@ public:
 	int GetLv() { return status_.Lv_; }
 
 	virtual void LevelUp(std::string str);
+
+	
 };
 
