@@ -298,7 +298,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(knife);
 		}
 		else {
-			knife->LevelUp(WeaponList_[_num].instruction_.front());
+			knife->LevelUp(WeaponList_[_num].instruction_.back());
 		}
 	}
 		break;

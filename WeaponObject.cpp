@@ -36,11 +36,6 @@ void WeaponObject::Penetration()
 		Stop();
 }
 
-void WeaponObject::AddBullet()
-{
-
-}
-
 void WeaponObject::StatusCSVRead()
 {
 	CsvReader csv;
@@ -55,6 +50,8 @@ void WeaponObject::StatusCSVRead()
 			status_.Range_ = csv.GetValue(5, i);
 			status_.duration_ = csv.GetValue(6, i);
 			status_.size_ = csv.GetValue(7, i);
+			originStatus_ = status_;
+			break;
 		}
 	}
 }
@@ -62,27 +59,25 @@ void WeaponObject::StatusCSVRead()
 WeaponObject::WeaponObject(GameObject* parent)
 	:GameObject(parent, ""), hModel_(-1)
 {
-	varia_.allowsMove_ = true;
-	varia_.ReStartTimer_ =  status_.restart_;
-
 	status_.Lv_ = 1;
 	status_.damege_ = 0;
-	status_.speed_ =0;
-	status_.hp_ =0;
-	status_.restart_ =0;
-	status_.Range_ =0;
-	status_.duration_ =0;
-	status_.size_ =0;
+	status_.speed_ = 0;
+	status_.hp_ = 0;
+	status_.restart_ = 0;
+	status_.Range_ = 0;
+	status_.duration_ = 0;
+	status_.size_ = 0;
+
+	varia_.allowsMove_ = true;
+	varia_.ReStartTimer_ = status_.restart_;
 
 	StatusCSVRead();
-	nextStatus_ = status_;
 }
 
 WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
 	:GameObject(parent, name), hModel_(-1)
 {
-	varia_.allowsMove_ = true;
-	varia_.ReStartTimer_ = status_.restart_;
+
 
 	status_.Lv_ = 1;
 	status_.damege_ = 0;
@@ -93,8 +88,10 @@ WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
 	status_.duration_ = 0;
 	status_.size_ = 0;
 
+	varia_.allowsMove_ = true;
+	varia_.ReStartTimer_ = status_.restart_;
+
 	StatusCSVRead();
-	nextStatus_ = status_;
 }
 
 WeaponObject::~WeaponObject()
@@ -110,14 +107,6 @@ void WeaponObject::Update()
 {
 	if (varia_.allowsMove_)
 		Move();
-	else {
-		if (varia_.ReStartTimer_ < 0.0f) {
-			Reset();
-		}
-		else {
-			varia_.ReStartTimer_ -= Time::DeltaTime();
-		}
-	}
 }
 
 void WeaponObject::Draw()
@@ -139,7 +128,7 @@ void WeaponObject::LevelUp(std::string str)
 	std::string temp;
 
 	//–½—ß‚ðˆê‚Â‚¸‚Â‚É•ªŠ„
-	while (std::getline(ss, temp, '.'))
+	while (std::getline(ss, temp, '/'))
 	{
 		std::stringstream stemp{ temp };
 		std::string mini;
@@ -148,37 +137,43 @@ void WeaponObject::LevelUp(std::string str)
 		float val;
 		int count = 0;
 		//–½—ß‚ð–½—ß•”‚Æ’l‚É•ÏŠ·
-		while (stemp, mini, '/')
+		while (std::getline(stemp, mini, ':'))
 		{
 			if (count == 0)
 				c = *mini.c_str();
 			else
 				val = std::stof(mini);
+			count++;
 		}
 
 		switch (c)
 		{
 		case 'H':
-			nextStatus_.hp_ += val;
+			status_.hp_ += val;
 			break;
 		case 'D':
-			nextStatus_.damege_ += val;
+			if (val < 1) {
+				status_.damege_ += val;
+			}
+			else {
+				status_.damege_ += originStatus_.damege_ * (1.0 + val);
+			}
 			break;
 		case 'S':
-			nextStatus_.size_ = val;
+			status_.size_ += originStatus_.size_ * (1.0 + val);
 			break;
 		case 'B':
 			for (int i = 0; i < val; i++)
 				AddBullet();
 			break;
 		case 'C':
-			nextStatus_.restart_ -= val;
+			status_.restart_ -= val;
 			break;
 		case 'L':
-			nextStatus_.Range_ += val;
+			status_.Range_ += val;
 			break;
 		case 'T':
-			nextStatus_.duration_ += val;
+			status_.duration_ += val;
 			break;
 		case 'E':
 			break;

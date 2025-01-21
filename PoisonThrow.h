@@ -5,7 +5,43 @@ class cPoisonThrow;
 
 class PoisonThrow :public WeaponObject
 {
+	class cPoisonThrow : public WeaponObject
+	{
+		int angle_;
+		float gravity_;
+		XMVECTOR move_;
+
+		int hCapsule_;
+
+		void Move() override;
+
+		//攻撃を出す
+		void ResetSub() override;
+		void AddBullet() override {};
+	public:
+		cPoisonThrow(GameObject* parent);
+
+		~cPoisonThrow();
+
+		//初期化
+		void Initialize() override;
+
+		//更新
+		//void Update() override;
+
+		//描画
+		void Draw() override;
+
+		//開放
+		void Release() override;
+
+		//当たり判定
+		void OnCollision(GameObject* pTarget) override;
+	};
+
 	std::vector<cPoisonThrow*> List_;
+
+	void AddBullet() override;
 
 public:
 	PoisonThrow(GameObject* parent);
@@ -25,37 +61,3 @@ public:
 	void Release() override;
 };
 
-
-class cPoisonThrow : public WeaponObject
-{
-	int angle_;
-	float gravity_;
-	XMVECTOR move_;
-
-	int hCapsule_;
-
-	void Move() override;
-
-	//攻撃を出す
-	void ResetSub() override;
-
-public:
-	cPoisonThrow(GameObject* parent);
-
-	~cPoisonThrow();
-
-	//初期化
-	void Initialize() override;
-
-	//更新
-	//void Update() override;
-
-	//描画
-	void Draw() override;
-
-	//開放
-	void Release() override;
-
-	//当たり判定
-	void OnCollision(GameObject* pTarget) override;
-};

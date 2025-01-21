@@ -10,6 +10,8 @@ class Knife :public WeaponObject
 		void Move() override;
 
 		void ResetSub() override;
+
+		void AddBullet() override {};
 	public:
 		cKnife(GameObject* parent);
 
@@ -32,6 +34,8 @@ class Knife :public WeaponObject
 	};
 
 	std::vector<Knife::cKnife*> List_;
+
+	void AddBullet() override;
 public:
 	Knife(GameObject* parent);
 

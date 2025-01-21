@@ -23,28 +23,29 @@ class WeaponObject :public GameObject
 
 	struct Status
 	{
-		int Lv_;		//武器のレベル
-		int damege_;	//攻撃力
-		float speed_;	//移動スピード
-		int hp_;	//貫通などに使う
-		float restart_;	//リスタートまでの時間を減らす
-		int Range_;
+		int Lv_;			//武器のレベル
+		int damege_;		//攻撃力
+		float speed_;		//移動スピード
+		int hp_;			//貫通などに使う
+		float restart_;		//リスタートまでの時間を減らす
+		int Range_;			//距離
 		float duration_;	//持続時間
-		float size_;	//当たり判定のサイズ
+		float size_;		//当たり判定のサイズ
 	};
 
+public:
+	WeaponVariables varia_;	//弾個々の変数
+
 protected:
+
 	int hModel_;
 
 	Status status_;		//全体共有のステータス
-	Status nextStatus_;
-	WeaponVariables varia_;	//弾個々の変数
-
+	Status originStatus_;	//ステータスの初期値
+	
 	//動き方を書く
 	virtual void Move() {};
 
-	//攻撃のリセット
-	void Reset();
 	//継承先で追加でリセットしたいことがあるとき用
 	virtual void ResetSub() {};
 
@@ -55,7 +56,7 @@ protected:
 
 	virtual void Penetration();	//貫通時
 
-	virtual void AddBullet();
+	virtual void AddBullet() = 0;
 
 	virtual void StatusCSVRead();
 
@@ -80,10 +81,14 @@ public:
 
 	virtual void OnCollision(GameObject* pTarget) override;
 
-	int GetLv() { return status_.Lv_; }
+	//攻撃のリセット
+	void Reset();
 
 	virtual void LevelUp(std::string str);
 
-	
+	int GetLv() { return status_.Lv_; }
+	void SetStatus(Status _st) { status_ = _st; };
+	Status GetStatus() { return status_; }
+	bool isMove() { return varia_.allowsMove_; }
 };
 

@@ -15,6 +15,10 @@ namespace {
 	const float ATTACKAREA{ 10.0f };	//UŒ‚ƒGƒŠƒA‚Ì”¼Œa
 }
 
+void PoisonThrow::AddBullet()
+{
+}
+
 PoisonThrow::PoisonThrow(GameObject* parent)
 	:WeaponObject(parent,"PoisonThrow")
 {
@@ -44,7 +48,7 @@ void PoisonThrow::Release()
 
 /*------------‚±‚±‚©‚çcPoisonThrow-----------*/
 
-void cPoisonThrow::Move()
+void PoisonThrow::cPoisonThrow::Move()
 {
 	Field* field = GetParent()->FindGameObject<Field>();
 	if (field->RayCastField(transform_.position_, RAYHEIGHT, RAYLIMIT)) {
@@ -68,7 +72,7 @@ void cPoisonThrow::Move()
 		Stop();
 }
 
-void cPoisonThrow::ResetSub()
+void PoisonThrow::cPoisonThrow::ResetSub()
 {
 	transform_.position_.y += 2.0f;
 
@@ -90,20 +94,18 @@ void cPoisonThrow::ResetSub()
 	move_ = XMVector3Normalize(move_);
 
 	varia_.AttackTime_ = ATTACKTIME;
-
-	status_ = nextStatus_;
 }
 
-cPoisonThrow::cPoisonThrow(GameObject* parent)
+PoisonThrow::cPoisonThrow::cPoisonThrow(GameObject* parent)
 	:WeaponObject(parent,"cPoisonThrow")
 {
 }
 
-cPoisonThrow::~cPoisonThrow()
+PoisonThrow::cPoisonThrow::~cPoisonThrow()
 {
 }
 
-void cPoisonThrow::Initialize()
+void PoisonThrow::cPoisonThrow::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Model\\PoisonArea.fbx");
 	assert(hModel_ >= 0);
@@ -115,7 +117,7 @@ void cPoisonThrow::Initialize()
 	AddCollider(collision);
 }
 
-void cPoisonThrow::Draw()
+void PoisonThrow::cPoisonThrow::Draw()
 {
 	if (IsClash()) {
 		Model::SetTransform(hModel_, transform_);
@@ -127,11 +129,11 @@ void cPoisonThrow::Draw()
 	}
 }
 
-void cPoisonThrow::Release()
+void PoisonThrow::cPoisonThrow::Release()
 {
 }
 
-void cPoisonThrow::OnCollision(GameObject* pTarget)
+void PoisonThrow::cPoisonThrow::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Enemy")
 	{

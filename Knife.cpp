@@ -2,8 +2,15 @@
 #include "EnemySpawn.h"
 #include "Player.h"
 
+void Knife::AddBullet()
+{
+	Knife::cKnife* c = Instantiate<Knife::cKnife>(GetParent());
+	c->SetStatus(status_);
+	List_.push_back(c);
+}
+
 Knife::Knife(GameObject* parent)
-	:WeaponObject(parent,"Knife")
+	:WeaponObject(parent, "Knife")
 {
 	Knife::cKnife* c = Instantiate<Knife::cKnife>(GetParent());
 	List_.push_back(c);
@@ -15,15 +22,33 @@ Knife::~Knife()
 
 void Knife::Initialize()
 {
-	nextStatus_ = status_;
+	status_.speed_ = status_.Range_ / status_.duration_;
+
+	for (int i = 0; i < List_.size(); i++) {
+		List_[i]->SetStatus(status_);
+	}
 }
 
 void Knife::Update()
 {
 	for (int i = 0; i < List_.size(); i++) {
-		if (nextStatus_.Lv_ != List_[i]->GetLv()) {
-			//List_[i].
+		//動いているのがあれば終わる
+		if (List_[i]->isMove())
+			return;
+	}
+	//このままだと一つアクティブになると他がアクティブにならない
+
+	//すべて動いていなければ
+	for (int i = 0; i < List_.size(); i++) {
+		if (List_[i]->varia_.ReStartTimer_ < 0.0f) {
+			List_[i]->Reset();
 		}
+		else {
+			//リセットまでの時間をちょっと遅らせる
+			List_[i]->varia_.ReStartTimer_ -= Time::DeltaTime();
+
+		}
+
 	}
 }
 
@@ -56,11 +81,10 @@ void Knife::cKnife::Move()
 
 void Knife::cKnife::ResetSub()
 {
-	//status_ = nextStatus_;
 }
 
 Knife::cKnife::cKnife(GameObject* parent)
-	:WeaponObject(parent,"cKnife")
+	:WeaponObject(parent, "cKnife")
 {
 }
 
@@ -77,17 +101,13 @@ void Knife::cKnife::Initialize()
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
 	AddCollider(collision);
-
-
-	status_.speed_ = status_.Range_ / status_.duration_;
-	nextStatus_ = status_;
 }
 
 void Knife::cKnife::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
-	
+
 }
 
 void Knife::cKnife::Release()
