@@ -56,7 +56,7 @@ void Knife::cKnife::Move()
 
 void Knife::cKnife::ResetSub()
 {
-	status_ = nextStatus_;
+	//status_ = nextStatus_;
 }
 
 Knife::cKnife::cKnife(GameObject* parent)

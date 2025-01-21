@@ -44,7 +44,7 @@ void WeaponObject::AddBullet()
 void WeaponObject::StatusCSVRead()
 {
 	CsvReader csv;
-	csv.Load("Assets\\CSV\\WeaponInitStaus.csv");
+	csv.Load("Assets\\CSV\\WeaponInitStatus.csv");
 
 	for (int i = 0; i < csv.GetHeight(); i++) {
 		if (csv.GetString(0, i) == objectName_) {

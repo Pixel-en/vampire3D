@@ -32,7 +32,6 @@ class Knife :public WeaponObject
 	};
 
 	std::vector<Knife::cKnife*> List_;
-
 public:
 	Knife(GameObject* parent);
 
