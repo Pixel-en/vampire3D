@@ -80,6 +80,7 @@ public:
 	float GetResetTimer() { return varia_.ReStartTimer_; }
 	void SetResetTimer(float _timer) { varia_.ReStartTimer_ = _timer; }
 	float GetAttackTimer() { return varia_.AttackTime_; }
+	void SetNextStatus(Status _st) { nextStatus_ = _st; };
 
 public:
 	WeaponObject(GameObject* parent);

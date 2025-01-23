@@ -159,7 +159,7 @@ void WeaponObject::LevelUp(std::string str)
 		std::string mini;
 
 		char c;
-		float val;
+		float val = 0;
 		int count = 0;
 		//–½—ß‚ð–½—ß•”‚Æ’l‚É•ÏŠ·
 		while (std::getline(stemp, mini, ':'))

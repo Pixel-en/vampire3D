@@ -7,7 +7,7 @@ void Knife::AddBullet()
 	Knife::cKnife* c = Instantiate<Knife::cKnife>(GetParent());
 	c->SetStatus(status_);
 	//止まっているなら残りの時間+バッファ
-	if(!c->isMove())
+	if (!c->isMove())
 		c->SetResetTimer(List_[0]->GetResetTimer() + ((List_.size() + 1) * BUFFER));
 	//動いているなら残りの攻撃持続時間+リセットタイム+バッファ
 	else {
@@ -38,8 +38,10 @@ void Knife::Initialize()
 void Knife::Update()
 {
 	status_.speed_ = status_.Range_ / status_.duration_;
-	nextStatus_ = status_;
-	Debug::Log(Time::DeltaTime(), true);
+	for (int i = 0; i < List_.size(); i++) {
+		if (List_[i]->GetLv() != status_.Lv_)
+			List_[i]->SetNextStatus(status_);
+	}
 }
 
 void Knife::Draw()

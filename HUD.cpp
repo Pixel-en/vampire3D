@@ -177,6 +177,7 @@ void HUD::WeaponRoll()
 
 			for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
 				RollListNum_.insert(rand() % WeaponList_.size());
+				RollListNum_.insert(i);
 			}
 			if (RollListNum_.size() == LEVEL::WEAPONCHOICEVAL)
 				break;
