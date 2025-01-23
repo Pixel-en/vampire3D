@@ -47,6 +47,7 @@ void WeaponObject::Penetration()
 
 void WeaponObject::StatusCSVRead()
 {
+	//ƒvƒŒƒCƒ„[‚Å“Ç‚İ‚Ş‚Ì‚ª‚¢‚¢‚Ì‚©‚à
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\WeaponInitStatus.csv");
 

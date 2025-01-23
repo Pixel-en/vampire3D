@@ -7,13 +7,15 @@ void Knife::AddBullet()
 	Knife::cKnife* c = Instantiate<Knife::cKnife>(GetParent());
 	c->SetStatus(status_);
 	//止まっているなら残りの時間+バッファ
-	if (!c->isMove())
-		c->SetResetTimer(List_[0]->GetResetTimer() + ((List_.size() + 1) * BUFFER));
+	if (!List_[0]->isMove()) {
+		c->SetResetTimer(List_[0]->GetResetTimer() + (List_.size() * BUFFER));
+	}
 	//動いているなら残りの攻撃持続時間+リセットタイム+バッファ
 	else {
-		c->SetResetTimer(varia_.ReStartTimer_ + List_[0]->GetAttackTimer() + ((List_.size() + 1) * BUFFER));
+		c->SetResetTimer(List_[0]->GetResetTimer() + List_[0]->GetAttackTimer() + (List_.size() * BUFFER));
 	}
 	List_.push_back(c);
+
 }
 
 Knife::Knife(GameObject* parent)

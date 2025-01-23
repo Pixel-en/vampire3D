@@ -5,7 +5,7 @@
 #include <vector>
 
 namespace {
-	const float BUFFER{ 0.05f };
+	const float BUFFER{ 0.1f };
 }
 
 //•Ší‚ÌŒp³Œ³

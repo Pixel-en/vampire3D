@@ -27,7 +27,7 @@ namespace {
 Player::Player(GameObject* parent)
 	:GameObject(parent, "Player"), hModel_(-1), hImage_(-1)
 {
-	transform_.position_ = { 0,50,0 };
+	transform_.position_ = { 0,1,0 };
 	lookHeight_ = PLAYERHEIGHT;
 	onGround_ = false;
 	gravity = 0.0f;
@@ -199,7 +199,7 @@ void Player::AcquisitionEXP(int _exp)
 	status_.currentExp_ += _exp;
 
 	if (status_.currentExp_ >= status_.nextLvExp_) {
-		GetParent()->SetChildFlags(0b10100);
+		GetParent()->SetChildFlags(0b10101);
 		status_.level_++;							//レベルアップ
 		status_.totalExp_ += status_.currentExp_;	//トータルに加算
 		status_.currentExp_ -= status_.nextLvExp_;	//余剰分を算出

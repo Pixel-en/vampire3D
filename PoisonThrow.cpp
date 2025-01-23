@@ -5,25 +5,31 @@
 
 namespace {
 	const int THROWANGLE{ -45 };
-	const float RESTARTTIME{ 1.5f };	//次に投げ始めるまでの時間
-	const float ATTACKTIME{ 3.0f };		//展開時間
 	const float RAYHEIGHT{ 5.0f };
 	const float RAYLIMIT{ 1.0f };
 	const float GRAVITY{ 0.0001f };
 	const float THROWHEIGHT{ 2.0f };	//投げ始めの高さ
-	const float MOVESPEED{ 30.0f };
-	const float ATTACKAREA{ 10.0f };	//攻撃エリアの半径
 }
 
 void PoisonThrow::AddBullet()
 {
+	PoisonThrow::cPoisonThrow* c = Instantiate<PoisonThrow::cPoisonThrow>(GetParent());
+	c->SetStatus(status_);
+	//止まっているなら残りの時間+バッファ
+	if (!List_[0]->isMove()) {
+		c->SetResetTimer(List_[0]->GetResetTimer() + (List_.size() * BUFFER));
+	}
+	//動いているなら残りの攻撃持続時間+リセットタイム+バッファ
+	else {
+		c->SetResetTimer(List_[0]->GetResetTimer() + List_[0]->GetAttackTimer() + (List_.size() * BUFFER));
+	}
+	List_.push_back(c);
+
 }
 
 PoisonThrow::PoisonThrow(GameObject* parent)
 	:WeaponObject(parent,"PoisonThrow")
 {
-	cPoisonThrow* c = Instantiate<cPoisonThrow>(GetParent());
-	List_.push_back(c);
 }
 
 PoisonThrow::~PoisonThrow()
@@ -32,10 +38,17 @@ PoisonThrow::~PoisonThrow()
 
 void PoisonThrow::Initialize()
 {
+	cPoisonThrow* c = Instantiate<cPoisonThrow>(GetParent());
+	c->SetStatus(status_);
+	List_.push_back(c);
 }
 
 void PoisonThrow::Update()
 {
+	for (int i = 0; i < List_.size(); i++) {
+		if (List_[i]->GetLv() != status_.Lv_)
+			List_[i]->SetNextStatus(status_);
+	}
 }
 
 void PoisonThrow::Draw()
@@ -67,7 +80,7 @@ void PoisonThrow::cPoisonThrow::Move()
 	move_ += XMVectorSet(0, gravity_, 0, 0);
 	gravity_ -= GRAVITY;
 
-	transform_.position_ += move_ * MOVESPEED * Time::DeltaTime();
+	transform_.position_ += move_ * status_.speed_ * Time::DeltaTime();
 	if (transform_.position_.y <= -10.0f)
 		Stop();
 }
@@ -105,13 +118,15 @@ PoisonThrow::cPoisonThrow::~cPoisonThrow()
 
 void PoisonThrow::cPoisonThrow::Initialize()
 {
+	Reset();
+
 	hModel_ = Model::Load("Assets\\Model\\PoisonArea.fbx");
 	assert(hModel_ >= 0);
 
 	hCapsule_ = Model::Load("Assets\\Model\\Capsule_Blue.fbx");
 	assert(hCapsule_ >= 0);
 
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), ATTACKAREA);
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
 	AddCollider(collision);
 }
 
