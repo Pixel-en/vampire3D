@@ -6,6 +6,13 @@ void Knife::AddBullet()
 {
 	Knife::cKnife* c = Instantiate<Knife::cKnife>(GetParent());
 	c->SetStatus(status_);
+	//止まっているなら残りの時間+バッファ
+	if(!c->isMove())
+		c->SetResetTimer(List_[0]->GetResetTimer() + ((List_.size() + 1) * BUFFER));
+	//動いているなら残りの攻撃持続時間+リセットタイム+バッファ
+	else {
+		c->SetResetTimer(varia_.ReStartTimer_ + List_[0]->GetAttackTimer() + ((List_.size() + 1) * BUFFER));
+	}
 	List_.push_back(c);
 }
 
@@ -23,7 +30,6 @@ Knife::~Knife()
 void Knife::Initialize()
 {
 	status_.speed_ = status_.Range_ / status_.duration_;
-
 	for (int i = 0; i < List_.size(); i++) {
 		List_[i]->SetStatus(status_);
 	}
@@ -31,25 +37,9 @@ void Knife::Initialize()
 
 void Knife::Update()
 {
-	for (int i = 0; i < List_.size(); i++) {
-		//動いているのがあれば終わる
-		if (List_[i]->isMove())
-			return;
-	}
-	//このままだと一つアクティブになると他がアクティブにならない
-
-	//すべて動いていなければ
-	for (int i = 0; i < List_.size(); i++) {
-		if (List_[i]->varia_.ReStartTimer_ < 0.0f) {
-			List_[i]->Reset();
-		}
-		else {
-			//リセットまでの時間をちょっと遅らせる
-			List_[i]->varia_.ReStartTimer_ -= Time::DeltaTime();
-
-		}
-
-	}
+	status_.speed_ = status_.Range_ / status_.duration_;
+	nextStatus_ = status_;
+	Debug::Log(Time::DeltaTime(), true);
 }
 
 void Knife::Draw()
@@ -64,6 +54,14 @@ void Knife::Release()
 
 void Knife::cKnife::Move()
 {
+	if (varia_.AttackTime_ < 0.0f) {
+		Stop();
+		return;
+	}
+	else {
+		varia_.AttackTime_ -= Time::DeltaTime();
+	}
+
 	XMVECTOR pFront = { 0,0,1,0 };
 
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);

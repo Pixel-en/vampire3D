@@ -199,7 +199,7 @@ void Player::AcquisitionEXP(int _exp)
 	status_.currentExp_ += _exp;
 
 	if (status_.currentExp_ >= status_.nextLvExp_) {
-		GetParent()->SetChildFlags(0b10101);
+		GetParent()->SetChildFlags(0b10100);
 		status_.level_++;							//レベルアップ
 		status_.totalExp_ += status_.currentExp_;	//トータルに加算
 		status_.currentExp_ -= status_.nextLvExp_;	//余剰分を算出

@@ -3,11 +3,14 @@
 #include "sstream"
 #include "Engine/CsvReader.h"
 
-namespace {
-}
 
 void WeaponObject::Reset()
 {
+	ResetBefore();
+
+	if (status_.Lv_ < nextStatus_.Lv_)
+		status_ = nextStatus_;
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
 	transform_ = player->GetTransform();
@@ -18,22 +21,28 @@ void WeaponObject::Reset()
 	Clash();
 	varia_.allowsMove_ = true;
 	varia_.peneCount_ = status_.hp_;
+	varia_.AttackTime_ = status_.duration_;
 
 	ResetSub();
 }
 
 void WeaponObject::Stop()
 {
+	ReStartWait();
+	varia_.allowsMove_ = false;
+}
+
+void WeaponObject::ReStartWait()
+{
 	Invisible();
 	NonClash();
-	varia_.allowsMove_ = false;
 }
 
 void WeaponObject::Penetration()
 {
 	varia_.peneCount_--;
 	if (varia_.peneCount_ <= 0)
-		Stop();
+		ReStartWait();
 }
 
 void WeaponObject::StatusCSVRead()
@@ -68,10 +77,13 @@ WeaponObject::WeaponObject(GameObject* parent)
 	status_.duration_ = 0;
 	status_.size_ = 0;
 
-	varia_.allowsMove_ = true;
+	varia_.allowsMove_ = false;
 	varia_.ReStartTimer_ = status_.restart_;
 
 	StatusCSVRead();
+	nextStatus_ = status_;
+
+	Reset();
 }
 
 WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
@@ -88,10 +100,13 @@ WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
 	status_.duration_ = 0;
 	status_.size_ = 0;
 
-	varia_.allowsMove_ = true;
+	varia_.allowsMove_ = false;
 	varia_.ReStartTimer_ = status_.restart_;
 
 	StatusCSVRead();
+	nextStatus_ = status_;
+
+	Reset();
 }
 
 WeaponObject::~WeaponObject()
@@ -100,13 +115,23 @@ WeaponObject::~WeaponObject()
 
 void WeaponObject::Initialize()
 {
-	Reset();
+	varia_.allowsMove_ = false;
 }
 
 void WeaponObject::Update()
 {
-	if (varia_.allowsMove_)
+	if (varia_.allowsMove_) {
 		Move();
+	}
+	//一定時間経過したらリセット
+	else {
+		if (varia_.ReStartTimer_ < 0.0f) {
+			Reset();
+		}
+		else {
+			varia_.ReStartTimer_ -= Time::DeltaTime();
+		}
+	}
 }
 
 void WeaponObject::Draw()

@@ -92,8 +92,6 @@ void PoisonThrow::cPoisonThrow::ResetSub()
 
 	move_ = XMVector3Transform(dirVec, rotM);
 	move_ = XMVector3Normalize(move_);
-
-	varia_.AttackTime_ = ATTACKTIME;
 }
 
 PoisonThrow::cPoisonThrow::cPoisonThrow(GameObject* parent)
