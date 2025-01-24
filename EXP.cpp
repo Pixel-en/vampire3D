@@ -101,5 +101,6 @@ void EXP::OnCollision(GameObject* pTarget)
 		Player* player = GetParent()->FindGameObject<Player>();
 		player->AcquisitionEXP(expValue_);
 		dead_ = true;
+		NonClash();
 	}
 }

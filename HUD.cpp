@@ -213,7 +213,7 @@ void HUD::LevelInitialize()
 		return;
 
 	for (int i = 1; i < csv.GetHeight(); i++) {
-		WeaponList_.push_back({ csv.GetString(0, i),csv.GetValue(1, i), csv.GetValue(2, i) });
+		WeaponList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i) });
 		//pop_back‚ª‚Å‚«‚é‚Ì‚Å‹t‚©‚ç“ü‚ê‚Ä‚Ý‚é
 		for (int j = WeaponList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
 			WeaponList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));

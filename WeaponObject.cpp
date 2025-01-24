@@ -1,15 +1,21 @@
 #include "WeaponObject.h"
 #include "Player.h"
 #include "sstream"
-#include "Engine/CsvReader.h"
 
 
 void WeaponObject::Reset()
 {
 	ResetBefore();
 
-	if (status_.Lv_ < nextStatus_.Lv_)
+	//ステータスの更新と当たり判定のサイズの変更
+	if (status_.Lv_ < nextStatus_.Lv_) {
 		status_ = nextStatus_;
+
+		for (auto itr = colliderList_.begin(); itr != colliderList_.end();itr++) {
+			(*itr)->ChengeSize(status_.size_);
+		}
+	}
+
 
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
@@ -45,31 +51,21 @@ void WeaponObject::Penetration()
 		ReStartWait();
 }
 
-void WeaponObject::StatusCSVRead()
+void WeaponObject::StatusInitGet()
 {
-	//プレイヤーで読み込むのがいいのかも
-	CsvReader csv;
-	csv.Load("Assets\\CSV\\WeaponInitStatus.csv");
+	Player* player = GetRootJob()->FindGameObject<Player>();
+	if (player == nullptr)
+		return;
 
-	for (int i = 0; i < csv.GetHeight(); i++) {
-		if (csv.GetString(0, i) == objectName_) {
-			status_.damege_ = csv.GetValue(1, i);
-			status_.speed_ = csv.GetValue(2, i);
-			status_.hp_ = csv.GetValue(3, i);
-			status_.restart_ = csv.GetValue(4, i);
-			status_.Range_ = csv.GetValue(5, i);
-			status_.duration_ = csv.GetValue(6, i);
-			status_.size_ = csv.GetValue(7, i);
-			originStatus_ = status_;
-			break;
-		}
+	if (player->WeaponStateWrite(objectName_, status_)) {
+		originStatus_ = status_;
 	}
 }
 
 WeaponObject::WeaponObject(GameObject* parent)
 	:GameObject(parent, ""), hModel_(-1)
 {
-	status_.Lv_ = 1;
+	status_.Lv_ = -1;
 	status_.damege_ = 0;
 	status_.speed_ = 0;
 	status_.hp_ = 0;
@@ -77,14 +73,14 @@ WeaponObject::WeaponObject(GameObject* parent)
 	status_.Range_ = 0;
 	status_.duration_ = 0;
 	status_.size_ = 0;
-
-	varia_.allowsMove_ = false;
+	
 	varia_.ReStartTimer_ = status_.restart_;
 
-	StatusCSVRead();
+	StatusInitGet();
 	nextStatus_ = status_;
 
 	Reset();
+	varia_.allowsMove_ = false;
 }
 
 WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
@@ -92,7 +88,7 @@ WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
 {
 
 
-	status_.Lv_ = 1;
+	status_.Lv_ = -1;
 	status_.damege_ = 0;
 	status_.speed_ = 0;
 	status_.hp_ = 0;
@@ -101,13 +97,13 @@ WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
 	status_.duration_ = 0;
 	status_.size_ = 0;
 
-	varia_.allowsMove_ = false;
 	varia_.ReStartTimer_ = status_.restart_;
 
-	StatusCSVRead();
+	StatusInitGet();
 	nextStatus_ = status_;
 
 	Reset();
+	varia_.allowsMove_ = false;
 }
 
 WeaponObject::~WeaponObject()

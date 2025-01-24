@@ -37,7 +37,7 @@ public:
 	//指定した位置のデータを整数で取得
 	//引数：x,y　取得したい位置
 	//戻値：取得した値
-	int GetValue(DWORD x, DWORD y);
+	float GetValue(DWORD x, DWORD y);
 
 	//ファイルの列数を取得
 	//引数：なし

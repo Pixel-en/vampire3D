@@ -25,6 +25,8 @@ class WeaponObject :public GameObject
 		int peneCount_;		//ŠÑ’Ê‰ñ”
 	};
 
+public:
+
 	struct Status
 	{
 		int Lv_;			//•Ší‚ÌƒŒƒxƒ‹
@@ -66,7 +68,7 @@ protected:
 
 	virtual void AddBullet() = 0;
 
-	virtual void StatusCSVRead();
+	virtual void StatusInitGet();
 
 
 public:

@@ -71,5 +71,9 @@ public:
 
 	GameObject* GetGameObject() { return pGameObject_; }
 
+	virtual void ChengeSize(float _size) { ChengeSize({ _size,_size,_size }); };
+
+	virtual void ChengeSize(XMFLOAT3 _size) { size_ = _size; };
+
 };
 

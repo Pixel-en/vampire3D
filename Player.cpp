@@ -4,6 +4,7 @@
 #include "Engine/Camera.h"
 #include "Engine/Image.h"
 #include "Engine/SphereCollider.h"
+#include "Engine/CsvReader.h"
 #include <algorithm>
 
 #include "Field.h"
@@ -55,7 +56,9 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\Player.fbx");
+	WeaponCSVRead();
+
+	hModel_ = Model::Load("Assets\\Model\\SpikeOrb.fbx");
 	assert(hModel_ >= 0);
 
 	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
@@ -82,6 +85,38 @@ void Player::Update()
 {
 	Move();
 	Attack();
+}
+
+void Player::WeaponCSVRead()
+{
+	//ƒvƒŒƒCƒ„[‚Å“Ç‚İ‚Ş‚Ì‚ª‚¢‚¢‚Ì‚©‚à
+	CsvReader csv;
+	csv.Load("Assets\\CSV\\WeaponInitStatus.csv");
+
+	for (int i = 0; i < csv.GetHeight(); i++) {
+		std::string str;
+		str = csv.GetString(0, i);
+		WeaponObject::Status Wstate;
+		Wstate.Lv_ = 1;
+		Wstate.damege_ = csv.GetValue(1, i);
+		Wstate.speed_ = csv.GetValue(2, i);
+		Wstate.hp_ = csv.GetValue(3, i);
+		Wstate.restart_ = csv.GetValue(4, i);
+		Wstate.Range_ = csv.GetValue(5, i);
+		Wstate.duration_ = csv.GetValue(6, i);
+		Wstate.size_ = csv.GetValue(7, i);
+		WeaponState_.insert({ str,Wstate });
+	}
+}
+
+bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
+{
+	auto itr = WeaponState_.find(name);
+	if (itr != WeaponState_.end()) {
+		_state = itr->second;
+		return true;
+	}
+	return false;
 }
 
 void Player::Move()

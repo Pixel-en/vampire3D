@@ -2,13 +2,11 @@
 #include "Engine/GameObject.h"
 #include "WeaponObject.h"
 #include <vector>
+#include <map>
 
 //プレイヤー
 class Player :public GameObject
 {
-public:
-	std::vector<WeaponObject*> MyWeaponList_;
-
 private:
 	struct Status
 	{
@@ -28,7 +26,17 @@ private:
 
 	Status status_;
 
+	void WeaponCSVRead();
+
+	std::map<std::string, WeaponObject::Status> WeaponState_;
 public:
+	std::vector<WeaponObject*> MyWeaponList_;
+
+	//武器のステータスを書き込む
+	//引数：name　武器の名前
+	//引数:_state　書き込むステータス
+	bool WeaponStateWrite(std::string name,WeaponObject::Status& _state);
+
 	unsigned int GetLevel() { return status_.level_; };
 	unsigned int GetCurrentExp() { return status_.currentExp_; };
 	unsigned int GetnextLvExp() { return status_.nextLvExp_; };

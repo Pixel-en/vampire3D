@@ -4,7 +4,7 @@
 #include "EnemySpawn.h"
 
 namespace {
-	const int THROWANGLE{ -45 };
+	const int THROWANGLE{ -30 };
 	const float RAYHEIGHT{ 5.0f };
 	const float RAYLIMIT{ 1.0f };
 	const float GRAVITY{ 0.0001f };
@@ -30,6 +30,8 @@ void PoisonThrow::AddBullet()
 PoisonThrow::PoisonThrow(GameObject* parent)
 	:WeaponObject(parent,"PoisonThrow")
 {
+	cPoisonThrow* c = Instantiate<cPoisonThrow>(GetParent());
+	List_.push_back(c);
 }
 
 PoisonThrow::~PoisonThrow()
@@ -38,9 +40,6 @@ PoisonThrow::~PoisonThrow()
 
 void PoisonThrow::Initialize()
 {
-	cPoisonThrow* c = Instantiate<cPoisonThrow>(GetParent());
-	c->SetStatus(status_);
-	List_.push_back(c);
 }
 
 void PoisonThrow::Update()
@@ -118,7 +117,6 @@ PoisonThrow::cPoisonThrow::~cPoisonThrow()
 
 void PoisonThrow::cPoisonThrow::Initialize()
 {
-	Reset();
 
 	hModel_ = Model::Load("Assets\\Model\\PoisonArea.fbx");
 	assert(hModel_ >= 0);

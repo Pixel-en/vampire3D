@@ -139,6 +139,9 @@
       <Filter>PlayScene\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="TitleScene.cpp" />
+    <ClCompile Include="SpikeOrb.cpp">
+      <Filter>PlayScene\Weapon</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -252,6 +255,9 @@
       <Filter>PlayScene\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="TitleScene.h" />
+    <ClInclude Include="SpikeOrb.h">
+      <Filter>PlayScene\Weapon</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

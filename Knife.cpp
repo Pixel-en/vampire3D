@@ -31,10 +31,7 @@ Knife::~Knife()
 
 void Knife::Initialize()
 {
-	status_.speed_ = status_.Range_ / status_.duration_;
-	for (int i = 0; i < List_.size(); i++) {
-		List_[i]->SetStatus(status_);
-	}
+
 }
 
 void Knife::Update()
@@ -96,7 +93,6 @@ Knife::cKnife::~cKnife()
 
 void Knife::cKnife::Initialize()
 {
-	Reset();
 
 	hModel_ = Model::Load("Assets\\Model\\Knife.fbx");
 	assert(hModel_ >= 0);
