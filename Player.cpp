@@ -11,6 +11,7 @@
 #include "EnemySpawn.h"
 #include "Knife.h"
 #include "HUD.h"
+#include "SpikeOrb.h"
 
 //Ç∆ÇËÇ†Ç¶Ç∏çUåÇÇÕ3Ç¬çÏÇÈ
 //í èÌéÀåÇ
@@ -58,7 +59,7 @@ void Player::Initialize()
 {
 	WeaponCSVRead();
 
-	hModel_ = Model::Load("Assets\\Model\\SpikeOrb.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Player.fbx");
 	assert(hModel_ >= 0);
 
 	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
@@ -67,8 +68,10 @@ void Player::Initialize()
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
 	AddCollider(collision);
 
-	Knife* k = Instantiate<Knife>(GetParent());
-	MyWeaponList_.push_back(k);
+	//Knife* k = Instantiate<Knife>(GetParent());
+	//MyWeaponList_.push_back(k);
+	SpikeOrb* s = Instantiate<SpikeOrb>(GetParent());
+
 }
 
 void Player::SuperUpdate()
@@ -189,7 +192,6 @@ void Player::Move()
 	if (field->RayCastField(transform_.position_, RAYHEIGHT, "Player")) {
 		onGround_ = true;
 	}
-
 
 	//ÉJÉÅÉâ
 	if (Input::IsKey(DIK_SPACE)) {

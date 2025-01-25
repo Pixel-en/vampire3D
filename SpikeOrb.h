@@ -4,9 +4,14 @@
 //cSpikeOrbを管理する(レベルなど)
 class SpikeOrb :public WeaponObject
 {
+
 	//実際に動くオブジェクト
 	class cSpikeOrb : public WeaponObject
 	{
+		float angle_;
+
+		Transform Rottransform_;
+
 		void Move() override;
 
 		void ResetSub() override;
