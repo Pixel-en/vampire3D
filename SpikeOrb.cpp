@@ -66,7 +66,6 @@ void SpikeOrb::Release()
 {
 }
 
-
 void SpikeOrb::cSpikeOrb::Move()
 {
 	Player* player = GetRootJob()->FindGameObject<Player>();

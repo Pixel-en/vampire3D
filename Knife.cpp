@@ -1,6 +1,8 @@
 #include "Knife.h"
 #include "EnemySpawn.h"
 #include "Player.h"
+#include "Engine/Camera.h"
+#include <algorithm>
 
 void Knife::AddBullet()
 {
@@ -64,6 +66,8 @@ void Knife::cKnife::Move()
 	}
 
 	XMVECTOR pFront = { 0,0,1,0 };
+	XMMATRIX rotup = XMMatrixRotationX(XMConvertToRadians(angleX_));
+	pFront = XMVector3Normalize(XMVector3TransformCoord(pFront, rotup));
 
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
 
@@ -80,6 +84,7 @@ void Knife::cKnife::Move()
 
 void Knife::cKnife::ResetSub()
 {
+	//カメラアングルについて考えてみて
 }
 
 Knife::cKnife::cKnife(GameObject* parent)

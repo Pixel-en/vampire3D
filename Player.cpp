@@ -11,7 +11,6 @@
 #include "EnemySpawn.h"
 #include "Knife.h"
 #include "HUD.h"
-#include "SpikeOrb.h"
 
 //Ç∆ÇËÇ†Ç¶Ç∏çUåÇÇÕ3Ç¬çÏÇÈ
 //í èÌéÀåÇ
@@ -68,9 +67,8 @@ void Player::Initialize()
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
 	AddCollider(collision);
 
-	//Knife* k = Instantiate<Knife>(GetParent());
-	//MyWeaponList_.push_back(k);
-	SpikeOrb* s = Instantiate<SpikeOrb>(GetParent());
+	Knife* k = Instantiate<Knife>(GetParent());
+	MyWeaponList_.push_back(k);
 
 }
 
@@ -218,6 +216,11 @@ void Player::Move()
 		XMFLOAT3 tarPos = transform_.position_ + 1.0f * rotCamtarVec;
 		Camera::SetTarget({ tarPos.x, tarPos.y + lookHeight_, tarPos.z });
 	}
+
+	Debug::Log("pos:");
+	Debug::Log(Camera::GetPosition());
+	Debug::Log(",tar:");
+	Debug::Log(Camera::GetTarget(),true);
 
 }
 

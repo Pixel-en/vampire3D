@@ -7,6 +7,8 @@ class Knife :public WeaponObject
 	//実際に動くオブジェクト
 	class cKnife : public WeaponObject
 	{
+		float angleX_;
+
 		void Move() override;
 
 		void ResetSub() override;
