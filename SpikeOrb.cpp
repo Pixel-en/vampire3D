@@ -3,18 +3,43 @@
 #include "Player.h"
 
 namespace {
-	const float CIRCLERANGE{ 5.0f };
+	const int BASEROTATEVALUE{ 1 };//回転の最低値
 }
 
 void SpikeOrb::AddBullet()
 {
+	SpikeOrb::cSpikeOrb* c = Instantiate<SpikeOrb::cSpikeOrb>(GetParent());
+	c->SetStatus(status_);
+	//止まっているなら残りの時間+バッファ
+	if (!List_[0]->isMove()) {
+		c->SetResetTimer(List_[0]->GetResetTimer() + (List_.size() * BUFFER));
+	}
+	//動いているなら残りの攻撃持続時間+リセットタイム+バッファ
+	else {
+		c->SetResetTimer(List_[0]->GetResetTimer() + List_[0]->GetAttackTimer() + (List_.size() * BUFFER));
+	}
+	List_.push_back(c);
+
+	AdjustedAngle();
+}
+
+void SpikeOrb::AdjustedAngle()
+{
+	int rot = 360 / List_.size();
+	for (int i = 0; i < List_.size(); i++) {
+		List_[i]->SetAngle(rot * i);
+	}
 }
 
 SpikeOrb::SpikeOrb(GameObject* parent)
 	:WeaponObject(parent, "SpikeOrb")
 {
-	SpikeOrb::cSpikeOrb* c = Instantiate<SpikeOrb::cSpikeOrb>(GetParent());
-	List_.push_back(c);
+	for (int i = 0; i < 3; i++) {
+		SpikeOrb::cSpikeOrb* c = Instantiate<SpikeOrb::cSpikeOrb>(GetParent());
+		List_.push_back(c);
+	}
+
+	AdjustedAngle();
 }
 
 SpikeOrb::~SpikeOrb()
@@ -47,28 +72,25 @@ void SpikeOrb::cSpikeOrb::Move()
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
 	transform_.position_ = player->GetPosition();
-	//transform_.position_.x += CIRCLERANGE;
 	Rottransform_.position_ = player->GetPosition();
 
-	Rottransform_.rotate_.y += 1 + status_.speed_ * Time::DeltaTime();
+	Rottransform_.rotate_.y += BASEROTATEVALUE + status_.speed_ * Time::DeltaTime();
 
-	//Rottransform_.rotate_.y = 90;
-
-	XMVECTOR pos = XMLoadFloat3(&transform_.position_);
 	XMMATRIX rotmat = XMMatrixRotationY(Rottransform_.rotate_.y / 180.0f * XM_PI);
-	XMVECTOR newpos = XMVector3TransformCoord(XMVectorSet(5,0,0,0), rotmat);
-	XMFLOAT3 temp;
-	XMStoreFloat3(&temp, newpos);
-	transform_.position_ = {transform_.position_.x+temp.x,transform_.position_.y + temp.y ,transform_.position_.z + temp.z};
+	XMVECTOR newpos = XMVector3TransformCoord(XMVectorSet(status_.Range_,0,0,0), rotmat);
+	XMFLOAT3 pos;
+	XMStoreFloat3(&pos, newpos);
+	transform_.position_ = transform_.position_ + pos;
 
 }
 
 void SpikeOrb::cSpikeOrb::ResetSub()
 {
+	Rottransform_.rotate_.y = angle_;
 }
 
 SpikeOrb::cSpikeOrb::cSpikeOrb(GameObject* parent)
-	:WeaponObject(parent,"cSpikeOrb")
+	:WeaponObject(parent,"cSpikeOrb"),angle_(0)
 {
 }
 
@@ -93,19 +115,4 @@ void SpikeOrb::cSpikeOrb::Draw()
 
 void SpikeOrb::cSpikeOrb::Release()
 {
-}
-
-void SpikeOrb::cSpikeOrb::OnCollision(GameObject* pTarget)
-{
-	if (pTarget->GetObjectName() == "Enemy")
-	{
-		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
-		std::vector<Enemy*> List = ep->GetEnemyList();
-		for (int i = 0; i < List.size(); i++) {
-			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
-				List[i]->HitDamege(status_.damege_);
-				break;
-			}
-		}
-	}
 }

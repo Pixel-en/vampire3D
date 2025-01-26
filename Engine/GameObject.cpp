@@ -345,20 +345,30 @@ void GameObject::Collision(GameObject* pTarget)
 		return;
 	}
 
-	if (!this->IsClash() || !pTarget->IsClash())
-		return;
+	if (this->IsClash() && pTarget->IsClash()) {
 
-	//自分とpTargetのコリジョン情報を使って当たり判定
-	//1つのオブジェクトが複数のコリジョン情報を持ってる場合もあるので二重ループ
-	for (auto i = this->colliderList_.begin(); i != this->colliderList_.end(); i++)
-	{
-		for (auto j = pTarget->colliderList_.begin(); j != pTarget->colliderList_.end(); j++)
+		//自分とpTargetのコリジョン情報を使って当たり判定
+		//1つのオブジェクトが複数のコリジョン情報を持ってる場合もあるので二重ループ
+		for (auto i = this->colliderList_.begin(); i != this->colliderList_.end(); i++)
 		{
-			if ((*i)->IsHit(*j))
+			for (auto j = pTarget->colliderList_.begin(); j != pTarget->colliderList_.end(); j++)
 			{
-				//当たった
-				this->OnCollision(pTarget);
+				//途中で判定しなくなったら終わる
+				if (!this->IsClash())
+					return;
+
+				if (!pTarget->IsClash())
+					break;
+
+				if ((*i)->IsHit(*j))
+				{
+					//当たった
+					this->OnCollision(pTarget);
+				}
 			}
+			
+			if (!pTarget->IsClash())
+				break;
 		}
 	}
 

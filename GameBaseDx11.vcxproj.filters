@@ -273,4 +273,7 @@
       <Filter>02Shader</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\CSV\WeaponInitStatus.csv" />
+  </ItemGroup>
 </Project>

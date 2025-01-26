@@ -108,6 +108,20 @@ void Player::WeaponCSVRead()
 		Wstate.Range_ = csv.GetValue(5, i);
 		Wstate.duration_ = csv.GetValue(6, i);
 		Wstate.size_ = csv.GetValue(7, i);
+		int knock = csv.GetValue(8, i);
+		knock = std::clamp(knock, 0, 2);
+		switch (knock)
+		{
+		case 0:
+			Wstate.knockback_ = 0.0;
+			break;
+		case 1:
+			Wstate.knockback_ = 0.5f;
+			break;
+		case 2:
+			Wstate.knockback_ = 1.0f;
+			break;
+		}
 		WeaponState_.insert({ str,Wstate });
 	}
 }
@@ -124,7 +138,6 @@ bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
 
 void Player::Move()
 {
-
 	//移動方向ベクトル
 	XMVECTOR moveVec = XMVECTOR{ 0,0,0 };
 	//カメラターゲット用ベクトル

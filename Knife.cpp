@@ -111,19 +111,3 @@ void Knife::cKnife::Draw()
 void Knife::cKnife::Release()
 {
 }
-
-void Knife::cKnife::OnCollision(GameObject* pTarget)
-{
-	if (pTarget->GetObjectName() == "Enemy")
-	{
-		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
-		std::vector<Enemy*> List = ep->GetEnemyList();
-		for (int i = 0; i < List.size(); i++) {
-			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
-				List[i]->HitDamege(status_.damege_);
-				Penetration();
-				break;
-			}
-		}
-	}
-}

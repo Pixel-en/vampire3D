@@ -28,9 +28,6 @@ class Knife :public WeaponObject
 
 		//ŠJ•ú
 		void Release() override;
-
-		//“–‚½‚è”»’è
-		void OnCollision(GameObject* pTarget) override;
 	};
 
 	std::vector<Knife::cKnife*> List_;

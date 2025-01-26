@@ -61,7 +61,8 @@ public:
 	/// ダメージを受けた時
 	/// </summary>
 	/// <param name="_damege">受けたダメージ</param>
-	void HitDamege(int _damege);
+	/// <param name="_knock">ノックバック係数</param>
+	void HitDamege(int _damege,float _knock);
 
 	/// <summary>
 	/// ダメージを与えた

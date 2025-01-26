@@ -37,6 +37,7 @@ public:
 		int Range_;			//距離
 		float duration_;	//持続時間
 		float size_;		//当たり判定のサイズ
+		float knockback_;		//ノックバック
 	};
 
 protected:

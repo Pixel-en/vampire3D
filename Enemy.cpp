@@ -10,7 +10,6 @@
 namespace {
 	const float MOVESPEED{ 5.0f };
 	const float INVICIBLETIME{ 0.5f };
-	const float KNOCKBACKRATE{ 0.5f };
 }
 
 Enemy::Enemy(GameObject* parent)
@@ -109,7 +108,7 @@ void Enemy::Release()
 {
 }
 
-void Enemy::HitDamege(int _damege)
+void Enemy::HitDamege(int _damege, float _knock)
 {
 	status_.hp_ -= _damege;
 	InvincibleTimer_ = INVICIBLETIME;
@@ -124,7 +123,7 @@ void Enemy::HitDamege(int _damege)
 	else {
 		Player* player = GetRootJob()->FindGameObject<Player>();
 		if (player == nullptr)
-			assert(false);
+			return;
 
 		XMFLOAT3 pPos = player->GetPosition();
 		XMFLOAT3 ePos = transform_.position_;
@@ -141,7 +140,7 @@ void Enemy::HitDamege(int _damege)
 		knockVec = XMVectorSetY(knockVec, 0);
 		knockVec = XMVector3Normalize(knockVec);
 
-		transform_.position_ += -knockVec * status_.speed_ * KNOCKBACKRATE;
+		transform_.position_ += -knockVec * status_.speed_ * _knock;
 	}
 }
 

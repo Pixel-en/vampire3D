@@ -1,6 +1,7 @@
 #include "WeaponObject.h"
 #include "Player.h"
 #include "sstream"
+#include "EnemySpawn.h"
 
 
 void WeaponObject::Reset()
@@ -46,6 +47,9 @@ void WeaponObject::ReStartWait()
 
 void WeaponObject::Penetration()
 {
+	if (varia_.peneCount_ == -1)
+		return;
+
 	varia_.peneCount_--;
 	if (varia_.peneCount_ <= 0)
 		ReStartWait();
@@ -141,6 +145,19 @@ void WeaponObject::Release()
 
 void WeaponObject::OnCollision(GameObject* pTarget)
 {
+
+	if (pTarget->GetObjectName() == "Enemy")
+	{
+		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
+		std::vector<Enemy*> List = ep->GetEnemyList();
+		for (int i = 0; i < List.size(); i++) {
+			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
+				List[i]->HitDamege(status_.damege_, status_.knockback_);
+				Penetration();
+				break;
+			}
+		}
+	}
 }
 
 void WeaponObject::LevelUp(std::string str)

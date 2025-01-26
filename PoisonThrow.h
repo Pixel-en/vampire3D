@@ -34,9 +34,6 @@ class PoisonThrow :public WeaponObject
 
 		//ŠJ•ú
 		void Release() override;
-
-		//“–‚½‚è”»’è
-		void OnCollision(GameObject* pTarget) override;
 	};
 
 	std::vector<cPoisonThrow*> List_;

@@ -34,13 +34,15 @@ class SpikeOrb :public WeaponObject
 		//ŠJ•ú
 		void Release() override;
 
-		//“–‚½‚è”»’è
-		void OnCollision(GameObject* pTarget) override;
+		void SetAngle(int _degrees) { angle_ = _degrees; };
 	};
 
 	std::vector<SpikeOrb::cSpikeOrb*> List_;
 
 	void AddBullet() override;
+
+	//Šp“x‚ğ’²®‚·‚é
+	void AdjustedAngle();
 public:
 	SpikeOrb(GameObject* parent);
 
