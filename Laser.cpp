@@ -66,6 +66,12 @@ void Laser::cLaser::Move()
 		varia_.AttackTime_ -= Time::DeltaTime();
 	}
 
+	transform_.rotate_.z -= 2.0f;
+
+	if (transform_.scale_.x < 1.0f)
+		transform_.scale_ += {0.1f, 0.1f, 0};
+	else
+		transform_.scale_ = { status_.size_,status_.size_,transform_.scale_.z };
 
 
 }
@@ -83,7 +89,13 @@ void Laser::cLaser::ResetSub()
 	laserStart_.position_ += dir * 2;
 	transform_.position_ = laserStart_.position_ + dir * (status_.Range_ / 2.0f);
 
-	transform_.scale_.z *= status_.Range_;
+	transform_.scale_ = { 0,0, transform_.scale_.z * status_.Range_ };
+
+	transform_.rotate_.z = 0;
+
+	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
+		(*itr)->ChengeSize({ status_.size_,status_.size_,(float)status_.Range_ });
+	}
 }
 
 Laser::cLaser::cLaser(GameObject* parent)
@@ -101,6 +113,8 @@ void Laser::cLaser::Initialize()
 	assert(hModel_ >= 0);
 
 	//コライダー
+	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(status_.size_, status_.size_, status_.Range_));
+	AddCollider(collision);
 }
 
 void Laser::cLaser::Draw()
