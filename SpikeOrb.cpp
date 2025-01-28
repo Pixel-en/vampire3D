@@ -68,6 +68,14 @@ void SpikeOrb::Release()
 
 void SpikeOrb::cSpikeOrb::Move()
 {
+	if (varia_.AttackTime_ < 0.0f) {
+		Stop();
+		return;
+	}
+	else {
+		varia_.AttackTime_ -= Time::DeltaTime();
+	}
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
 	transform_.position_ = player->GetPosition();

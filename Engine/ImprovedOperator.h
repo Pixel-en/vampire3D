@@ -89,3 +89,11 @@ inline XMFLOAT3 operator *(const XMFLOAT3& a, const XMVECTOR& b) {
 	XMStoreFloat3(&temp, c * b);
 	return temp;
 }
+
+inline XMFLOAT3 operator *(const XMFLOAT3& a, int& b) {
+	return { a.x * b ,a.y * b ,a.z * b };
+}
+
+inline XMFLOAT3 operator *(const XMFLOAT3& a, float& b) {
+	return { a.x * b,a.y * b,a.z * b };
+}

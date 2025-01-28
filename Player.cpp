@@ -12,6 +12,9 @@
 #include "Knife.h"
 #include "HUD.h"
 
+#include "SpikeOrb.h"
+#include "Laser.h"
+
 //‚Æ‚è‚ ‚¦‚¸UŒ‚‚Í3‚Âì‚é
 //’ÊíËŒ‚
 //”ÍˆÍ“àƒ_ƒ[ƒW
@@ -68,8 +71,9 @@ void Player::Initialize()
 	AddCollider(collision);
 
 	Knife* k = Instantiate<Knife>(GetParent());
-	MyWeaponList_.push_back(k);
-
+	//MyWeaponList_.push_back(k);
+	Instantiate<Laser>(GetParent());
+	//Instantiate<SpikeOrb>(GetParent());
 }
 
 void Player::SuperUpdate()
@@ -217,10 +221,10 @@ void Player::Move()
 		Camera::SetTarget({ tarPos.x, tarPos.y + lookHeight_, tarPos.z });
 	}
 
-	Debug::Log("pos:");
-	Debug::Log(Camera::GetPosition());
-	Debug::Log(",tar:");
-	Debug::Log(Camera::GetTarget(),true);
+	//Debug::Log("pos:");
+	//Debug::Log(Camera::GetPosition());
+	//Debug::Log(",tar:");
+	//Debug::Log(Camera::GetTarget(),true);
 
 }
 
