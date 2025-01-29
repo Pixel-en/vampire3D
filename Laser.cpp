@@ -1,5 +1,12 @@
 #include "Laser.h"
 
+namespace {
+	const float LASERSTARTSIZE{ 0.05f };
+	const float LASERSIZERATE{ 0.2f };
+	const float LASERANGLERATE{ 2.0f };
+	const float LASERWAITTIME{ 0.5f };
+}
+
 void Laser::AddBullet()
 {
 	Laser::cLaser* c = Instantiate<Laser::cLaser>(GetParent());
@@ -58,43 +65,60 @@ void Laser::Release()
 
 void Laser::cLaser::Move()
 {
-	if (varia_.AttackTime_ < 0.0f) {
-		Stop();
-		return;
+	//演出のためレーザーを回す
+	transform_.rotate_.z -= LASERANGLERATE;
+
+	//大きくなるまでのタイマー
+	if (BiggerWaittimer_ < 0.0) {
+		Clash();
+
+		//徐々に大きく
+		if (transform_.scale_.x < status_.size_)
+			transform_.scale_ += {LASERSIZERATE, LASERSIZERATE, 0};
+		else {
+			transform_.scale_ = { status_.size_,status_.size_,transform_.scale_.z };
+
+			//攻撃持続タイマー
+			if (varia_.AttackTime_ < 0.0f) {
+				Stop();
+				return;
+			}
+			else {
+				varia_.AttackTime_ -= Time::DeltaTime();
+			}
+		}
 	}
 	else {
-		varia_.AttackTime_ -= Time::DeltaTime();
+		BiggerWaittimer_ -= Time::DeltaTime();
+		NonClash();
 	}
-
-	transform_.rotate_.z -= 2.0f;
-
-	if (transform_.scale_.x < 1.0f)
-		transform_.scale_ += {0.1f, 0.1f, 0};
-	else
-		transform_.scale_ = { status_.size_,status_.size_,transform_.scale_.z };
-
-
 }
 
 void Laser::cLaser::ResetSub()
 {
 	Transform laserStart_ = transform_;
 	XMVECTOR pFront = { 0,0,1,0 };
-
+	//プレイヤーの向いている方向に回転
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
 
 	XMVECTOR dir = XMVector3TransformCoord(pFront, rot);
-	dir = XMVector3Normalize(dir);	//方向ベクトル
-
+	//dir = XMVector3Normalize(dir);	//方向ベクトル
+	dir = XMVectorSetX(dir,1);
+	////スタート位置を決める
 	laserStart_.position_ += dir * 2;
+	//オブジェクトの座標を先端と後端の中点にする
 	transform_.position_ = laserStart_.position_ + dir * (status_.Range_ / 2.0f);
-
-	transform_.scale_ = { 0,0, transform_.scale_.z * status_.Range_ };
-
+	//大きさを攻撃距離倍する
+	transform_.scale_ = { LASERSTARTSIZE,LASERSTARTSIZE, transform_.scale_.z * status_.Range_ };
+	//レーザーの回る角度を0にする
 	transform_.rotate_.z = 0;
+	//レーザーの拡大開始するまでのタイマー
+	BiggerWaittimer_ = LASERWAITTIME;
 
+	//レーザーの判定の大きさと向きの変更
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
 		(*itr)->ChengeSize({ status_.size_,status_.size_,(float)status_.Range_ });
+		(*itr)->SetRotate(transform_.rotate_);
 	}
 }
 

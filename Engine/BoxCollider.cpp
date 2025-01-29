@@ -10,12 +10,27 @@ BoxCollider::BoxCollider(XMFLOAT3 basePos, XMFLOAT3 size)
 {
 	center_ = basePos;
 	size_ = size;
+	rotate_ = { 0,0,0 };
 	type_ = COLLIDER_BOX;
 
 	//リリース時は判定枠は表示しない
 #ifdef _DEBUG
 	//テスト表示用判定枠
-	hDebugModel_ = Model::Load("Assets\\DebugCollision/boxCollider.fbx");
+	hDebugModel_ = Model::Load("Assets/DebugCollision/boxCollider.fbx");
+#endif
+}
+
+BoxCollider::BoxCollider(XMFLOAT3 basePos, XMFLOAT3 size, XMFLOAT3 rotate)
+{
+	center_ = basePos;
+	size_ = size;
+	rotate_ = rotate;
+	type_ = COLLIDER_BOX;
+
+	//リリース時は判定枠は表示しない
+#ifdef _DEBUG
+	//テスト表示用判定枠
+	hDebugModel_ = Model::Load("Assets/DebugCollision/boxCollider.fbx");
 #endif
 }
 

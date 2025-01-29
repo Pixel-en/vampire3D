@@ -9,6 +9,7 @@ class Laser :public WeaponObject
 	class cLaser : public WeaponObject
 	{
 		float angle_;
+		float BiggerWaittimer_;	//レーザーが大きくなるまでのタイマー
 
 		void Move() override;
 

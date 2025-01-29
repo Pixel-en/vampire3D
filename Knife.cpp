@@ -65,7 +65,8 @@ void Knife::cKnife::Move()
 		varia_.AttackTime_ -= Time::DeltaTime();
 	}
 
-	XMVECTOR pFront = { 0,0,1,0 };
+	XMVECTOR pFront = { 0,0,1,0 };;
+
 	XMMATRIX rotup = XMMatrixRotationX(XMConvertToRadians(angleX_));
 	pFront = XMVector3Normalize(XMVector3TransformCoord(pFront, rotup));
 
