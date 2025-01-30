@@ -225,7 +225,6 @@ void Player::Move()
 	//Debug::Log(Camera::GetPosition());
 	//Debug::Log(",tar:");
 	//Debug::Log(Camera::GetTarget(),true);
-
 }
 
 void Player::Attack()

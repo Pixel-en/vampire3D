@@ -1,0 +1,123 @@
+#include "Missile.h"
+#include "EnemySpawn.h"
+
+void Missile::AddBullet()
+{
+	Missile::cMissile* c = Instantiate<Missile::cMissile>(GetParent());
+	c->SetStatus(status_);
+	//止まっているなら残りの時間+バッファ
+	if (!List_[0]->isMove()) {
+		c->SetResetTimer(List_[0]->GetResetTimer() + (List_.size() * BUFFER));
+	}
+	//動いているなら残りの攻撃持続時間+リセットタイム+バッファ
+	else {
+		c->SetResetTimer(List_[0]->GetResetTimer() + List_[0]->GetAttackTimer() + (List_.size() * BUFFER));
+	}
+	List_.push_back(c);
+}
+
+Missile::Missile(GameObject* parent)
+	:WeaponObject(parent,"Missile")
+{
+	Missile::cMissile* c = Instantiate<Missile::cMissile>(GetParent());
+	List_.push_back(c);
+}
+
+Missile::~Missile()
+{
+}
+
+void Missile::Initialize()
+{
+}
+
+void Missile::Update()
+{
+	for (int i = 0; i < List_.size(); i++) {
+		if (List_[i]->GetLv() != status_.Lv_)
+			List_[i]->SetNextStatus(status_);
+	}
+}
+
+void Missile::Draw()
+{
+}
+
+void Missile::Release()
+{
+}
+
+//-------------------------------
+
+void Missile::cMissile::Move()
+{
+	XMVECTOR pFront = { 0,0,1,0 };
+	XMVECTOR dir;
+
+	if (UpTimer_ < 0.0f) {
+		if (!Search_) {
+			transform_.rotate_.x = 0;
+			targetpos_=searchEnemy();
+			Search_ = true;
+		}
+
+
+	}
+	else {
+		UpTimer_ -= Time::DeltaTime();
+		transform_.rotate_.x = -90;
+		XMMATRIX rot = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
+		dir = XMVector3Normalize(XMVector3TransformCoord(pFront, rot));
+		Search_ = false;
+	}
+
+	transform_.position_ + dir * status_.speed_ * Time::DeltaTime();
+}
+
+void Missile::cMissile::ResetSub()
+{
+	UpTimer_ = 0.5f;
+}
+
+XMFLOAT3 Missile::cMissile::searchEnemy()
+{
+	EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
+	std::vector<Enemy*> List = ep->GetEnemyList();
+
+	float distance = fabs(varia_.originPos_ - List[0]->GetPosition());
+	int num = 0;
+	for (int i = 1; i < List.size(); i++) {
+		float subdis = fabs(varia_.originPos_ - List[i]->GetPosition());
+		if (distance > subdis) {
+			distance = subdis;
+			num = i;
+		}
+	}
+	return List[num]->GetPosition();
+}
+
+Missile::cMissile::cMissile(GameObject* parent)
+	:WeaponObject(parent, "cMissile")
+{
+}
+
+Missile::cMissile::~cMissile()
+{
+}
+
+void Missile::cMissile::Initialize()
+{
+	hModel_ = Model::Load("Assets\\Model\\Missile.fbx");
+	if (hModel_ < 0)
+		MessageBox(NULL, "モデルが見つかりません", objectName_.c_str(), MB_OK);
+}
+
+void Missile::cMissile::Draw()
+{
+	Model::SetTransform(hModel_, transform_);
+	Model::Draw(hModel_);
+}
+
+void Missile::cMissile::Release()
+{
+}

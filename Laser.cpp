@@ -102,9 +102,8 @@ void Laser::cLaser::ResetSub()
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
 
 	XMVECTOR dir = XMVector3TransformCoord(pFront, rot);
-	//dir = XMVector3Normalize(dir);	//方向ベクトル
-	dir = XMVectorSetX(dir,1);
-	////スタート位置を決める
+	dir = XMVector3Normalize(dir);	//方向ベクトル
+	//スタート位置を決める
 	laserStart_.position_ += dir * 2;
 	//オブジェクトの座標を先端と後端の中点にする
 	transform_.position_ = laserStart_.position_ + dir * (status_.Range_ / 2.0f);
@@ -118,7 +117,7 @@ void Laser::cLaser::ResetSub()
 	//レーザーの判定の大きさと向きの変更
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
 		(*itr)->ChengeSize({ status_.size_,status_.size_,(float)status_.Range_ });
-		(*itr)->SetRotate(transform_.rotate_);
+		//(*itr)->SetRotate(transform_.rotate_);
 	}
 }
 

@@ -1,29 +1,29 @@
 #pragma once
 #include "WeaponObject.h"
 
-
-//cSpikeOrbを管理する(レベルなど)
-class SpikeOrb :public WeaponObject
+//cMissileを管理する(レベルなど)
+class Missile :public WeaponObject
 {
 
 	//実際に動くオブジェクト
-	class cSpikeOrb : public WeaponObject
+	class cMissile : public WeaponObject
 	{
-		float angle_;
+		float UpTimer_;	//上昇用のタイマー
+		bool Search_;
+		XMFLOAT3 targetpos_;
 
-		Transform Rottransform_;
 
 		void Move() override;
 
 		void ResetSub() override;
 
-		void AddBullet() override {};
+		void AddBullet()  override {};
 
-		void test();
+		XMFLOAT3 searchEnemy();
 	public:
-		cSpikeOrb(GameObject* parent);
+		cMissile(GameObject* parent);
 
-		~cSpikeOrb();
+		~cMissile();
 
 		//初期化
 		void Initialize() override;
@@ -36,20 +36,16 @@ class SpikeOrb :public WeaponObject
 
 		//開放
 		void Release() override;
-
-		void SetAngle(int _degrees) { angle_ = _degrees; };
 	};
 
-	std::vector<SpikeOrb::cSpikeOrb*> List_;
+	std::vector<Missile::cMissile*> List_;
 
 	void AddBullet() override;
 
-	//角度を調整する
-	void AdjustedAngle();
 public:
-	SpikeOrb(GameObject* parent);
+	Missile(GameObject* parent);
 
-	~SpikeOrb();
+	~Missile();
 
 	//初期化
 	void Initialize() override;

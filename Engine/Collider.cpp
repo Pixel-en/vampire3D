@@ -95,9 +95,4 @@ void Collider::Draw(XMFLOAT3 position)
 	transform.Calclation();
 	Model::SetTransform(hDebugModel_, transform);
 	Model::Draw(hDebugModel_);
-
-	if (type_ == 0) {
-		Debug::Log("box");
-		Debug::Log(transform.position_, true);
-	}
 }

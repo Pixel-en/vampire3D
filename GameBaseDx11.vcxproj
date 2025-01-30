@@ -159,6 +159,7 @@
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="Laser.cpp" />
+    <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PoisonThrow.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Knife.h" />
     <ClInclude Include="Laser.h" />
+    <ClInclude Include="Missile.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PoisonThrow.h" />

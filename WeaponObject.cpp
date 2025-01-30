@@ -137,6 +137,8 @@ void WeaponObject::Update()
 
 void WeaponObject::Draw()
 {
+	Model::SetTransform(hModel_, transform_);
+	Model::Draw(hModel_);
 }
 
 void WeaponObject::Release()
