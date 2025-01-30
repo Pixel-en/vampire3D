@@ -55,13 +55,26 @@ void Missile::cMissile::Move()
 	XMVECTOR dir;
 
 	if (UpTimer_ < 0.0f) {
-		if (!Search_) {
-			transform_.rotate_.x = 0;
-			targetpos_=searchEnemy();
-			Search_ = true;
+		
+		if (varia_.AttackTime_ < 0.0f) {
+			Stop();
+			return;
+		}
+		else {
+			varia_.AttackTime_ -= Time::DeltaTime();
 		}
 
-
+		if (!Search_) {
+			transform_.rotate_.x = 0;
+			targetpos_ = searchEnemy();;
+			Search_ = true;
+			varia_.originPos_ = transform_.position_;
+		}
+		XMVECTOR origin = XMLoadFloat3(&varia_.originPos_);
+		XMVECTOR target = XMLoadFloat3(&targetpos_);
+		dir = target - origin;
+		dir = XMVector3Normalize(dir);
+		transform_.rotate_.z += 5;
 	}
 	else {
 		UpTimer_ -= Time::DeltaTime();
@@ -71,12 +84,23 @@ void Missile::cMissile::Move()
 		Search_ = false;
 	}
 
-	transform_.position_ + dir * status_.speed_ * Time::DeltaTime();
+	transform_.position_ += dir * status_.speed_ * Time::DeltaTime();
 }
 
 void Missile::cMissile::ResetSub()
 {
 	UpTimer_ = 0.5f;
+	transform_.rotate_.z = 0;
+}
+
+void Missile::cMissile::Penetration()
+{
+	if (varia_.peneCount_ == -1)
+		return;
+
+	varia_.peneCount_--;
+	if (varia_.peneCount_ <= 0)
+		Stop();
 }
 
 XMFLOAT3 Missile::cMissile::searchEnemy()

@@ -34,6 +34,9 @@ protected:
 
 	float screenWidth;		//スクリーンの幅
 	float screenHeight;		//スクリーンの高さ
+	
+	//ターゲットの判定する相手
+	std::string				targetName_;
 
 public:
 	//コンストラクタ

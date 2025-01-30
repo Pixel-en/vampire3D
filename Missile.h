@@ -19,6 +19,8 @@ class Missile :public WeaponObject
 
 		void AddBullet()  override {};
 
+		void Penetration() override;
+
 		XMFLOAT3 searchEnemy();
 	public:
 		cMissile(GameObject* parent);
@@ -58,5 +60,6 @@ public:
 
 	//ŠJ•ú
 	void Release() override;
+
 };
 

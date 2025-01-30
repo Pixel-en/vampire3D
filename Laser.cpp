@@ -66,7 +66,7 @@ void Laser::Release()
 void Laser::cLaser::Move()
 {
 	//演出のためレーザーを回す
-	transform_.rotate_.z -= LASERANGLERATE;
+	transform_.rotate_.y -= LASERANGLERATE;
 
 	//大きくなるまでのタイマー
 	if (BiggerWaittimer_ < 0.0) {
@@ -135,9 +135,12 @@ void Laser::cLaser::Initialize()
 	hModel_ = Model::Load("Assets\\Model\\Laser.fbx");
 	assert(hModel_ >= 0);
 
-	//コライダー
-	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 0, 0), XMFLOAT3(status_.size_, status_.size_, status_.Range_));
-	AddCollider(collision);
+	for (int i = 0; i < 10;i++) {
+		SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 1 + status_.size_ * i), status_.size_);
+		AddCollider(collision);
+	}
+
+	targetName_ = "Enemy";
 }
 
 void Laser::cLaser::Draw()

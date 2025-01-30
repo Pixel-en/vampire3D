@@ -16,7 +16,7 @@ GameObject::GameObject(GameObject* parent) :
 
 //コンストラクタ（標準）
 GameObject::GameObject(GameObject* parent, const std::string& name)
-	: pParent_(parent), objectName_(name)
+	: pParent_(parent), objectName_(name),targetName_("")
 {
 	childList_.clear();
 	state_ = { 0, 1, 1, 0, 1 };
@@ -343,6 +343,12 @@ void GameObject::Collision(GameObject* pTarget)
 	if (pTarget == nullptr || this == pTarget)
 	{
 		return;
+	}
+
+	if (targetName_ != "") {
+		if (targetName_ != pTarget->objectName_) {
+			return;
+		}
 	}
 
 	if (this->IsClash() && pTarget->IsClash()) {

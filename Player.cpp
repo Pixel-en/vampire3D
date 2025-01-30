@@ -14,6 +14,7 @@
 
 #include "SpikeOrb.h"
 #include "Laser.h"
+#include "Missile.h"
 
 //‚Æ‚è‚ ‚¦‚¸UŒ‚‚Í3‚Âì‚é
 //’ÊíËŒ‚
@@ -74,6 +75,7 @@ void Player::Initialize()
 	//MyWeaponList_.push_back(k);
 	Instantiate<Laser>(GetParent());
 	//Instantiate<SpikeOrb>(GetParent());
+	Instantiate<Missile>(GetParent());
 }
 
 void Player::SuperUpdate()
