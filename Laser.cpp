@@ -66,7 +66,7 @@ void Laser::Release()
 void Laser::cLaser::Move()
 {
 	//演出のためレーザーを回す
-	transform_.rotate_.y -= LASERANGLERATE;
+	transform_.rotate_.z -= LASERANGLERATE;
 
 	//大きくなるまでのタイマー
 	if (BiggerWaittimer_ < 0.0) {
@@ -115,9 +115,10 @@ void Laser::cLaser::ResetSub()
 	BiggerWaittimer_ = LASERWAITTIME;
 
 	//レーザーの判定の大きさと向きの変更
+	int count = 0;
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
-		(*itr)->ChengeSize({ status_.size_,status_.size_,(float)status_.Range_ });
-		//(*itr)->SetRotate(transform_.rotate_);
+		(*itr)->SetPosition(XMFLOAT3(0, 0, count * status_.size_*2));
+		count++;
 	}
 }
 
@@ -135,8 +136,9 @@ void Laser::cLaser::Initialize()
 	hModel_ = Model::Load("Assets\\Model\\Laser.fbx");
 	assert(hModel_ >= 0);
 
-	for (int i = 0; i < 10;i++) {
-		SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 1 + status_.size_ * i), status_.size_);
+
+	for (int i = 0; i < 13;i++) {
+		SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
 		AddCollider(collision);
 	}
 

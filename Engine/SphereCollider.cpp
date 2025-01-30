@@ -9,21 +9,6 @@ SphereCollider::SphereCollider(XMFLOAT3 center, float radius)
 {
 	center_ = center;
 	size_ = XMFLOAT3(radius, radius, radius);
-	rotate_ = { 0,0,0 };
-	type_ = COLLIDER_CIRCLE;
-
-	//リリース時は判定枠は表示しない
-#ifdef _DEBUG
-	//テスト表示用判定枠
-	hDebugModel_ = Model::Load("Assets/DebugCollision/sphereCollider.fbx");
-#endif
-}
-
-SphereCollider::SphereCollider(XMFLOAT3 center, float radius, XMFLOAT3 rotate)
-{
-	center_ = center;
-	size_ = XMFLOAT3(radius, radius, radius);
-	rotate_ = rotate;
 	type_ = COLLIDER_CIRCLE;
 
 	//リリース時は判定枠は表示しない

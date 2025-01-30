@@ -30,7 +30,6 @@ protected:
 	ColliderType	type_;			//種類
 	XMFLOAT3		center_;		//中心位置（ゲームオブジェクトの原点から見た位置）
 	XMFLOAT3		size_;			//判定サイズ（幅、高さ、奥行き）
-	XMFLOAT3		rotate_;		//回転
 	int				hDebugModel_;	//デバッグ表示用のモデルのID
 
 public:
@@ -76,6 +75,6 @@ public:
 
 	void ChengeSize(XMFLOAT3 _size) { size_ = _size; }
 
-	void SetRotate(XMFLOAT3 rotate) { rotate_ = rotate; }
+	void SetPosition(XMFLOAT3 _center) { center_ = _center; };
 };
 
