@@ -34,6 +34,9 @@ class Laser :public WeaponObject
 		void Release() override;
 
 		void SetAngle(int _degrees) { angle_ = _degrees; };
+
+		//コライダーをつける(特殊のためInitでやらない)
+		void SetCollider();
 	};
 
 	std::vector<Laser::cLaser*> List_;

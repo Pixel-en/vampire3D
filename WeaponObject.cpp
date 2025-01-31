@@ -69,6 +69,9 @@ void WeaponObject::StatusInitGet()
 WeaponObject::WeaponObject(GameObject* parent)
 	:GameObject(parent, ""), hModel_(-1)
 {
+
+	targetName_ = "";
+
 	status_.Lv_ = -1;
 	status_.damege_ = 0;
 	status_.speed_ = 0;
@@ -90,7 +93,7 @@ WeaponObject::WeaponObject(GameObject* parent)
 WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
 	:GameObject(parent, name), hModel_(-1)
 {
-
+	targetName_ = "";
 
 	status_.Lv_ = -1;
 	status_.damege_ = 0;

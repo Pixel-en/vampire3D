@@ -39,5 +39,10 @@ public:
 	{
 		return XMFLOAT3(a.x + b.x, a.y + b.y, a.z + b.z);
 	}
+
+	static XMFLOAT3 Float3Sub(XMFLOAT3 a, XMFLOAT3 b)
+	{
+		return XMFLOAT3(a.x - b.x, a.y - b.y, a.z - b.z);
+	}
 };
 

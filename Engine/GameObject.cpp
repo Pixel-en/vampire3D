@@ -6,17 +6,19 @@
 GameObject::GameObject(void) :
 	GameObject(nullptr, "")
 {
+	targetName_ = "";
 }
 
 //コンストラクタ（名前なし）
 GameObject::GameObject(GameObject* parent) :
 	GameObject(parent, "")
 {
+	targetName_ = "";
 }
 
 //コンストラクタ（標準）
 GameObject::GameObject(GameObject* parent, const std::string& name)
-	: pParent_(parent), objectName_(name),targetName_("")
+	: pParent_(parent), objectName_(name), targetName_("")
 {
 	childList_.clear();
 	state_ = { 0, 1, 1, 0, 1 };
@@ -199,7 +201,7 @@ bool GameObject::SwapChildList(std::string name, int num)
 			childList_.erase(itr);
 
 			auto it = childList_.begin();
-			std::advance(it, num-1);
+			std::advance(it, num - 1);
 			childList_.insert(it, obj);
 			return true;
 		}
@@ -345,36 +347,34 @@ void GameObject::Collision(GameObject* pTarget)
 		return;
 	}
 
-	if (targetName_ != "") {
-		if (targetName_ != pTarget->objectName_) {
-			return;
-		}
-	}
+	//ターゲット指定がない又は相手がターゲットであるとき
+	if (this->targetName_ == "" || this->targetName_ == pTarget->GetObjectName()) {
 
-	if (this->IsClash() && pTarget->IsClash()) {
+		if (this->IsClash() && pTarget->IsClash()) {
 
-		//自分とpTargetのコリジョン情報を使って当たり判定
-		//1つのオブジェクトが複数のコリジョン情報を持ってる場合もあるので二重ループ
-		for (auto i = this->colliderList_.begin(); i != this->colliderList_.end(); i++)
-		{
-			for (auto j = pTarget->colliderList_.begin(); j != pTarget->colliderList_.end(); j++)
+			//自分とpTargetのコリジョン情報を使って当たり判定
+			//1つのオブジェクトが複数のコリジョン情報を持ってる場合もあるので二重ループ
+			for (auto i = this->colliderList_.begin(); i != this->colliderList_.end(); i++)
 			{
-				//途中で判定しなくなったら終わる
-				if (!this->IsClash())
-					return;
+				for (auto j = pTarget->colliderList_.begin(); j != pTarget->colliderList_.end(); j++)
+				{
+					//途中で判定しなくなったら終わる
+					if (!this->IsClash())
+						return;
+
+					if (!pTarget->IsClash())
+						break;
+
+					if ((*i)->IsHit(*j))
+					{
+						//当たった
+						this->OnCollision(pTarget);
+					}
+				}
 
 				if (!pTarget->IsClash())
 					break;
-
-				if ((*i)->IsHit(*j))
-				{
-					//当たった
-					this->OnCollision(pTarget);
-				}
 			}
-			
-			if (!pTarget->IsClash())
-				break;
 		}
 	}
 

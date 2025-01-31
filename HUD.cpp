@@ -5,8 +5,12 @@
 
 #include "Player.h"
 #include "EnemySpawn.h"
+
 #include "Knife.h"
 #include "PoisonThrow.h"
+#include "SpikeOrb.h"
+#include "Missile.h"
+#include "Laser.h"
 
 namespace {
 	namespace RADAR {
@@ -314,10 +318,40 @@ void HUD::ObtainWeapon(int _num)
 	}
 		break;
 	case 2:
+	{
+		SpikeOrb* spike = GetParent()->FindGameObject<SpikeOrb>();
+		if (spike == nullptr) {
+			spike = Instantiate<SpikeOrb>(GetParent());
+			player->MyWeaponList_.push_back(spike);
+		}
+		else {
+			spike->LevelUp(WeaponList_[_num].instruction_.front());
+		}
+	}
 		break;
-	case 3:
+	case 3:	
+	{
+		Missile* missile = GetParent()->FindGameObject<Missile>();
+		if (missile == nullptr) {
+			missile = Instantiate<Missile>(GetParent());
+			player->MyWeaponList_.push_back(missile);
+		}
+		else {
+			missile->LevelUp(WeaponList_[_num].instruction_.front());
+		}
+	}
 		break;
 	case 4:
+	{
+		Laser* laser = GetParent()->FindGameObject<Laser>();
+		if (laser == nullptr) {
+			laser = Instantiate<Laser>(GetParent());
+			player->MyWeaponList_.push_back(laser);
+		}
+		else {
+			laser->LevelUp(WeaponList_[_num].instruction_.front());
+		}
+	}
 		break;
 	case 5:
 		break;

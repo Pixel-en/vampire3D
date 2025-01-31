@@ -11,6 +11,7 @@ void Laser::AddBullet()
 {
 	Laser::cLaser* c = Instantiate<Laser::cLaser>(GetParent());
 	c->SetStatus(status_);
+	c->SetCollider();
 	//止まっているなら残りの時間+バッファ
 	if (!List_[0]->isMove()) {
 		c->SetResetTimer(List_[0]->GetResetTimer() + (List_.size() * BUFFER));
@@ -35,6 +36,8 @@ Laser::Laser(GameObject* parent)
 	:WeaponObject(parent, "Laser")
 {
 	Laser::cLaser* c = Instantiate<Laser::cLaser>(GetParent());
+	c->SetStatus(status_);
+	c->SetCollider();
 	List_.push_back(c);
 }
 
@@ -114,10 +117,12 @@ void Laser::cLaser::ResetSub()
 	//レーザーの拡大開始するまでのタイマー
 	BiggerWaittimer_ = LASERWAITTIME;
 
-	//レーザーの判定の大きさと向きの変更
+	//レーダーのコライダーの位置を合わせる
 	int count = 0;
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
-		(*itr)->SetPosition(XMFLOAT3(0, 0, count * status_.size_*2));
+		//ワールド座標にするためにtransform_を引く
+		//transform_-レーダーのスタート+レーダーの端合わせ+(方向ベクトル*位置合わせカウント*大きさ*バッファ(直径))
+		(*itr)->SetPosition(Transform::Float3Sub(transform_.position_, laserStart_.position_ + dir + (dir * count * status_.size_ * (status_.size_ * 2))));
 		count++;
 	}
 }
@@ -136,12 +141,6 @@ void Laser::cLaser::Initialize()
 	hModel_ = Model::Load("Assets\\Model\\Laser.fbx");
 	assert(hModel_ >= 0);
 
-
-	for (int i = 0; i < 13;i++) {
-		SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
-		AddCollider(collision);
-	}
-
 	targetName_ = "Enemy";
 }
 
@@ -153,4 +152,14 @@ void Laser::cLaser::Draw()
 
 void Laser::cLaser::Release()
 {
+}
+
+void Laser::cLaser::SetCollider()
+{
+	ClearCollider();
+
+	for (int i = 0; i < status_.Range_ / 2; i++) {
+		SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
+		AddCollider(collision);
+	}
 }
