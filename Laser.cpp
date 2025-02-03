@@ -118,12 +118,13 @@ void Laser::cLaser::ResetSub()
 	BiggerWaittimer_ = LASERWAITTIME;
 
 	//レーダーのコライダーの位置を合わせる
-	int count = 0;
+
+}
+
+void Laser::cLaser::CollisionSizeSet()
+{
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
-		//ワールド座標にするためにtransform_を引く
-		//transform_-レーダーのスタート+レーダーの端合わせ+(方向ベクトル*位置合わせカウント*大きさ*バッファ(直径))
-		(*itr)->SetPosition(Transform::Float3Sub(transform_.position_, laserStart_.position_ + dir + (dir * count * status_.size_ * (status_.size_ * 2))));
-		count++;
+		(*itr)->ChengeSize(status_.size_ / 2.0f);
 	}
 }
 
@@ -157,9 +158,8 @@ void Laser::cLaser::Release()
 void Laser::cLaser::SetCollider()
 {
 	ClearCollider();
-
-	for (int i = 0; i < status_.Range_ / 2; i++) {
-		SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
-		AddCollider(collision);
-	}
+	//コライダーセット
+	//for(int )
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_ / 2.0f);
+	AddCollider(collision);
 }

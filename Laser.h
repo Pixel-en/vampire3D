@@ -16,6 +16,8 @@ class Laser :public WeaponObject
 		void ResetSub() override;
 
 		void AddBullet()  override {};
+
+		void CollisionSizeSet() override;
 	public:
 		cLaser(GameObject* parent);
 

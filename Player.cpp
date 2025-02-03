@@ -72,8 +72,8 @@ void Player::Initialize()
 	AddCollider(collision);
 
 	Knife* k = Instantiate<Knife>(GetParent());
-	MyWeaponList_.push_back(k);
-	//Instantiate<Laser>(GetParent());
+	//MyWeaponList_.push_back(k);
+	Instantiate<Laser>(GetParent());
 	//Instantiate<SpikeOrb>(GetParent());
 	//Instantiate<Missile>(GetParent());
 }

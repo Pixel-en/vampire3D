@@ -12,9 +12,7 @@ void WeaponObject::Reset()
 	if (status_.Lv_ < nextStatus_.Lv_) {
 		status_ = nextStatus_;
 
-		for (auto itr = colliderList_.begin(); itr != colliderList_.end();itr++) {
-			(*itr)->ChengeSize(status_.size_);
-		}
+		CollisionSizeSet();
 	}
 
 
@@ -63,6 +61,13 @@ void WeaponObject::StatusInitGet()
 
 	if (player->WeaponStateWrite(objectName_, status_)) {
 		originStatus_ = status_;
+	}
+}
+
+void WeaponObject::CollisionSizeSet()
+{
+	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
+		(*itr)->ChengeSize(status_.size_);
 	}
 }
 

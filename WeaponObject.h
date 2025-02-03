@@ -71,7 +71,7 @@ protected:
 
 	virtual void StatusInitGet();
 
-
+	virtual void CollisionSizeSet();
 public:
 	virtual void LevelUp(std::string str);
 
