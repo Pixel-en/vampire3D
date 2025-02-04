@@ -99,32 +99,28 @@ void Laser::cLaser::Move()
 
 void Laser::cLaser::ResetSub()
 {
-	Transform laserStart_ = transform_;
-	XMVECTOR pFront = { 0,0,1,0 };
-	//プレイヤーの向いている方向に回転
+	XMFLOAT3 StartPos = transform_.position_;
+
+	//前方向ベクトル
+	XMVECTOR Front = { 0,0,1,0 };
+	//プレイヤーの角度分回転
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
+	//回転と正規化
+	Front = XMVector3Normalize(XMVector3TransformCoord(Front, rot));
 
-	XMVECTOR dir = XMVector3TransformCoord(pFront, rot);
-	dir = XMVector3Normalize(dir);	//方向ベクトル
-	//スタート位置を決める
-	laserStart_.position_ += dir * 2;
-	//オブジェクトの座標を先端と後端の中点にする
-	transform_.position_ = laserStart_.position_ + dir * (status_.Range_ / 2.0f);
-	//大きさを攻撃距離倍する
-	transform_.scale_ = { LASERSTARTSIZE,LASERSTARTSIZE, transform_.scale_.z * status_.Range_ };
-	//レーザーの回る角度を0にする
-	transform_.rotate_.z = 0;
-	//レーザーの拡大開始するまでのタイマー
-	BiggerWaittimer_ = LASERWAITTIME;
+	StartPos += Front * 2;
 
-	//レーダーのコライダーの位置を合わせる
-
+	transform_.position_ = StartPos + Front * (status_.Range_ / 2.0f);
+	transform_.scale_ = { LASERSTARTSIZE,LASERSTARTSIZE ,transform_.scale_.z * status_.Range_ };
+	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
+		(*itr)->SetPosition(Transform::Float3Sub(StartPos, GetWorldPosition()));
+	}
 }
 
 void Laser::cLaser::CollisionSizeSet()
 {
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
-		(*itr)->ChengeSize(status_.size_ / 2.0f);
+		(*itr)->ChengeSize(1);
 	}
 }
 
@@ -160,6 +156,6 @@ void Laser::cLaser::SetCollider()
 	ClearCollider();
 	//コライダーセット
 	//for(int )
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_ / 2.0f);
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1);
 	AddCollider(collision);
 }
