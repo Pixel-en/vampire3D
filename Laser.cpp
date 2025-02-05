@@ -106,22 +106,27 @@ void Laser::cLaser::ResetSub()
 	//プレイヤーの角度分回転
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
 	//回転と正規化
-	Front = XMVector3Normalize(XMVector3TransformCoord(Front, rot));
-
-	StartPos += Front * 2;
-
-	transform_.position_ = StartPos + Front * (status_.Range_ / 2.0f);
+	XMVECTOR dir = XMVector3Normalize(XMVector3TransformCoord(Front, rot));
+	//初期値をプレイヤーの少し前に
+	StartPos += dir * 2;
+	//発射原点からレーザー全長の半分にポジションを設定
+	transform_.position_ = StartPos + dir * (status_.Range_ / 2.0f);
+	//初期の大きさに変更
 	transform_.scale_ = { LASERSTARTSIZE,LASERSTARTSIZE ,transform_.scale_.z * status_.Range_ };
+
+	int count = 0;
+	//コライダーの位置を変更
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
-		(*itr)->SetPosition(Transform::Float3Sub(StartPos, GetWorldPosition()));
+		//ローカルポジションで出るので先に加算される分を引いてワールドポジションにしておく
+		//発射原点+(方向*コライダーの大きさ(コライダーの端と原点を合わせる))+(方向*コライダーの大きさの2つ分*何個目か(間隔をあける))
+		(*itr)->SetPosition(Transform::Float3Sub(StartPos+(dir * status_.size_ / 2.0f)+(dir*status_.size_*count), GetWorldPosition()));
+		count++;
 	}
 }
 
 void Laser::cLaser::CollisionSizeSet()
 {
-	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
-		(*itr)->ChengeSize(1);
-	}
+	SetCollider();
 }
 
 Laser::cLaser::cLaser(GameObject* parent)
@@ -155,7 +160,8 @@ void Laser::cLaser::SetCollider()
 {
 	ClearCollider();
 	//コライダーセット
-	//for(int )
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 1);
-	AddCollider(collision);
+	for (int i = 0; i < status_.Range_ / status_.size_; i++) {
+		SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_ / 2.0f);
+		AddCollider(collision);
+	}
 }
