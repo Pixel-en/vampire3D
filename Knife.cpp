@@ -86,6 +86,27 @@ void Knife::cKnife::Move()
 void Knife::cKnife::ResetSub()
 {
 	//カメラアングルについて考えてみて
+
+	Player* player = GetRootJob()->FindGameObject<Player>();
+	//プレイヤーの視点の位置とみている場所をとる
+	XMVECTOR pos = XMVector3Normalize(XMVectorSet(0, 0, 1, 0));
+	XMVECTOR target = XMVector3Normalize(XMLoadFloat3(&player->LookTarget_));
+	//内積をとって角度を出す
+	float dot = XMVectorGetX(XMVector3Dot(pos, target));
+	dot = std::clamp(dot, -1.0f, 1.0f);
+	float angle = acos(dot);
+
+	XMVECTOR cross = XMVector3Cross(pos, target);
+	cross = XMVector3Normalize(cross);
+	if (XMVectorGetX(cross) >= 0) {
+		angleX_ = XMConvertToDegrees(angle);
+	}
+	else {
+		angleX_ = -XMConvertToDegrees(angle);
+	}
+	angleX_;
+	transform_.position_ = player->LookPos_;
+
 }
 
 Knife::cKnife::cKnife(GameObject* parent)

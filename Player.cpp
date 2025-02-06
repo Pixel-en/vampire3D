@@ -23,7 +23,7 @@
 
 namespace {
 	const float MOVESPEED{ 50.0f };
-	const float PLAYERHEIGHT{ 1.0f };
+	const float PLAYERHEIGHT{ 1.5f };
 	const float ROTATESPEED{ 70.0f };
 	const float RAYHEIGHT{ 5.0f };
 	const float GRAVITY{ 9.8f / 2.0f / 60.0f };
@@ -72,10 +72,7 @@ void Player::Initialize()
 	AddCollider(collision);
 
 	Knife* k = Instantiate<Knife>(GetParent());
-	//MyWeaponList_.push_back(k);
-	Instantiate<Laser>(GetParent());
-	//Instantiate<SpikeOrb>(GetParent());
-	//Instantiate<Missile>(GetParent());
+	MyWeaponList_.push_back(k);
 }
 
 void Player::SuperUpdate()
@@ -210,6 +207,7 @@ void Player::Move()
 		onGround_ = true;
 	}
 
+
 	//ÉJÉÅÉâ
 	if (Input::IsKey(DIK_SPACE)) {
 		//òÎ·’ÉÇÅ[Éh
@@ -223,10 +221,10 @@ void Player::Move()
 		Camera::SetTarget({ tarPos.x, tarPos.y + lookHeight_, tarPos.z });
 	}
 
-	//Debug::Log("pos:");
-	//Debug::Log(Camera::GetPosition());
-	//Debug::Log(",tar:");
-	//Debug::Log(Camera::GetTarget(),true);
+	XMFLOAT3 tar = { 0,0,0 };
+	XMStoreFloat3(&tar, rotCamtarVec);
+	LookPos_ = { transform_.position_.x,transform_.position_.y + PLAYERHEIGHT,transform_.position_.z };
+	LookTarget_ = { tar.x, tar.y + lookHeight_-PLAYERHEIGHT, tar.z };
 }
 
 void Player::Attack()

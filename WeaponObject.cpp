@@ -209,7 +209,7 @@ void WeaponObject::LevelUp(std::string str)
 			}
 			break;
 		case 'S':
-			status_.size_ += originStatus_.size_ * (1.0 + val);
+			status_.size_ += originStatus_.size_ * val;
 			break;
 		case 'B':
 			for (int i = 0; i < val; i++)

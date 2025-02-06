@@ -217,7 +217,7 @@ void HUD::LevelInitialize()
 		return;
 
 	for (int i = 1; i < csv.GetHeight(); i++) {
-		WeaponList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i) });
+		WeaponList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i)});
 		//pop_backができるので逆から入れてみる
 		for (int j = WeaponList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
 			WeaponList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));
@@ -279,9 +279,23 @@ void HUD::LevelDraw()
 		Image::SetTransform(hLevelCursor_, LCursorTransform_);
 		Image::Draw(hLevelCursor_);
 
+		Player* player = GetParent()->FindGameObject<Player>();
+
+		//レベルアップで選択できる武器
 		auto itr = RollListNum_.begin();
 		for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
-			ptext_->Draw(900, 150 + (i * 50), WeaponList_[ (*std::next(itr, i)) ].name_.c_str());
+			std::string level = "new";
+
+			//武器の名前
+			ptext_->Draw(800, 150 + (i * 50), WeaponList_[ (*std::next(itr, i)) ].name_.c_str());
+			//武器のレベル
+			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
+				if (WeaponList_[(*std::next(itr, i))].name_ == player->MyWeaponList_[j]->GetObjectName()) {
+					level = std::to_string(player->MyWeaponList_[j]->GetLv() + 1);
+					break;
+				}
+			}
+			ptext_->Draw(1000, 150 + (i * 50), level.c_str());
 		}
 	}
 }

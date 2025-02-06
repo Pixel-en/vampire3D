@@ -113,7 +113,6 @@ void Laser::cLaser::ResetSub()
 	transform_.position_ = StartPos + dir * (status_.Range_ / 2.0f);
 	//初期の大きさに変更
 	transform_.scale_ = { LASERSTARTSIZE,LASERSTARTSIZE ,transform_.scale_.z * status_.Range_ };
-
 	int count = 0;
 	//コライダーの位置を変更
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {

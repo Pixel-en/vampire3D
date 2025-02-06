@@ -32,6 +32,9 @@ private:
 public:
 	std::vector<WeaponObject*> MyWeaponList_;
 
+	XMFLOAT3 LookPos_;
+	XMFLOAT3 LookTarget_;
+
 	//武器のステータスを書き込む
 	//引数：name　武器の名前
 	//引数:_state　書き込むステータス
