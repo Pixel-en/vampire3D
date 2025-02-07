@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySpawn.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
@@ -169,6 +170,7 @@
     <ClCompile Include="WeaponObject.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bomb.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawn.h" />
     <ClInclude Include="Engine\Audio.h" />

@@ -67,7 +67,7 @@ void Knife::cKnife::Move()
 
 	XMVECTOR pFront = { 0,0,1,0 };
 
-	XMMATRIX rotup = XMMatrixRotationX(XMConvertToRadians(angleX_));
+	XMMATRIX rotup = XMMatrixRotationX(angleX_);
 	pFront = XMVector3Normalize(XMVector3TransformCoord(pFront, rotup));
 
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
@@ -85,26 +85,27 @@ void Knife::cKnife::Move()
 
 void Knife::cKnife::ResetSub()
 {
-	//カメラアングルについて考えてみて
 
 	Player* player = GetRootJob()->FindGameObject<Player>();
 	//プレイヤーの視点の位置とみている場所をとる
-	XMVECTOR pos = XMVector3Normalize(XMVectorSet(0, 0, 1, 0));
 	XMVECTOR target = XMVector3Normalize(XMLoadFloat3(&player->LookTarget_));
+	//方向を合わせる
+	XMVECTOR pos = XMVector3Normalize(XMVectorSet(XMVectorGetX(target), 0, XMVectorGetZ(target), 0));
 	//内積をとって角度を出す
 	float dot = XMVectorGetX(XMVector3Dot(pos, target));
 	dot = std::clamp(dot, -1.0f, 1.0f);
 	float angle = acos(dot);
 
-	XMVECTOR cross = XMVector3Cross(pos, target);
-	cross = XMVector3Normalize(cross);
-	if (XMVectorGetX(cross) >= 0) {
-		angleX_ = XMConvertToDegrees(angle);
+	//下向いたとき下方向に飛ばす
+	if (XMVectorGetY(pos) - XMVectorGetY(target) > 0) {
+		angleX_ = angle;
 	}
 	else {
-		angleX_ = -XMConvertToDegrees(angle);
+		angleX_ = -angle;
 	}
-	angleX_;
+	//角度に合わせてモデルの角度も変更
+	transform_.rotate_.x = XMConvertToDegrees(angleX_);
+
 	transform_.position_ = player->LookPos_;
 
 }
@@ -132,7 +133,6 @@ void Knife::cKnife::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
 	Model::Draw(hModel_);
-
 }
 
 void Knife::cKnife::Release()

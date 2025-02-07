@@ -27,3 +27,10 @@ void Debug::Log(DirectX::XMFLOAT3 value, bool isLineFeed)
 	sprintf_s(str, "%f,%f,%f", value.x, value.y, value.z );
 	Debug::Log(str, isLineFeed);
 }
+
+void Debug::Log(DirectX::XMVECTOR value, bool isLineFeed)
+{
+	DirectX::XMFLOAT3 val;
+	DirectX::XMStoreFloat3(&val, value);
+	Debug::Log(val, isLineFeed);
+}

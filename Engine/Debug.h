@@ -8,5 +8,6 @@ namespace Debug
 	void Log(float value, bool isLineFeed = false);
 	void Log(std::string value, bool isLineFeed = false);
 	void Log(DirectX::XMFLOAT3 value, bool isLineFeed = false);
+	void Log(DirectX::XMVECTOR value, bool isLineFeed = false);
 };
 
