@@ -5,6 +5,7 @@ namespace {
 	const int SPAWNAREA{ 10 };
 	const int SPAWNAREALIMIT{ 50 };
 	const float SPAWNTIME{ 1.0f };
+	const int SPAWNLIMIT{ 1 };
 }
 
 
@@ -30,28 +31,29 @@ void EnemySpawn::Update()
 		return;
 
 	if (timer <= 0.0) {
-		if (EnemyList_.size() > 200)
-			return;
+		if (EnemyList_.size() < SPAWNLIMIT)
+		{
 
-		Enemy* e = Instantiate<Enemy>(this);
-		//èoåªèÍèäÇåàÇﬂÇÈ
-		int x, z;
-		x = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
-		z = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
-		int signX = rand() % 2;
-		int signZ = rand() % 2;
+			Enemy* e = Instantiate<Enemy>(this);
+			//èoåªèÍèäÇåàÇﬂÇÈ
+			int x, z;
+			x = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
+			z = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
+			int signX = rand() % 2;
+			int signZ = rand() % 2;
 
-		//ïÑçÜÇÇ¬ÇØÇÈ
-		if (signX == 1)
-			x = x * -1;
-		if (signZ == 1)
-			z = z * -1;
+			//ïÑçÜÇÇ¬ÇØÇÈ
+			if (signX == 1)
+				x = x * -1;
+			if (signZ == 1)
+				z = z * -1;
 
-		e->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
-		e->SetEnemyNumber(number_);
-		EnemyList_.push_back(e);
-		timer = SPAWNTIME;
-		number_++;
+			e->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
+			e->SetEnemyNumber(number_);
+			EnemyList_.push_back(e);
+			timer = SPAWNTIME;
+			number_++;
+		}
 	}
 	else
 		timer -= Time::DeltaTime();

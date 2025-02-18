@@ -1,5 +1,6 @@
 #include "Missile.h"
 #include "EnemySpawn.h"
+#include <algorithm>
 
 void Missile::AddBullet()
 {
@@ -66,9 +67,29 @@ void Missile::cMissile::Move()
 
 		if (!Search_) {
 			transform_.rotate_.x = 0;
-			targetpos_ = searchEnemy();;
+			targetpos_ = searchEnemy();
 			Search_ = true;
 			varia_.originPos_ = transform_.position_;
+
+			XMVECTOR pos = XMLoadFloat3(&transform_.position_);
+			XMVECTOR tar = XMLoadFloat3(&targetpos_);
+
+			XMVECTOR distance = XMVector3Normalize(tar - pos);
+
+			float dot = XMVectorGetX(XMVector3Dot(pFront, distance));
+			dot = std::clamp(dot, -1.0f, 1.0f);
+			float angle = acos(dot);
+
+			XMVECTOR cross = XMVector3Cross(distance, pFront);
+			cross = XMVector3Normalize(cross);
+
+			if (XMVectorGetY(cross) >= 0) {
+				transform_.rotate_.y += -XMConvertToDegrees(angle);
+			}
+			else {
+				transform_.rotate_.y += XMConvertToDegrees(angle);
+			}
+			Debug::Log(transform_.rotate_.y, true);
 		}
 		XMVECTOR origin = XMLoadFloat3(&varia_.originPos_);
 		XMVECTOR target = XMLoadFloat3(&targetpos_);
