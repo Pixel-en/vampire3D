@@ -1,5 +1,4 @@
 #include "SpikeOrb.h"
-#include "EnemySpawn.h"
 #include "Player.h"
 
 namespace {

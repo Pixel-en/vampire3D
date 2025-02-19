@@ -8,6 +8,10 @@ class Bomb :public WeaponObject
 	//実際に動くオブジェクト
 	class cBomb : public WeaponObject
 	{
+		bool detonate_;	//起爆したかどうか
+		bool ignite_;	//点火したかどうか
+		float detonateTimer_;	//起爆までの時間
+
 		void Move() override;
 
 		void ResetSub() override;
@@ -29,9 +33,12 @@ class Bomb :public WeaponObject
 
 		//開放
 		void Release() override;
+
+		virtual void OnCollision(GameObject* pTarget) override;
 	};
 
 	std::list<Bomb::cBomb*> List_;
+	int spawncount_;
 
 	void AddBullet() override;
 public:

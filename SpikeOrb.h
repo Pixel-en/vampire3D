@@ -18,8 +18,6 @@ class SpikeOrb :public WeaponObject
 		void ResetSub() override;
 
 		void AddBullet() override {};
-
-		void test();
 	public:
 		cSpikeOrb(GameObject* parent);
 

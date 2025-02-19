@@ -12,14 +12,7 @@
 #include "Knife.h"
 #include "HUD.h"
 
-#include "SpikeOrb.h"
-#include "Laser.h"
-#include "Missile.h"
-
-//‚Æ‚è‚ ‚¦‚¸UŒ‚‚Í3‚Âì‚é
-//’ÊíËŒ‚
-//”ÍˆÍ“àƒ_ƒ[ƒW
-//‰ñ“]
+#include "Bomb.h"
 
 namespace {
 	const float MOVESPEED{ 50.0f };
@@ -73,6 +66,7 @@ void Player::Initialize()
 
 	Knife* k = Instantiate<Knife>(GetParent());
 	MyWeaponList_.push_back(k);
+	Bomb* b = Instantiate<Bomb>(GetParent());
 }
 
 void Player::SuperUpdate()
