@@ -264,6 +264,16 @@ public:
 	void SetScale(XMFLOAT3 scale) { transform_.scale_ = scale; }
 	void SetScale(float x, float y, float z) { SetScale(XMFLOAT3(x, y, z)); }
 
+protected:
+
+	//NULLかどうか調べる(NULLならプログラム終了)
+	//引数：obj 調べるオブジェクト
+	void NullCheck(GameObject* obj);
+
+	//ハンドルが取れているか調べる
+	//引数：handle　調べるハンドル
+	//引数：str　　 エラーメッセージ
+	void HandleCheck(int handle, std::string str);
 
 private:
 
@@ -271,8 +281,6 @@ private:
 	//引数：obj　削除するオブジェクト
 	void KillObjectSub(GameObject* obj);
 
-
-private:
 	//フラグ
 	struct OBJECT_STATE
 	{

@@ -129,12 +129,18 @@ void WeaponObject::Initialize()
 
 void WeaponObject::Update()
 {
+	Player* player = GetRootJob()->FindGameObject<Player>();
+	float hasteBoost = 1.0f;
+	if (player != nullptr) {
+		hasteBoost = player->GetStatus().haste_;
+	}
+
 	if (varia_.allowsMove_) {
 		Move();
 	}
 	//一定時間経過したらリセット
 	else {
-		if (varia_.ReStartTimer_ < 0.0f) {
+		if (varia_.ReStartTimer_*hasteBoost < 0.0f) {
 			Reset();
 		}
 		else {

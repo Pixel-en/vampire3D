@@ -8,6 +8,7 @@ void Knife::AddBullet()
 {
 	Knife::cKnife* c = Instantiate<Knife::cKnife>(GetParent());
 	c->SetStatus(status_);
+	c->CollisionSizeSet();
 	//止まっているなら残りの時間+バッファ
 	if (!List_[0]->isMove()) {
 		c->SetResetTimer(List_[0]->GetResetTimer() + (List_.size() * BUFFER));
@@ -123,7 +124,7 @@ void Knife::cKnife::Initialize()
 {
 
 	hModel_ = Model::Load("Assets\\Model\\Knife.fbx");
-	assert(hModel_ >= 0);
+	HandleCheck(hModel_, "ナイフのモデルがない");
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
 	AddCollider(collision);

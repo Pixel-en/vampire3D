@@ -55,7 +55,7 @@ void EXP::Update()
 	XMFLOAT3 pPos = player->GetPosition();
 	float distance = transform_.position_ - pPos;
 
-	if (distance > DISMAX)
+	if (distance > DISMAX * player->GetStatus().collectionRange_)
 		return;
 	XMVECTOR pPosVec = XMLoadFloat3(&pPos);
 	XMVECTOR PosVec = XMLoadFloat3(&transform_.position_);

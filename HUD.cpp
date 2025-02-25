@@ -257,8 +257,8 @@ void HUD::LevelUpdate()
 	levelCursor_ = 0;
 
 	Player* player = GetParent()->FindGameObject<Player>();
-	float current = player->GetCurrentExp();
-	float next = player->GetnextLvExp();
+	float current = player->GetStatus().currentExp_;
+	float next = player->GetStatus().nextLvExp_;
 
 	float ratio = current / next;
 

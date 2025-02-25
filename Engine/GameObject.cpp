@@ -319,6 +319,22 @@ void GameObject::KillObjectSub(GameObject* obj)
 	obj->Release();
 }
 
+void GameObject::NullCheck(GameObject* obj)
+{
+	if (obj == nullptr) {
+		MessageBox(NULL, "オブジェクトがNULL", objectName_.c_str(), MB_OK);
+		exit(0);
+	}
+}
+
+void GameObject::HandleCheck(int handle, std::string str)
+{
+	if (handle < 0) {
+		MessageBox(NULL, str.c_str(), objectName_.c_str(), MB_OK);
+		exit(0);
+	}
+}
+
 
 
 //コライダー（衝突判定）を追加する

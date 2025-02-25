@@ -10,23 +10,28 @@ class Player :public GameObject
 private:
 	struct Status
 	{
-		int hp_;				//体力
-		float speed_;			//移動速度
-		float critical_;		//クリティカル
-		float collectionRange_;	//回収範囲
-		float haste_;			//攻撃頻度
+		//ゲーム中にパワーアップが取得できるもの
+		int hp_;				//体力(実数値)
+		float speed_;			//移動速度(実数値)
+		float strength_;		//攻撃力(割合)
+		int critical_;		//クリティカル率(割合)
+		float collectionRange_;	//回収範囲(割合)
+		float haste_;			//攻撃頻度(割合)
 
-		//内部データ
-		int resist_;					//防御
-		unsigned int level_;			//現在のレベル
-		unsigned int currentExp_;		//今の経験値量
-		unsigned int nextLvExp_;		//次のレベルまでの必要経験値量
-		unsigned long long totalExp_;	//取得した経験値量
+		//できないもの
+		float criticalBoost_;			//クリティカル倍率(割合)
+		float area_;					//攻撃エリア(割合)
+		int resist_;					//防御(実数値)
+		unsigned int level_;			//現在のレベル(実数値)
+		unsigned int currentExp_;		//今の経験値量(実数値)
+		unsigned int nextLvExp_;		//次のレベルまでの必要経験値量(実数値)
+		unsigned long long totalExp_;	//取得した経験値量(実数値)
 	};
 
 	Status status_;
 
-	void WeaponCSVRead();
+	void WeaponCSVLoad();
+	void PlayerStatusLoad();
 
 	std::map<std::string, WeaponObject::Status> WeaponState_;
 public:
@@ -40,9 +45,8 @@ public:
 	//引数:_state　書き込むステータス
 	bool WeaponStateWrite(std::string name,WeaponObject::Status& _state);
 
-	unsigned int GetLevel() { return status_.level_; };
-	unsigned int GetCurrentExp() { return status_.currentExp_; };
-	unsigned int GetnextLvExp() { return status_.nextLvExp_; };
+	Status GetStatus() { return status_; }
+
 private:
 
 	bool onGround_;	//地面についているか
@@ -57,9 +61,6 @@ private:
 
 	//キャラクターの移動
 	void Move();
-
-	//プレイヤーの攻撃
-	void Attack();
 
 public:
 	Player(GameObject* parent);

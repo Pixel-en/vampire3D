@@ -34,10 +34,13 @@ Player::Player(GameObject* parent)
 
 
 	status_.hp_ = 10;
+	status_.strength_ = 1.0f;
 	status_.speed_ = 0;
 	status_.critical_ = 0.0f;
+	status_.criticalBoost_ = 1.2f;
 	status_.collectionRange_ = 30.0f;
 	status_.haste_ = 10.0f;
+	status_.area_ = 1.0f;	
 	status_.resist_ = 0.0;
 	status_.level_ = 1;
 	status_.currentExp_ = 0;
@@ -53,13 +56,14 @@ Player::~Player()
 
 void Player::Initialize()
 {
-	WeaponCSVRead();
+	WeaponCSVLoad();
+	PlayerStatusLoad();
 
 	hModel_ = Model::Load("Assets\\Model\\Player.fbx");
-	assert(hModel_ >= 0);
+	HandleCheck(hModel_, "プレイヤーモデルがない");
 
 	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
-	assert(hImage_ >= 0);
+	HandleCheck(hImage_, "クロスヘアがない");
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
 	AddCollider(collision);
@@ -81,10 +85,9 @@ void Player::SuperUpdate()
 void Player::Update()
 {
 	Move();
-	Attack();
 }
 
-void Player::WeaponCSVRead()
+void Player::WeaponCSVLoad()
 {
 	//プレイヤーで読み込むのがいいのかも
 	CsvReader csv;
@@ -120,6 +123,21 @@ void Player::WeaponCSVRead()
 	}
 }
 
+void Player::PlayerStatusLoad()
+{
+	CsvReader csv;
+	csv.Load("Assets\\CSV\\PlayerStatus.csv");
+	status_.hp_ = csv.GetValue(2, 1);
+	status_.speed_ = csv.GetValue(2, 2);
+	status_.strength_ = csv.GetValue(2, 3);
+	status_.critical_ = csv.GetValue(2, 4);
+	status_.collectionRange_ = csv.GetValue(2, 5);
+	status_.haste_ = csv.GetValue(2, 6);
+	status_.criticalBoost_ = csv.GetValue(2, 7);
+	status_.area_ = csv.GetValue(2, 8);
+	status_.resist_ = csv.GetValue(2, 9);
+}
+
 bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
 {
 	auto itr = WeaponState_.find(name);
@@ -149,11 +167,6 @@ void Player::Move()
 	}
 
 	Gravity = XMVector3Normalize(Gravity);
-
-	if (Input::IsKey(DIK_LSHIFT) || Input::IsKey(DIK_RSHIFT))
-		status_.speed_ = MOVESPEED * 2.0f;
-	else
-		status_.speed_ = MOVESPEED;
 
 	//移動
 	if (Input::IsKey(DIK_W))
@@ -194,6 +207,7 @@ void Player::Move()
 
 	//フィールドからモデルのハンドルをとってくる
 	Field* field = GetParent()->FindGameObject<Field>();
+	NullCheck(field);
 	//レイがあたった距離下げる
 	onGround_ = false;
 	if (field->RayCastField(transform_.position_, RAYHEIGHT, "Player")) {
@@ -218,10 +232,6 @@ void Player::Move()
 	XMStoreFloat3(&tar, rotCamtarVec);
 	LookPos_ = { transform_.position_.x,transform_.position_.y + PLAYERHEIGHT,transform_.position_.z };
 	LookTarget_ = { tar.x, tar.y + lookHeight_-PLAYERHEIGHT, tar.z };
-}
-
-void Player::Attack()
-{
 }
 
 void Player::Draw()
@@ -254,6 +264,7 @@ void Player::AcquisitionEXP(int _exp)
 		status_.currentExp_ -= status_.nextLvExp_;	//余剰分を算出
 
 		HUD* hud = GetRootJob()->FindGameObject<HUD>();
+		NullCheck(hud);
 		hud->LevelUP();
 
 		//次のレベルに必要な経験値を計算

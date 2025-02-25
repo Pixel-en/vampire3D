@@ -1,5 +1,6 @@
 #include "Bomb.h"
 #include "EnemySpawn.h"
+#include "Player.h"
 
 namespace {
 	const int LISTMAX{ 30 };
@@ -26,7 +27,13 @@ void Bomb::Initialize()
 
 void Bomb::Update()
 {
-	if (varia_.ReStartTimer_ < 0.0f) {
+	Player* player = GetRootJob()->FindGameObject<Player>();
+	float hasteBoost = 1.0f;
+	if (player != nullptr) {
+		hasteBoost = player->GetStatus().haste_;
+	}
+
+	if (varia_.ReStartTimer_*hasteBoost < 0.0f) {
 		//ƒŠƒXƒg‚ÌŠi”[”‚ð’´‚¦‚Ä‚¢‚½‚çŒÃ‚¢‚Ì‚©‚çíœ
 		if (List_.size() + spawncount_ > LISTMAX) {
 			int count = List_.size() + spawncount_ - LISTMAX;

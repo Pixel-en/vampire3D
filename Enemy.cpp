@@ -110,7 +110,17 @@ void Enemy::Release()
 
 void Enemy::HitDamege(int _damege, float _knock)
 {
-	status_.hp_ -= _damege;
+	Player* player = GetRootJob()->FindGameObject<Player>();
+	
+	float dBoost = 1.0;
+	if (player != nullptr) {
+		dBoost = player->GetStatus().strength_;
+		if (rand() % 100 < player->GetStatus().critical_) {
+			dBoost *= player->GetStatus().criticalBoost_;
+		}
+	}
+
+	status_.hp_ -= _damege * dBoost;
 	InvincibleTimer_ = INVICIBLETIME;
 	NonClash();
 
