@@ -66,7 +66,6 @@ void Player::Initialize()
 
 	Knife* k = Instantiate<Knife>(GetParent());
 	MyWeaponList_.push_back(k);
-	Bomb* b = Instantiate<Bomb>(GetParent());
 }
 
 void Player::SuperUpdate()

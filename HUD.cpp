@@ -11,6 +11,7 @@
 #include "SpikeOrb.h"
 #include "Missile.h"
 #include "Laser.h"
+#include "Bomb.h"
 
 namespace {
 	namespace RADAR {
@@ -368,6 +369,16 @@ void HUD::ObtainWeapon(int _num)
 	}
 		break;
 	case 5:
+	{
+		Bomb* bomb = GetParent()->FindGameObject<Bomb>();
+		if (bomb == nullptr) {
+			bomb = Instantiate<Bomb>(GetParent());
+			player->MyWeaponList_.push_back(bomb);
+		}
+		else {
+			bomb->LevelUp(WeaponList_[_num].instruction_.front());
+		}
+	}
 		break;
 	case 6:
 		break;

@@ -84,11 +84,13 @@ void Missile::cMissile::Move()
 			cross = XMVector3Normalize(cross);
 
 			if (XMVectorGetY(cross) >= 0) {
-				transform_.rotate_.y += -XMConvertToDegrees(angle);
+				transform_.rotate_.y = -XMConvertToDegrees(angle);
 			}
 			else {
-				transform_.rotate_.y += XMConvertToDegrees(angle);
+				transform_.rotate_.y = XMConvertToDegrees(angle);
 			}
+			
+			Debug::Log("Missile");
 			Debug::Log(transform_.rotate_.y, true);
 		}
 		XMVECTOR origin = XMLoadFloat3(&varia_.originPos_);

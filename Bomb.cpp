@@ -2,8 +2,8 @@
 #include "EnemySpawn.h"
 
 namespace {
-	const int LISTMAX{ 100 };
-	const float DETONATETIME{ 2.0f };
+	const int LISTMAX{ 30 };
+	const float DETONATETIME{ 1.5f };
 }
 
 void Bomb::AddBullet()
@@ -40,7 +40,7 @@ void Bomb::Update()
 			Bomb::cBomb* c = Instantiate<Bomb::cBomb>(GetParent());
 			c->SetStatus(status_);
 			c->SetRotateY(i * rot);
-			List_.push_back(c);
+ 			List_.push_back(c);
 		}
 		Reset();
 	}
@@ -51,12 +51,14 @@ void Bomb::Update()
 
 	//ƒŠƒZƒbƒgó‘Ô‚È‚çÁ‚·
 	for (auto itr = List_.begin(); itr != List_.end();) {
-		if ((*itr)->isMove() == false)
+		if ((*itr)->IsDead())
 			itr = List_.erase(itr);
 		else {
 			itr++;
 		}
 	}
+	int a = List_.size();
+	Debug::Log(a, true);
 }
 
 void Bomb::Draw()
@@ -87,6 +89,7 @@ void Bomb::cBomb::Move()
 
 		if (varia_.AttackTime_ < 0.0f) {
 			Stop();
+			KillMe();
 			return;
 		}
 		else {
@@ -128,6 +131,8 @@ void Bomb::cBomb::Initialize()
 
 void Bomb::cBomb::Update()
 {
+	CollisionSizeSet();
+	Move();
 }
 
 void Bomb::cBomb::Draw()
@@ -157,6 +162,7 @@ void Bomb::cBomb::OnCollision(GameObject* pTarget)
 				if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
 					List[i]->HitDamege(status_.damege_, status_.knockback_);
 					Penetration();
+					KillMe();
 					break;
 				}
 			}

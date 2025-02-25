@@ -215,6 +215,9 @@ void WeaponObject::LevelUp(std::string str)
 			for (int i = 0; i < val; i++)
 				AddBullet();
 			break;
+		case 'K':
+			status_.knockback_ = val;
+			break;
 		case 'C':
 			status_.restart_ -= val;
 			break;
