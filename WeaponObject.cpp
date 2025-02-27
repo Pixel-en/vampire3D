@@ -20,7 +20,7 @@ void WeaponObject::Reset()
 
 	transform_ = player->GetTransform();
 	varia_.originPos_ = player->GetPosition();
-	varia_.ReStartTimer_ = status_.restart_;
+	varia_.ReStartTimer_ = status_.restart_ * player->GetStatus().haste_;
 
 	Visible();
 	Clash();
@@ -66,8 +66,19 @@ void WeaponObject::StatusInitGet()
 
 void WeaponObject::CollisionSizeSet()
 {
+	CollisionSizeSet(status_.size_);
+}
+
+void WeaponObject::CollisionSizeSet(float _size)
+{
+	float sizeboost = 1.0f;
+	Player* player = GetRootJob()->FindGameObject<Player>();
+	if (player != nullptr) {
+		sizeboost = player->GetStatus().area_;
+	}
+
 	for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
-		(*itr)->ChengeSize(status_.size_);
+		(*itr)->ChengeSize(_size * sizeboost);
 	}
 }
 
@@ -129,18 +140,13 @@ void WeaponObject::Initialize()
 
 void WeaponObject::Update()
 {
-	Player* player = GetRootJob()->FindGameObject<Player>();
-	float hasteBoost = 1.0f;
-	if (player != nullptr) {
-		hasteBoost = player->GetStatus().haste_;
-	}
 
 	if (varia_.allowsMove_) {
 		Move();
 	}
 	//一定時間経過したらリセット
 	else {
-		if (varia_.ReStartTimer_*hasteBoost < 0.0f) {
+		if (varia_.ReStartTimer_ < 0.0f) {
 			Reset();
 		}
 		else {

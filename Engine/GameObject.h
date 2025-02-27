@@ -275,6 +275,10 @@ protected:
 	//引数：str　　 エラーメッセージ
 	void HandleCheck(int handle, std::string str);
 
+	//ハンドルが取れているか調べる
+	//引数：handle　調べるハンドル
+	void HandleCheck(int handle);
+
 private:
 
 	//オブジェクト削除（再帰）

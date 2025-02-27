@@ -335,6 +335,11 @@ void GameObject::HandleCheck(int handle, std::string str)
 	}
 }
 
+void GameObject::HandleCheck(int handle)
+{
+	HandleCheck(handle, "ハンドルがない");
+}
+
 
 
 //コライダー（衝突判定）を追加する

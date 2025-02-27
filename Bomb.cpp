@@ -27,13 +27,8 @@ void Bomb::Initialize()
 
 void Bomb::Update()
 {
-	Player* player = GetRootJob()->FindGameObject<Player>();
-	float hasteBoost = 1.0f;
-	if (player != nullptr) {
-		hasteBoost = player->GetStatus().haste_;
-	}
 
-	if (varia_.ReStartTimer_*hasteBoost < 0.0f) {
+	if (varia_.ReStartTimer_ < 0.0f) {
 		//ƒŠƒXƒg‚ÌŠi”[”‚ð’´‚¦‚Ä‚¢‚½‚çŒÃ‚¢‚Ì‚©‚çíœ
 		if (List_.size() + spawncount_ > LISTMAX) {
 			int count = List_.size() + spawncount_ - LISTMAX;
@@ -90,9 +85,7 @@ void Bomb::cBomb::Move()
 
 	if (detonate_) {
 		Clash();
-		for (auto itr = colliderList_.begin(); itr != colliderList_.end(); itr++) {
-			(*itr)->ChengeSize(status_.size_ * 2.0f);
-		}
+		CollisionSizeSet(status_.size_ * 2.0f);
 
 		if (varia_.AttackTime_ < 0.0f) {
 			Stop();
@@ -130,7 +123,7 @@ Bomb::cBomb::~cBomb()
 void Bomb::cBomb::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Model\\Box.fbx");
-	assert(hModel_ >= 0);
+	HandleCheck(hModel_);
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
 	AddCollider(collision);

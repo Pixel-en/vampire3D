@@ -40,7 +40,7 @@ Player::Player(GameObject* parent)
 	status_.criticalBoost_ = 1.2f;
 	status_.collectionRange_ = 30.0f;
 	status_.haste_ = 10.0f;
-	status_.area_ = 1.0f;	
+	status_.area_ = 1.0f;
 	status_.resist_ = 0.0;
 	status_.level_ = 1;
 	status_.currentExp_ = 0;
@@ -127,15 +127,16 @@ void Player::PlayerStatusLoad()
 {
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\PlayerStatus.csv");
-	status_.hp_ = csv.GetValue(2, 1);
+
+	status_.hp_ = csv.GetValue(1, 2);
 	status_.speed_ = csv.GetValue(2, 2);
-	status_.strength_ = csv.GetValue(2, 3);
-	status_.critical_ = csv.GetValue(2, 4);
-	status_.collectionRange_ = csv.GetValue(2, 5);
-	status_.haste_ = csv.GetValue(2, 6);
-	status_.criticalBoost_ = csv.GetValue(2, 7);
-	status_.area_ = csv.GetValue(2, 8);
-	status_.resist_ = csv.GetValue(2, 9);
+	status_.strength_ = csv.GetValue(3, 2);
+	status_.critical_ = csv.GetValue(4, 2);
+	status_.collectionRange_ = csv.GetValue(5, 2);
+	status_.haste_ = csv.GetValue(6, 2);
+	status_.criticalBoost_ = csv.GetValue(7, 2);
+	status_.area_ = csv.GetValue(8, 2);
+	status_.resist_ = csv.GetValue(9, 2);
 }
 
 bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
@@ -231,7 +232,7 @@ void Player::Move()
 	XMFLOAT3 tar = { 0,0,0 };
 	XMStoreFloat3(&tar, rotCamtarVec);
 	LookPos_ = { transform_.position_.x,transform_.position_.y + PLAYERHEIGHT,transform_.position_.z };
-	LookTarget_ = { tar.x, tar.y + lookHeight_-PLAYERHEIGHT, tar.z };
+	LookTarget_ = { tar.x, tar.y + lookHeight_ - PLAYERHEIGHT, tar.z };
 }
 
 void Player::Draw()

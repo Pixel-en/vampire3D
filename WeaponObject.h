@@ -73,6 +73,7 @@ protected:
 
 public:
 	virtual void CollisionSizeSet();
+	virtual void CollisionSizeSet(float _size);
 
 	virtual void LevelUp(std::string str);
 

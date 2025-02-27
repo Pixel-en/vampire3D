@@ -155,8 +155,7 @@ Missile::cMissile::~cMissile()
 void Missile::cMissile::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Model\\Missile.fbx");
-	if (hModel_ < 0)
-		MessageBox(NULL, "ƒ‚ƒfƒ‹‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ", objectName_.c_str(), MB_OK);
+	HandleCheck(hModel_);
 }
 
 void Missile::cMissile::Draw()

@@ -119,10 +119,10 @@ void PoisonThrow::cPoisonThrow::Initialize()
 {
 
 	hModel_ = Model::Load("Assets\\Model\\PoisonArea.fbx");
-	assert(hModel_ >= 0);
+	HandleCheck(hModel_, "エリアモデルがない");
 
 	hCapsule_ = Model::Load("Assets\\Model\\Capsule_Blue.fbx");
-	assert(hCapsule_ >= 0);
+	HandleCheck(hCapsule_, "カプセルがない");
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
 	AddCollider(collision);
