@@ -12,6 +12,7 @@
 #include "Input.h"
 #include "Audio.h"
 #include "VFX.h"
+#include "TextFont.h"
 
 #pragma comment(lib,"Winmm.lib")
 
@@ -41,8 +42,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	int isDrawFps = GetPrivateProfileInt("DEBUG", "ViewFps", 0, ".\\setup.ini");		//キャプションに現在のFPSを表示するかどうか
 
 
-
-
 	//ウィンドウを作成
 	HWND hWnd = InitApp(hInstance, screenWidth, screenHeight, nCmdShow);
 
@@ -60,7 +59,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	//オーディオ（効果音）の準備
 	Audio::Initialize();
 
-
+	TextFont::Initialize(hWnd);
 
 	//ルートオブジェクト準備
 	//すべてのゲームオブジェクトの親となるオブジェクト
@@ -160,6 +159,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	Audio::AllRelease();
 	Model::AllRelease();
 	Image::AllRelease();
+	TextFont::Release();
 	pRootObject->ReleaseSub();
 	SAFE_DELETE(pRootObject);
 	Direct3D::Release();

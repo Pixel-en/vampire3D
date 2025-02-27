@@ -75,11 +75,26 @@ namespace Direct3D
 		///////////////////////////上記設定をもとにデバイス、コンテキスト、スワップチェインを作成///////////////////////////////
 		D3D_FEATURE_LEVEL level;
 		HRESULT  hr;
+		//hr = D3D11CreateDeviceAndSwapChain(
+		//	nullptr,					// どのビデオアダプタを使用するか？既定ならばnullptrで
+		//	D3D_DRIVER_TYPE_HARDWARE,	// ドライバのタイプを渡す。これ以外は基本的にソフトウェア実装で、どうしてもという時やデバグ用に用いるべし.
+		//	nullptr,					// 上記をD3D_DRIVER_TYPE_SOFTWAREに設定した際に、その処理を行うDLLのハンドルを渡す。それ以外を指定している際には必ずnullptrを渡す.
+		//	0,							// 何らかのフラグを指定する。（デバッグ時はD3D11_CREATE_DEVICE_DEBUG？）
+		//	nullptr,					// デバイス、コンテキストのレベルを設定。nullptrにしとけば可能な限り高いレベルにしてくれる
+		//	0,							// 上の引数でレベルを何個指定したか
+		//	D3D11_SDK_VERSION,			// SDKのバージョン。必ずこの値
+		//	&scDesc,					// 上でいろいろ設定した構造体
+		//	&pSwapChain_,				// 無事完成したSwapChainのアドレスが返ってくる
+		//	&pDevice_,					// 無事完成したDeviceアドレスが返ってくる
+		//	&level,						// 無事完成したDevice、Contextのレベルが返ってくる
+		//	&pContext_);				// 無事完成したContextのアドレスが返ってくる
+
+		//DirectWriteも使えるようにする
 		hr = D3D11CreateDeviceAndSwapChain(
 			nullptr,					// どのビデオアダプタを使用するか？既定ならばnullptrで
 			D3D_DRIVER_TYPE_HARDWARE,	// ドライバのタイプを渡す。これ以外は基本的にソフトウェア実装で、どうしてもという時やデバグ用に用いるべし.
 			nullptr,					// 上記をD3D_DRIVER_TYPE_SOFTWAREに設定した際に、その処理を行うDLLのハンドルを渡す。それ以外を指定している際には必ずnullptrを渡す.
-			0,							// 何らかのフラグを指定する。（デバッグ時はD3D11_CREATE_DEVICE_DEBUG？）
+			D3D11_CREATE_DEVICE_BGRA_SUPPORT,							// 何らかのフラグを指定する。（デバッグ時はD3D11_CREATE_DEVICE_DEBUG？）
 			nullptr,					// デバイス、コンテキストのレベルを設定。nullptrにしとけば可能な限り高いレベルにしてくれる
 			0,							// 上の引数でレベルを何個指定したか
 			D3D11_SDK_VERSION,			// SDKのバージョン。必ずこの値
@@ -510,6 +525,11 @@ namespace Direct3D
 		{
 			pContext_->OMSetRenderTargets(1, &pRenderTargetView_, nullptr);
 		}
+	}
+
+	IDXGISwapChain* GetSwapChain()
+	{
+		return pSwapChain_;
 	}
 
 }

@@ -151,6 +151,12 @@
     <ClCompile Include="Missile.cpp">
       <Filter>PlayScene\Weapon</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\DirectWriteCustomFont.cpp">
+      <Filter>01Engine\DirectX</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\TextFont.cpp">
+      <Filter>01Engine\ResourceManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -275,6 +281,12 @@
     </ClInclude>
     <ClInclude Include="Missile.h">
       <Filter>PlayScene\Weapon</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DirectWriteCustomFont.h">
+      <Filter>01Engine\DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\TextFont.h">
+      <Filter>01Engine\ResourceManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
