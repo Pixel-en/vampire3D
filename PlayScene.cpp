@@ -32,7 +32,7 @@ void PlayScene::Update()
 
 void PlayScene::Draw()
 {
-	TextFont::Draw(std::to_string(time_), { 500,200 });
+	TextFont::Draw(std::to_string((int)time_), { 600,30 });
 }
 
 void PlayScene::Release()
