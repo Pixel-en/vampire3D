@@ -25,10 +25,14 @@ class CustomFontCollectionLoader;
 //=============================================================================
 namespace FontList
 {
+	enum FONT
+	{
+		Kenney,
+		MAX
+	};
+
 	const std::wstring FontPath[] =
 	{
-		//L"font\\Sample.ttf",
-		//L"font\\サンプル.ttf",
 		L"Assets\\Kenney Pixel.ttf",
 	};
 }
@@ -66,6 +70,46 @@ struct FontData
 
 		shadowColor = D2D1::ColorF(D2D1::ColorF::Black);
 		shadowOffset = D2D1::Point2F(2.0f, -2.0f);
+	}
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="_font">フォント名　GetFontNameで取得可</param>
+	/// <param name="_collection">フォントコレクション　基本nullptr</param>
+	/// <param name="_weight">フォントの太さ DWRITE_FONT_WEIGHTから</param>
+	/// <param name="_style">フォントのスタイル DWRITE_FONT_STYLEから</param>
+	/// <param name="_stretch">フォントの幅 DWRITE_FONT_STRETCHから</param>
+	/// <param name="_size">フォントのサイズ</param>
+	/// <param name="_locale">ロケール名 基本そのまま</param>
+	/// <param name="DWRITE_TEXT_ALIGNMENT_LEADING">テキストの配置 DWRITE_TEXT_ALIGNMENTから</param>
+	/// <param name="_color">色 D2D1::ColorFから</param>
+	/// <param name="_shadowcolor">影の色 D2D1::ColorF</param>
+	/// <param name="_shadowoffset">影のオフセット D2D1::Point2F</param>
+	FontData(
+		std::wstring _font=L"",
+		IDWriteFontCollection* _collection=nullptr,
+		DWRITE_FONT_WEIGHT _weight= DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_NORMAL,
+		DWRITE_FONT_STYLE _style = DWRITE_FONT_STYLE::DWRITE_FONT_STYLE_NORMAL,
+		DWRITE_FONT_STRETCH _stretch = DWRITE_FONT_STRETCH::DWRITE_FONT_STRETCH_NORMAL,
+		FLOAT _size=20,
+		WCHAR const* _locale = L"ja-jp",
+		DWRITE_TEXT_ALIGNMENT _alignment = DWRITE_TEXT_ALIGNMENT::DWRITE_TEXT_ALIGNMENT_LEADING,
+		D2D1_COLOR_F _color = D2D1::ColorF(D2D1::ColorF::White),
+		D2D1_COLOR_F _shadowcolor = D2D1::ColorF(D2D1::ColorF::Black),
+		D2D1_POINT_2F _shadowoffset = D2D1::Point2F(2.0f, -2.0f)) {
+
+		font = _font;
+		fontCollection = _collection;
+		fontWeight = _weight;
+		fontStyle = _style;
+		fontStretch = _stretch;
+		fontSize = _size;
+		localeName = _locale;
+		textAlignment = _alignment;
+		Color = _color;
+		shadowColor = _shadowcolor;
+		shadowOffset = _shadowoffset;
 	}
 };
 

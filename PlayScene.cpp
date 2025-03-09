@@ -6,12 +6,11 @@
 #include "EnemySpawn.h"
 #include "EXPManager.h"
 #include "HUD.h"
-#include "Engine/TextFont.h"
 
 PlayScene::PlayScene(GameObject* parent)
 	:GameObject(parent,"PlayScene")
 {
-	time_ = 0;
+	PlayTimer_ = 0.0f;
 }
 
 void PlayScene::Initialize()
@@ -27,12 +26,14 @@ void PlayScene::Update()
 {
 	int num = GetChildList()->size();
 	SwapChildList("HUD", num);
-	time_ += Time::DeltaTime();
+	PlayTimer_ += Time::DeltaTime();
+
+	HUD* hud = FindGameObject<HUD>();
+	hud->SetTimer(PlayTimer_);
 }
 
 void PlayScene::Draw()
 {
-	TextFont::Draw(std::to_string((int)time_), { 600,30 });
 }
 
 void PlayScene::Release()

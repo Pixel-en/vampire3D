@@ -56,6 +56,9 @@ class HUD :public GameObject
 
 	Text* ptext_;
 
+	/*-----タイマー-----*/
+	float PlayTime_;
+
 public:
 	HUD(GameObject* parent);
 
@@ -79,5 +82,7 @@ public:
 	/// レベルが上がった時に行う
 	/// </summary>
 	void LevelUP();
+
+	void SetTimer(float _time) { PlayTime_ = _time; }
 };
 
