@@ -1,13 +1,13 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-class TitleScene : public GameObject
+class GameOverScene : public GameObject
 {
-	int hImage_;
+	int image_;
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）
-	TitleScene(GameObject* parent);
+	GameOverScene(GameObject* parent);
 
 	//初期化
 	void Initialize() override;

@@ -58,6 +58,7 @@ class HUD :public GameObject
 
 	/*-----タイマー-----*/
 	float PlayTime_;
+	void TimerDraw();
 
 public:
 	HUD(GameObject* parent);

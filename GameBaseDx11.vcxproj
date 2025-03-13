@@ -159,6 +159,7 @@
     <ClCompile Include="EXP.cpp" />
     <ClCompile Include="EXPManager.cpp" />
     <ClCompile Include="Field.cpp" />
+    <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="Laser.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="EXP.h" />
     <ClInclude Include="EXPManager.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Knife.h" />
     <ClInclude Include="Laser.h" />

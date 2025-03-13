@@ -2,6 +2,7 @@
 #include "Engine/Image.h"
 #include "Engine/Input.h"
 #include "Engine/CsvReader.h"
+#include "Engine/TextFont.h"
 
 #include "Player.h"
 #include "EnemySpawn.h"
@@ -60,11 +61,11 @@ void HUD::Draw()
 {
 	RadarDraw();
 	LevelDraw();
+	TimerDraw();
 }
 
 void HUD::Release()
 {
-	ptext_->Release();
 }
 
 void HUD::RadarInitialize()
@@ -387,4 +388,17 @@ void HUD::ObtainWeapon(int _num)
 	}
 
 	WeaponList_[_num].instruction_.pop_back();
+}
+
+
+void HUD::TimerDraw()
+{
+	FontData data{};
+	data.fontSize = 60;
+	data.Color=D2D1::ColorF(255, 255, 255);
+	data.font = FontList::FontPath[FontList::FONT::Kenney];
+
+	int Stime = fmodf(PlayTime_, 60.0f);
+	int Mtime = PlayTime_ / 60;
+	TextFont::Draw(std::to_string(Mtime) + ":" + std::to_string(Stime).c_str(), {600,30}, data);
 }

@@ -1,4 +1,5 @@
 #include "PlayScene.h"
+#include "Engine/SceneManager.h"
 
 //オブジェクト
 #include "Player.h"
@@ -30,6 +31,11 @@ void PlayScene::Update()
 
 	HUD* hud = FindGameObject<HUD>();
 	hud->SetTimer(PlayTimer_);
+
+	if (PlayTimer_ >= 10) {
+		SceneManager* scene = GetRootJob()->FindGameObject<SceneManager>();
+		scene->ChangeScene(SCENE_ID_GAMEOVER);
+	}
 }
 
 void PlayScene::Draw()

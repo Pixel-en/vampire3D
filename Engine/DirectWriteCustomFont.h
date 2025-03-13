@@ -87,17 +87,17 @@ struct FontData
 	/// <param name="_shadowcolor">影の色 D2D1::ColorF</param>
 	/// <param name="_shadowoffset">影のオフセット D2D1::Point2F</param>
 	FontData(
-		std::wstring _font=L"",
-		IDWriteFontCollection* _collection=nullptr,
-		DWRITE_FONT_WEIGHT _weight= DWRITE_FONT_WEIGHT::DWRITE_FONT_WEIGHT_NORMAL,
-		DWRITE_FONT_STYLE _style = DWRITE_FONT_STYLE::DWRITE_FONT_STYLE_NORMAL,
-		DWRITE_FONT_STRETCH _stretch = DWRITE_FONT_STRETCH::DWRITE_FONT_STRETCH_NORMAL,
-		FLOAT _size=20,
-		WCHAR const* _locale = L"ja-jp",
-		DWRITE_TEXT_ALIGNMENT _alignment = DWRITE_TEXT_ALIGNMENT::DWRITE_TEXT_ALIGNMENT_LEADING,
-		D2D1_COLOR_F _color = D2D1::ColorF(D2D1::ColorF::White),
-		D2D1_COLOR_F _shadowcolor = D2D1::ColorF(D2D1::ColorF::Black),
-		D2D1_POINT_2F _shadowoffset = D2D1::Point2F(2.0f, -2.0f)) {
+		std::wstring _font,
+		IDWriteFontCollection* _collection ,
+		DWRITE_FONT_WEIGHT _weight,
+		DWRITE_FONT_STYLE _style,
+		DWRITE_FONT_STRETCH _stretch,
+		FLOAT _size,
+		WCHAR const* _locale ,
+		DWRITE_TEXT_ALIGNMENT _alignment ,
+		D2D1_COLOR_F _color,
+		D2D1_COLOR_F _shadowcolor,
+		D2D1_POINT_2F _shadowoffset) {
 
 		font = _font;
 		fontCollection = _collection;
