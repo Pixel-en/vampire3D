@@ -8,6 +8,10 @@
 #include "EXPManager.h"
 #include "HUD.h"
 
+namespace {
+	const float PLAYTIME{ 120.0f };
+}
+
 PlayScene::PlayScene(GameObject* parent)
 	:GameObject(parent,"PlayScene")
 {
@@ -32,7 +36,7 @@ void PlayScene::Update()
 	HUD* hud = FindGameObject<HUD>();
 	hud->SetTimer(PlayTimer_);
 
-	if (PlayTimer_ >= 10) {
+	if (PlayTimer_ >= PLAYTIME) {
 		SceneManager* scene = GetRootJob()->FindGameObject<SceneManager>();
 		scene->ChangeScene(SCENE_ID_GAMEOVER);
 	}

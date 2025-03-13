@@ -169,29 +169,33 @@ void Player::Move()
 
 	Gravity = XMVector3Normalize(Gravity);
 
+	//---------------操作--------------------
 	//移動
-	if (Input::IsKey(DIK_W))
+	if (Input::IsKey(DIK_W) || Input::GetPadStickL().y >= 0.5f)
 		moveVec = XMVectorSetZ(moveVec, 1.0);
-	if (Input::IsKey(DIK_S))
+	if (Input::IsKey(DIK_S) || Input::GetPadStickL().y <= -0.5f)
 		moveVec = XMVectorSetZ(moveVec, -1.0);
-	if (Input::IsKey(DIK_A))
+	if (Input::IsKey(DIK_A) || Input::GetPadStickL().x <= -0.5f)
 		moveVec = XMVectorSetX(moveVec, -1.0);
-	if (Input::IsKey(DIK_D))
+	if (Input::IsKey(DIK_D) || Input::GetPadStickL().x >= 0.5f)
 		moveVec = XMVectorSetX(moveVec, 1.0);
 
 	//カメラ縦
-	if (Input::IsKey(DIK_UP))
+	if (Input::IsKey(DIK_UP) || Input::GetPadStickR().y >= 0.5f)
 		lookHeight_ += 1.0f * Time::DeltaTime();
-	if (Input::IsKey(DIK_DOWN))
+	if (Input::IsKey(DIK_DOWN) || Input::GetPadStickR().y <= -0.5f)
 		lookHeight_ -= 1.0f * Time::DeltaTime();
 	lookHeight_ = std::clamp(lookHeight_, PLAYERHEIGHT - 1.0f, PLAYERHEIGHT + 1.0f);
 
 
 	//カメラ回転
-	if (Input::IsKey(DIK_LEFT))
+	if (Input::IsKey(DIK_LEFT) || Input::GetPadStickR().x <= -0.5f)
 		transform_.rotate_.y -= ROTATESPEED * Time::DeltaTime();
-	if (Input::IsKey(DIK_RIGHT))
+	if (Input::IsKey(DIK_RIGHT) || Input::GetPadStickR().x >= 0.5f)
 		transform_.rotate_.y += ROTATESPEED * Time::DeltaTime();
+
+
+	//---------------操作--------------------
 
 	//Y軸の回転をマトリクスに変換
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
