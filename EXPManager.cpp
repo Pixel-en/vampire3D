@@ -1,7 +1,7 @@
 #include "EXPManager.h"
 
 namespace {
-	const int SPAWNMAX{ 100 };
+	const int SPAWNMAX{ 50 };
 	const int EXPDISTRIBUTION{ 20 };
 }
 

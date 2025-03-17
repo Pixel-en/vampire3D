@@ -28,12 +28,16 @@ namespace FontList
 	enum FONT
 	{
 		Kenney,
+		Gkktt,
+		Kaisotai,
 		MAX
 	};
 
 	const std::wstring FontPath[] =
 	{
-		L"Assets\\Kenney Pixel.ttf",
+		L"Assets\\Font\\Kenney Pixel.ttf",
+		L"Assets\\Font\\851Gkktt_005.ttf",
+		L"Assets\\Font\\Kaisotai-Next-UP-B.ttf",
 	};
 }
 

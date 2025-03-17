@@ -5,6 +5,8 @@
 #include "Engine/Image.h"
 #include "Engine/SphereCollider.h"
 #include "Engine/CsvReader.h"
+#include "Engine/SceneManager.h"
+#include "Engine/TextFont.h"
 #include <algorithm>
 
 #include "Field.h"
@@ -59,7 +61,7 @@ void Player::Initialize()
 	WeaponCSVLoad();
 	PlayerStatusLoad();
 
-	hModel_ = Model::Load("Assets\\Model\\Player.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Character\\Player.fbx");
 	HandleCheck(hModel_, "プレイヤーモデルがない");
 
 	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
@@ -75,8 +77,9 @@ void Player::Initialize()
 void Player::SuperUpdate()
 {
 	if (PauseON_) {
-		if (Input::IsKeyDown(DIK_RETURN)) {
-			GetParent()->SetChildFlags(0b11101);
+		if (Input::IsKeyDown(DIK_RETURN)||Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
+			GetParent()->SetFlags(0b11101);
+			//GetParent()->SetChildFlags(0b11101);
 			PauseON_ = false;
 		}
 	}
@@ -85,6 +88,15 @@ void Player::SuperUpdate()
 void Player::Update()
 {
 	Move();
+
+	
+	if (InvincibleTimer_ <= 0.0) {
+		Clash();
+	}
+	else {
+		InvincibleTimer_ -= Time::DeltaTime();
+		NonClash();
+	}
 }
 
 void Player::WeaponCSVLoad()
@@ -242,11 +254,18 @@ void Player::Move()
 void Player::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
-	if (Input::IsKey(DIK_SPACE))
-		Model::Draw(hModel_);
+	//if (Input::IsKey(DIK_SPACE))
+	//	Model::Draw(hModel_);
 
 	Image::SetTransform(hImage_, crossTrans);
 	Image::Draw(hImage_);
+
+	FontData data;
+	data.font = TextFont::GetFontName(FontList::Gkktt);
+	data.Color = D2D1::ColorF(255, 255, 255);
+	data.fontSize = 35;
+
+	TextFont::Draw("体力"+std::to_string(status_.hp_), {30,30}, data);
 }
 
 void Player::Release()
@@ -255,7 +274,25 @@ void Player::Release()
 
 void Player::OnCollision(GameObject* pTarget)
 {
+	if (pTarget->GetObjectName() == "Enemy")
+	{
+		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
+		std::vector<Enemy*> List = ep->GetEnemyList();
+		for (int i = 0; i < List.size(); i++) {
+			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
+				status_.hp_ -= List[i]->CausedDamege();
+				if (status_.hp_ <= 0) {
+					SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
+					sc->ChangeScene(SCENE_ID_GAMEOVER);
+				}
 
+				NonClash();
+				isDamege_ = true;
+				InvincibleTimer_ = 0.5f;
+				break;
+			}
+		}
+	}
 }
 
 void Player::AcquisitionEXP(int _exp)
@@ -263,7 +300,9 @@ void Player::AcquisitionEXP(int _exp)
 	status_.currentExp_ += _exp;
 
 	if (status_.currentExp_ >= status_.nextLvExp_) {
-		GetParent()->SetChildFlags(0b10101);
+		//ポーズ状態にする
+		//GetParent()->SetChildFlags(0b10101);
+		GetParent()->SetFlags(0b10101);
 		status_.level_++;							//レベルアップ
 		status_.totalExp_ += status_.currentExp_;	//トータルに加算
 		status_.currentExp_ -= status_.nextLvExp_;	//余剰分を算出

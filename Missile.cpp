@@ -154,7 +154,7 @@ Missile::cMissile::~cMissile()
 
 void Missile::cMissile::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\Missile.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Weapon\\Missile.fbx");
 	HandleCheck(hModel_);
 }
 

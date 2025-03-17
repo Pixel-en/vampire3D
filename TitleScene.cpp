@@ -12,7 +12,7 @@ TitleScene::TitleScene(GameObject* parent)
 
 void TitleScene::Initialize()
 {
-	hImage_ = Image::Load("Assets\\Image\\Title.jpg");
+	hImage_ = Image::Load("Assets\\Image\\Title.png");
 	assert(hImage_ >= 0);
 
 	//handle = TextFont::Load("Assets\\Kenney Pixel.tff");

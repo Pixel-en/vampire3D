@@ -9,7 +9,7 @@
 #include "HUD.h"
 
 namespace {
-	const float PLAYTIME{ 120.0f };
+	const float PLAYTIME{ 900.0f };
 }
 
 PlayScene::PlayScene(GameObject* parent)

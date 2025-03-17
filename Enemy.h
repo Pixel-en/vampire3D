@@ -4,8 +4,16 @@
 //敵個人
 class Enemy :public GameObject
 {
+	enum ANIMATION {
+		MOVE,
+		DEATH,
+		MAX,
+	};
 
-	int hModel_;
+	ANIMATION anim_;
+
+	int hModel_[ANIMATION::MAX];
+	int hModelLow_;
 
 	unsigned int number_;
 
@@ -26,6 +34,10 @@ class Enemy :public GameObject
 	/// </summary>
 	void Move();
 
+	//前にポーズをしていたか
+	bool prevPause_;
+	bool isLow_;
+
 public:
 	Enemy(GameObject* parent);
 
@@ -33,6 +45,8 @@ public:
 
 	//初期化
 	void Initialize() override;
+
+	void SuperUpdate() override;
 
 	//更新
 	void Update() override;

@@ -19,6 +19,7 @@ namespace TextFont {
 		data.font = Write->GetFontName(FontList::FONT::Kenney);
 		data.shadowColor = D2D1::ColorF(D2D1::ColorF::White);
 		data.shadowOffset = D2D1::Point2F(5.0f, -5.0f);
+		Write->GetFontFamilyName(Write->fontCollection.Get(), L"ja-JP");
 
 		// フォントをセット
 		Write->SetFont(data);
@@ -34,6 +35,24 @@ namespace TextFont {
 		Write->SetFont(_data);
 		Draw(_text, _pos);
 		Write->SetFont(data);
+	}
+
+	void Draw(std::string _text, DirectX::XMFLOAT2 _pos1, DirectX::XMFLOAT2 _pos2)
+	{
+		Write->DrawString(_text, D2D1::RectF(_pos1.x, _pos1.y, _pos2.x, _pos2.y), D2D1_DRAW_TEXT_OPTIONS_NONE);
+	}
+
+	void Draw(std::string _text, DirectX::XMFLOAT2 _pos1, DirectX::XMFLOAT2 _pos2, FontData _data)
+	{
+		Write->SetFont(_data);
+		Draw(_text, _pos1, _pos2);
+		Write->SetFont(data);
+	}
+
+	std::wstring GetFontName(FontList::FONT _font)
+	{
+		std::wstring name = Write->GetFontName(_font);
+		return name;
 	}
 
 	void TextFont::Release()

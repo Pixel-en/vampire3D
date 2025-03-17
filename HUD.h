@@ -1,7 +1,6 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-#include "Engine/Text.h"
 #include <vector>
 #include <string>
 #include <set>
@@ -27,6 +26,8 @@ class HUD :public GameObject
 	int hLevelGaugeFrame_;		//経験値のフレーム
 	int hLevelGaugeBar_;		//経験値のバー
 	int hLevelCursor_;
+	int hLevelFrameImage_;
+	int hLevelCursorImage_;
 
 	bool Pause_;						//ポーズ中かどうか
 
@@ -36,6 +37,7 @@ class HUD :public GameObject
 		int num_;								//武器の番号
 		int MaxLevel_;							//最大レベル
 		std::vector<std::string> instruction_;	//レベルアップ内容
+		std::string EffectText_[10];				//効果説明
 	};
 
 	std::vector<WeaponLevel> WeaponList_;	//出現していないorレベルが最大ではない武器のリスト
@@ -48,13 +50,12 @@ class HUD :public GameObject
 	Transform LGFrameTransform_;
 	Transform LGBarTransform_;
 	Transform LCursorTransform_;
+	Transform LFrameTransform_;
 	void LevelInitialize();
 	void LevelSuperUpdate();
 	void LevelUpdate();
 	void LevelDraw();
 	void ObtainWeapon(int _num);
-
-	Text* ptext_;
 
 	/*-----タイマー-----*/
 	float PlayTime_;

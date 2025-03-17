@@ -123,7 +123,7 @@ Knife::cKnife::~cKnife()
 void Knife::cKnife::Initialize()
 {
 
-	hModel_ = Model::Load("Assets\\Model\\Knife.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Weapon\\Knife.fbx");
 	HandleCheck(hModel_, "ナイフのモデルがない");
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);

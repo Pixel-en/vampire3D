@@ -41,9 +41,6 @@ void HUD::Initialize()
 {
 	RadarInitialize();
 	LevelInitialize();
-
-	ptext_ = new Text;
-	ptext_->Initialize();
 }
 
 void HUD::SuperUpdate()
@@ -59,9 +56,9 @@ void HUD::Update()
 
 void HUD::Draw()
 {
+	TimerDraw();
 	RadarDraw();
 	LevelDraw();
-	TimerDraw();
 }
 
 void HUD::Release()
@@ -196,6 +193,8 @@ void HUD::LevelInitialize()
 	hLevelBack_ = -1;
 	hLevelGaugeFrame_ = -1;
 	hLevelGaugeBar_ = -1;
+	hLevelFrameImage_ = -1;
+	hLevelCursorImage_ = -1;
 
 	LBackTransform_ = transform_;
 	LGFrameTransform_ = transform_;
@@ -206,16 +205,22 @@ void HUD::LevelInitialize()
 	LGBarTransform_.position_ = { LEVEL::LEVELGAUGEBARXPOS,LEVEL::LEVELGAUGEYPOS,0 };
 
 	hLevelBack_ = Image::Load("Assets\\Image\\LevelUpBackGround0.6.png");
-	assert(hLevelBack_ >= 0);
+	HandleCheck(hLevelBack_);
 	hLevelGaugeFrame_ = Image::Load("Assets\\Image\\LevelFrame.png");
-	assert(hLevelGaugeFrame_ >= 0);
+	HandleCheck(hLevelGaugeFrame_);
 	hLevelGaugeBar_ = Image::Load("Assets\\Image\\LevelBar.png");
-	assert(hLevelGaugeBar_ >= 0);
+	HandleCheck(hLevelGaugeBar_);
 	hLevelCursor_ = Image::Load("Assets\\Image\\LevelCursor.png");
-	assert(hLevelCursor_ >= 0);
+	HandleCheck(hLevelCursor_);
+	hLevelFrameImage_ = Image::Load("Assets\\Image\\LevelUpFrame.png");
+	HandleCheck(hLevelFrameImage_);
+	hLevelCursorImage_ = Image::Load("Assets\\Image\\LevelUpCursor.png");
+	HandleCheck(hLevelCursorImage_);
 
-	CsvReader csv;
+	CsvReader csv,effect;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
+		return;
+	if (!effect.Load("Assets\\CSV\\WeaponLevelText.csv"))
 		return;
 
 	for (int i = 1; i < csv.GetHeight(); i++) {
@@ -224,27 +229,29 @@ void HUD::LevelInitialize()
 		for (int j = WeaponList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
 			WeaponList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));
 		}
+		for (int j = 2; j < effect.GetWidth(); j++) {
+			WeaponList_[i - 1].EffectText_[j - 2] = effect.GetString(j, i);
+		}
 	}
+
 }
 
 void HUD::LevelSuperUpdate()
 {
-
-
 	if (Pause_) {
 
-		if (Input::IsKeyDown(DIK_UP))
+		if (Input::IsKeyDown(DIK_UP)|| Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP))
 			levelCursor_--;
-		else if (Input::IsKeyDown(DIK_DOWN))
+		else if (Input::IsKeyDown(DIK_DOWN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN))
 			levelCursor_++;
 
 		levelCursor_ = levelCursor_ % LEVEL::WEAPONCHOICEVAL;
 		if (levelCursor_ < 0)
 			levelCursor_ = 3;
 
-		LCursorTransform_.position_.y = 0.6 + -0.1 * levelCursor_;
-
-		if (Input::IsKeyDown(DIK_RETURN)) {
+		//LCursorTransform_.position_.y = 0.6 + -0.1 * levelCursor_;
+		LCursorTransform_.position_= { 330 / (screenWidth / 2.0f),(310 - (80 + levelCursor_ * 170)) / (screenHeight / 2.0f) ,0 };
+		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
 			ObtainWeapon((*itr));
@@ -278,26 +285,44 @@ void HUD::LevelDraw()
 		Image::SetTransform(hLevelBack_, LBackTransform_);
 		Image::Draw(hLevelBack_);
 		
-		Image::SetTransform(hLevelCursor_, LCursorTransform_);
-		Image::Draw(hLevelCursor_);
+		//Image::SetTransform(hLevelCursor_, LCursorTransform_);
+		//Image::Draw(hLevelCursor_);
+		Image::SetTransform(hLevelCursorImage_, LCursorTransform_);
+		Image::Draw(hLevelCursorImage_);
 
 		Player* player = GetParent()->FindGameObject<Player>();
 
 		//レベルアップで選択できる武器
 		auto itr = RollListNum_.begin();
 		for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
+			//														初期値-画像の縦の長さ/2+i*画像の長さ+バッファ
+			LFrameTransform_.position_ = { 330 / (screenWidth / 2.0f),(310-(80+i*170)) / (screenHeight / 2.0f) ,0 };
+			Image::SetTransform(hLevelFrameImage_, LFrameTransform_);
+			Image::Draw(hLevelFrameImage_);
+
 			std::string level = "new";
+			int Lv = 0;
+			FontData data;
+			data.font = TextFont::GetFontName(FontList::Gkktt);
+			data.Color = D2D1::ColorF(255, 255, 255);
+			data.fontSize = 30;
 
 			//武器の名前
-			ptext_->Draw(800, 150 + (i * 50), WeaponList_[ (*std::next(itr, i)) ].name_.c_str());
+			TextFont::Draw(WeaponList_[(*std::next(itr, i))].name_.c_str(), { 720,70.0f + (i * 170) }, data);
+
 			//武器のレベル
 			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
 				if (WeaponList_[(*std::next(itr, i))].name_ == player->MyWeaponList_[j]->GetObjectName()) {
-					level = std::to_string(player->MyWeaponList_[j]->GetLv() + 1);
+					level = "Level:" + std::to_string(player->MyWeaponList_[j]->GetLv() + 1);
+					Lv = player->MyWeaponList_[j]->GetLv();
 					break;
 				}
 			}
-			ptext_->Draw(1000, 150 + (i * 50), level.c_str());
+
+			TextFont::Draw(WeaponList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 720,120.0f + (i * 170) }, {1250,140.0f+(i*170)}, data);
+
+			TextFont::Draw(level.c_str(), { 1100,70.0f + (i * 170) }, data);
+			
 		}
 	}
 }
@@ -394,11 +419,15 @@ void HUD::ObtainWeapon(int _num)
 void HUD::TimerDraw()
 {
 	FontData data{};
-	data.fontSize = 60;
+	data.fontSize = 30;
 	data.Color=D2D1::ColorF(255, 255, 255);
-	data.font = FontList::FontPath[FontList::FONT::Kenney];
+	data.font = TextFont::GetFontName(FontList::Gkktt);
 
 	int Stime = fmodf(PlayTime_, 60.0f);
 	int Mtime = PlayTime_ / 60;
-	TextFont::Draw(std::to_string(Mtime) + ":" + std::to_string(Stime).c_str(), {600,30}, data);
+	std::string minutes = std::to_string(Mtime);
+	std::string seconds = std::to_string(Stime);
+	minutes.insert(0, 2 - minutes.length(), '0');
+	seconds.insert(0, 2 - seconds.length(), '0');
+	TextFont::Draw(minutes + ":" + seconds.c_str(), { 600,30 }, data);
 }

@@ -58,6 +58,8 @@ private:
 	int hImage_;	//画像のハンドル(クロスヘア)
 	Transform crossTrans;	//クロスヘア用のトランス
 
+	bool isDamege_;
+	float InvincibleTimer_;
 
 	//キャラクターの移動
 	void Move();

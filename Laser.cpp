@@ -154,7 +154,7 @@ Laser::cLaser::~cLaser()
 
 void Laser::cLaser::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\Laser.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Weapon\\Laser.fbx");
 	HandleCheck(hModel_);
 
 	targetName_ = "Enemy";

@@ -106,7 +106,7 @@ SpikeOrb::cSpikeOrb::~cSpikeOrb()
 
 void SpikeOrb::cSpikeOrb::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\SpikeOrb.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Weapon\\SpikeOrb.fbx");
 	HandleCheck(hModel_);
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
