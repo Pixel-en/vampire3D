@@ -43,6 +43,7 @@ class HUD :public GameObject
 	std::vector<WeaponLevel> WeaponList_;	//出現していないorレベルが最大ではない武器のリスト
 	std::set<int> RollListNum_;				//ロールされた武器
 	int levelCursor_;
+	bool StickTriggerY_;					//前フレームでスティックを倒しているか
 
 	void WeaponRoll();	//武器のロール
 

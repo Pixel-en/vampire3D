@@ -22,6 +22,7 @@ namespace {
 	const float ROTATESPEED{ 70.0f };
 	const float RAYHEIGHT{ 5.0f };
 	const float GRAVITY{ 9.8f / 2.0f / 60.0f };
+	const float INVINCIBLETIME{ 0.5f };
 }
 
 Player::Player(GameObject* parent)
@@ -77,6 +78,7 @@ void Player::Initialize()
 void Player::SuperUpdate()
 {
 	if (PauseON_) {
+		Input::SetPadVibration(0, 0);
 		if (Input::IsKeyDown(DIK_RETURN)||Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			GetParent()->SetFlags(0b11101);
 			//GetParent()->SetChildFlags(0b11101);
@@ -96,6 +98,8 @@ void Player::Update()
 	else {
 		InvincibleTimer_ -= Time::DeltaTime();
 		NonClash();
+		if(InvincibleTimer_ <= INVINCIBLETIME/2.0f)
+			Input::SetPadVibration(0, 0);
 	}
 }
 
@@ -104,7 +108,7 @@ void Player::WeaponCSVLoad()
 	//プレイヤーで読み込むのがいいのかも
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\WeaponInitStatus.csv");
-
+	  
 	for (int i = 0; i < csv.GetHeight(); i++) {
 		std::string str;
 		str = csv.GetString(0, i);
@@ -183,14 +187,16 @@ void Player::Move()
 
 	//---------------操作--------------------
 	//移動
-	if (Input::IsKey(DIK_W) || Input::GetPadStickL().y >= 0.5f)
-		moveVec = XMVectorSetZ(moveVec, 1.0);
-	if (Input::IsKey(DIK_S) || Input::GetPadStickL().y <= -0.5f)
-		moveVec = XMVectorSetZ(moveVec, -1.0);
-	if (Input::IsKey(DIK_A) || Input::GetPadStickL().x <= -0.5f)
-		moveVec = XMVectorSetX(moveVec, -1.0);
-	if (Input::IsKey(DIK_D) || Input::GetPadStickL().x >= 0.5f)
-		moveVec = XMVectorSetX(moveVec, 1.0);
+	if (onGround_) {
+		if (Input::IsKey(DIK_W) || Input::GetPadStickL().y >= 0.5f)
+			moveVec = XMVectorSetZ(moveVec, 1.0);
+		if (Input::IsKey(DIK_S) || Input::GetPadStickL().y <= -0.5f)
+			moveVec = XMVectorSetZ(moveVec, -1.0);
+		if (Input::IsKey(DIK_A) || Input::GetPadStickL().x <= -0.5f)
+			moveVec = XMVectorSetX(moveVec, -1.0);
+		if (Input::IsKey(DIK_D) || Input::GetPadStickL().x >= 0.5f)
+			moveVec = XMVectorSetX(moveVec, 1.0);
+	}
 
 	//カメラ縦
 	if (Input::IsKey(DIK_UP) || Input::GetPadStickR().y >= 0.5f)
@@ -281,14 +287,16 @@ void Player::OnCollision(GameObject* pTarget)
 		for (int i = 0; i < List.size(); i++) {
 			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
 				status_.hp_ -= List[i]->CausedDamege();
+				Input::SetPadVibration(0.5f * 65535, 0.5f * 65535);
 				if (status_.hp_ <= 0) {
 					SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
 					sc->ChangeScene(SCENE_ID_GAMEOVER);
+					Input::SetPadVibration(0, 0);
 				}
 
 				NonClash();
 				isDamege_ = true;
-				InvincibleTimer_ = 0.5f;
+				InvincibleTimer_ = INVINCIBLETIME;
 				break;
 			}
 		}

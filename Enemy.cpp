@@ -161,6 +161,7 @@ void Enemy::Draw()
 		Model::SetTransform(hModel_[i], tempTrans);
 	}
 	Model::SetTransform(hModelLow_, transform_);
+
 	if (!isLow_) {
 		Model::Draw(hModel_[anim_]);
 	}

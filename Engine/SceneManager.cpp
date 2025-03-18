@@ -8,6 +8,7 @@
 #include "../PlayScene.h"
 #include "../TitleScene.h"
 #include "../GameOverScene.h"
+#include "../GameClearScene.h"
 
 //コンストラクタ
 SceneManager::SceneManager(GameObject* parent)
@@ -46,6 +47,7 @@ void SceneManager::Update()
 		case SCENE_ID_TITLE:Instantiate<TitleScene>(this); break;
 		case SCENE_ID_PLAY: Instantiate<PlayScene>(this); break;
 		case SCENE_ID_GAMEOVER: Instantiate<GameOverScene>(this); break;
+		case SCENE_ID_GAMECLEAR: Instantiate<GameClearScene>(this); break;
 
 		}
 		Audio::Initialize();

@@ -38,7 +38,7 @@ void PlayScene::Update()
 
 	if (PlayTimer_ >= PLAYTIME) {
 		SceneManager* scene = GetRootJob()->FindGameObject<SceneManager>();
-		scene->ChangeScene(SCENE_ID_GAMEOVER);
+		scene->ChangeScene(SCENE_ID_GAMECLEAR);
 	}
 }
 

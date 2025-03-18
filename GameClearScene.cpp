@@ -1,20 +1,20 @@
-#include "GameOverScene.h"
+#include "GameClearScene.h"
 #include "Engine/Image.h"
 #include "Engine/Input.h"
 #include "Engine/SceneManager.h"
 
-GameOverScene::GameOverScene(GameObject* parent)
-	:GameObject(parent,"GameOverScene"),image_(-1)
+GameClearScene::GameClearScene(GameObject* parent)
+	:GameObject(parent, "GameClearScene"),image_(0)	
 {
 }
 
-void GameOverScene::Initialize()
+void GameClearScene::Initialize()
 {
-	image_ = Image::Load("Assets\\Image\\GameOver.png");
+	image_=Image::Load("Assets\\/Image/GameClear.png");
 	HandleCheck(image_);
 }
 
-void GameOverScene::Update()
+void GameClearScene::Update()
 {
 	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
 		SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
@@ -22,12 +22,12 @@ void GameOverScene::Update()
 	}
 }
 
-void GameOverScene::Draw()
+void GameClearScene::Draw()
 {
 	Image::SetTransform(image_, transform_);
 	Image::Draw(image_);
 }
 
-void GameOverScene::Release()
+void GameClearScene::Release()
 {
 }

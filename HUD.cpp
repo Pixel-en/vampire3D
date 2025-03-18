@@ -234,16 +234,25 @@ void HUD::LevelInitialize()
 		}
 	}
 
+
+	StickTriggerY_ = false;
 }
 
 void HUD::LevelSuperUpdate()
 {
 	if (Pause_) {
 
-		if (Input::IsKeyDown(DIK_UP)|| Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP))
+		if ((Input::IsKeyDown(DIK_UP) || Input::GetPadStickL().y>=0.5f)&&!StickTriggerY_)
+		{
 			levelCursor_--;
-		else if (Input::IsKeyDown(DIK_DOWN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN))
+			StickTriggerY_ = true;
+		}
+		else if ((Input::IsKeyDown(DIK_DOWN) || Input::GetPadStickL().y <= -0.5f) && !StickTriggerY_){
 			levelCursor_++;
+			StickTriggerY_ = true;
+		}
+		if(Input::GetPadStickL().y >= -0.5f && Input::GetPadStickL().y <= 0.5f)
+			StickTriggerY_ = false;
 
 		levelCursor_ = levelCursor_ % LEVEL::WEAPONCHOICEVAL;
 		if (levelCursor_ < 0)
