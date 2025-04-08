@@ -1,5 +1,6 @@
 #include "Field.h"
 #include "Engine/Model.h"
+#include "Engine/BoxCollider.h"
 #include "Player.h"
 
 namespace {
@@ -44,6 +45,11 @@ void Field::Initialize()
 	hModel_ = Model::Load("Assets\\Model\\Test_Ground.fbx");
 	assert(hModel_ >= 0); 
 	fieldPosList_ = { {0,-1,0} };
+
+	hWall_ = Model::Load("Assets\\Model\\TestWall.fbx");
+	HandleCheck(hWall_, "•Ç‚Ìƒ‚ƒfƒ‹‚ª‚È‚¢");
+
+
 }
 
 void Field::Update()
@@ -52,11 +58,13 @@ void Field::Update()
 
 void Field::Draw()
 {
+	ClearCollider();
 	for (int i = 0; i < fieldPosList_.size(); i++) {
 		transform_.position_ = fieldPosList_[i];
 		Model::SetTransform(hModel_, transform_);
 		Model::Draw(hModel_);
-
+		Model::SetTransform(hWall_, transform_);
+		Model::Draw(hWall_);
 	}
 
 }
@@ -64,6 +72,8 @@ void Field::Draw()
 void Field::Release()
 {
 }
+
+
 
 bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name, float _limit)
 {

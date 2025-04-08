@@ -17,6 +17,8 @@ class Field :public GameObject
 	//’n–Ê‚ğÁ‚·
 	XMFLOAT3 DeleteField(int num);
 
+	int hWall_;
+
 public:
 	Field(GameObject* parent);
 
