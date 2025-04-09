@@ -4,6 +4,7 @@
 #include "Engine/Camera.h"
 #include "Engine/Image.h"
 #include "Engine/SphereCollider.h"
+#include "Engine/BoxCollider.h"
 #include "Engine/CsvReader.h"
 #include "Engine/SceneManager.h"
 #include "Engine/TextFont.h"
@@ -68,7 +69,8 @@ void Player::Initialize()
 	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
 	HandleCheck(hImage_, "ÉNÉçÉXÉwÉAÇ™Ç»Ç¢");
 
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
+	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
+	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1, 0), XMFLOAT3(1.0f, 3.0, 1.0f));
 	AddCollider(collision);
 
 	Knife* k = Instantiate<Knife>(GetParent());
@@ -260,8 +262,8 @@ void Player::Move()
 void Player::Draw()
 {
 	Model::SetTransform(hModel_, transform_);
-	//if (Input::IsKey(DIK_SPACE))
-	//	Model::Draw(hModel_);
+	if (Input::IsKey(DIK_SPACE))
+		Model::Draw(hModel_);
 
 	Image::SetTransform(hImage_, crossTrans);
 	Image::Draw(hImage_);

@@ -32,7 +32,7 @@ XMFLOAT3 Field::DeleteField(int num)
 }
 
 Field::Field(GameObject* parent)
-	:GameObject(parent,"Field"),hModel_(-1),currentNum_(-1)
+	:GameObject(parent, "Field"), hModel_(-1), currentNum_(-1)
 {
 }
 
@@ -43,12 +43,12 @@ Field::~Field()
 void Field::Initialize()
 {
 	hModel_ = Model::Load("Assets\\Model\\Test_Ground.fbx");
-	assert(hModel_ >= 0); 
+	assert(hModel_ >= 0);
 	fieldPosList_ = { {0,-1,0} };
 
 	hWall_ = Model::Load("Assets\\Model\\TestWall.fbx");
 	HandleCheck(hWall_, "壁のモデルがない");
-
+	transform_.position_={0,0,0};
 
 }
 
@@ -60,13 +60,20 @@ void Field::Draw()
 {
 	ClearCollider();
 	for (int i = 0; i < fieldPosList_.size(); i++) {
-		transform_.position_ = fieldPosList_[i];
-		Model::SetTransform(hModel_, transform_);
+		Transform trans;
+		trans.position_= fieldPosList_[i];
+		Model::SetTransform(hModel_, trans);
 		Model::Draw(hModel_);
-		Model::SetTransform(hWall_, transform_);
+		Model::SetTransform(hWall_, trans);
 		Model::Draw(hWall_);
+		XMFLOAT3 leftbone = Model::GetBonePosition(hWall_, "WallLeft");
+		BoxCollider* collider = new BoxCollider(leftbone, XMFLOAT3(1, 10, 1));
+		AddCollider(collider);
+		XMFLOAT3 rightbone = Model::GetBonePosition(hWall_, "WallRight");
+		BoxCollider* collider2 = new BoxCollider(rightbone, XMFLOAT3(1, 10, 1));
+		AddCollider(collider2);
 	}
-
+	colliderList_;
 }
 
 void Field::Release()
@@ -86,8 +93,9 @@ bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name, fl
 		data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
 
 		//ハンドルにポジションをセットしなおす
-		transform_.position_ = fieldPosList_[i];
-		Model::SetTransform(hModel_, transform_);
+		Transform trans;
+		trans.position_= fieldPosList_[i];
+		Model::SetTransform(hModel_, trans);
 		Model::RayCast(hModel_, &data); //レイを発射
 
 

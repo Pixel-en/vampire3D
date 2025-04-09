@@ -10,7 +10,7 @@ namespace Direct3D
 	//画用紙を2枚用紙しておき、片方を画面に映している間にもう一方に描画。
 	//1フレーム分の絵が出来上がったら画用紙を交換。これにより画面がちらつかない。
 	//その辺を司るのがスワップチェーン
-	IDXGISwapChain*         pSwapChain_ = nullptr;
+	IDXGISwapChain* pSwapChain_ = nullptr;
 
 	//【レンダーターゲットビュー】
 	//描画したいものと、描画先（上でいう画用紙）の橋渡しをするもの
@@ -18,7 +18,7 @@ namespace Direct3D
 
 	//【デプスステンシル】
 	//Zバッファ法を用いて、3D物体の前後関係を正しく表示するためのもの
-	ID3D11Texture2D*		pDepthStencil;
+	ID3D11Texture2D* pDepthStencil;
 
 	//【デプスステンシルビュー】
 	//デプスステンシルの情報をシェーダーに渡すためのもの
@@ -27,7 +27,7 @@ namespace Direct3D
 
 	//【ブレンドステート】
 	//半透明のものをどのように表現するか
-	ID3D11BlendState*	pBlendState[BLEND_MAX];
+	ID3D11BlendState* pBlendState[BLEND_MAX];
 
 	bool		isDrawCollision_ = true;	//コリジョンを表示するか
 	bool		_isLighting = false;		//ライティングするか
@@ -35,8 +35,8 @@ namespace Direct3D
 
 
 	//extern宣言した変数の初期化
-	ID3D11Device*           pDevice_ = nullptr;
-	ID3D11DeviceContext*    pContext_ = nullptr;
+	ID3D11Device* pDevice_ = nullptr;
+	ID3D11DeviceContext* pContext_ = nullptr;
 	SHADER_BUNDLE			shaderBundle[SHADER_MAX] = { 0 };
 	int						screenWidth_ = 0;
 	int						screenHeight_ = 0;
@@ -238,13 +238,13 @@ namespace Direct3D
 		//3D
 		{
 			// 頂点シェーダの作成（コンパイル）
-			ID3DBlob *pCompileVS = NULL;
+			ID3DBlob* pCompileVS = NULL;
 			D3DCompileFromFile(L"Shader/Simple3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 			pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_3D].pVertexShader);
 
 
 			// ピクセルシェーダの作成（コンパイル）
-			ID3DBlob *pCompilePS = NULL;
+			ID3DBlob* pCompilePS = NULL;
 			D3DCompileFromFile(L"Shader/Simple3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 			pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_3D].pPixelShader);
 
@@ -274,13 +274,13 @@ namespace Direct3D
 		//2D
 		{
 			// 頂点シェーダの作成（コンパイル）
-			ID3DBlob *pCompileVS = NULL;
+			ID3DBlob* pCompileVS = NULL;
 			D3DCompileFromFile(L"Shader/Simple2D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 			pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_2D].pVertexShader);
 
 
 			// ピクセルシェーダの作成（コンパイル）
-			ID3DBlob *pCompilePS = NULL;
+			ID3DBlob* pCompilePS = NULL;
 			D3DCompileFromFile(L"Shader/Simple2D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 			pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_2D].pPixelShader);
 
@@ -308,13 +308,13 @@ namespace Direct3D
 		//DEBUG用
 		{
 			// 頂点シェーダの作成（コンパイル）
-			ID3DBlob *pCompileVS = NULL;
+			ID3DBlob* pCompileVS = NULL;
 			D3DCompileFromFile(L"Shader/Debug3D.hlsl", nullptr, nullptr, "VS", "vs_5_0", NULL, 0, &pCompileVS, NULL);
 			pDevice_->CreateVertexShader(pCompileVS->GetBufferPointer(), pCompileVS->GetBufferSize(), NULL, &shaderBundle[SHADER_UNLIT].pVertexShader);
 
 
 			// ピクセルシェーダの作成（コンパイル）
-			ID3DBlob *pCompilePS = NULL;
+			ID3DBlob* pCompilePS = NULL;
 			D3DCompileFromFile(L"Shader/Debug3D.hlsl", nullptr, nullptr, "PS", "ps_5_0", NULL, 0, &pCompilePS, NULL);
 			pDevice_->CreatePixelShader(pCompilePS->GetBufferPointer(), pCompilePS->GetBufferSize(), NULL, &shaderBundle[SHADER_UNLIT].pPixelShader);
 
@@ -390,7 +390,7 @@ namespace Direct3D
 		//加算合成
 		float blendFactor[4] = { D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO, D3D11_BLEND_ZERO };
 		pContext_->OMSetBlendState(pBlendState[blendMode], blendFactor, 0xffffffff);
-		
+
 		//Zバッファへの書き込み
 		pContext_->OMSetDepthStencilState(pDepthStencilState[blendMode], 0);
 	}
@@ -405,13 +405,14 @@ namespace Direct3D
 		if (NULL == pSwapChain_) return;
 
 		//背景の色
-		float clearColor[4] = { 135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f, 1.0f };//R,G,B,A
+		//float clearColor[4] = { 135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f, 1.0f };//R,G,B,A
+		float clearColor[4] = { 0.1f, 0.2f, 0.2f, 1.0f };//R,G,B,A
 
 		//画面をクリア
 		pContext_->ClearRenderTargetView(pRenderTargetView_, clearColor);
 
 		//深度バッファクリア
-		pContext_->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);	
+		pContext_->ClearDepthStencilView(pDepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 	}
 
 
@@ -459,7 +460,7 @@ namespace Direct3D
 
 	//三角形と線分の衝突判定（衝突判定に使用）
 	//https://pheema.hatenablog.jp/entry/ray-triangle-intersection
-	bool Intersect(XMFLOAT3 & start, XMFLOAT3 & direction, XMFLOAT3 & v0, XMFLOAT3 & v1, XMFLOAT3 & v2, float* distance)
+	bool Intersect(XMFLOAT3& start, XMFLOAT3& direction, XMFLOAT3& v0, XMFLOAT3& v1, XMFLOAT3& v2, float* distance)
 	{
 		// 微小な定数([M?ller97] での値)
 		constexpr float kEpsilon = 1e-6f;
@@ -474,7 +475,7 @@ namespace Direct3D
 		// 三角形に対して、レイが平行に入射するような場合 det = 0 となる。
 		// det が小さすぎると 1/det が大きくなりすぎて数値的に不安定になるので
 		// det ? 0 の場合は交差しないこととする。
-		if (-kEpsilon < det && det < kEpsilon) 
+		if (-kEpsilon < det && det < kEpsilon)
 		{
 			return false;
 		}
@@ -494,14 +495,14 @@ namespace Direct3D
 		// v が 0 <= v <= 1 かつ u + v <= 1 を満たすことを調べる。
 		// すなわち、v が 0 <= v <= 1 - u をみたしているかを調べればOK。
 		float v = XMVector3Dot(XMLoadFloat3(&direction), beta).m128_f32[0] * invDet;
-		if (v < 0.0f || u + v > 1.0f) 
+		if (v < 0.0f || u + v > 1.0f)
 		{
 			return false;
 		}
 
 		// t が 0 <= t を満たすことを調べる。
 		float t = XMVector3Dot(edge2, beta).m128_f32[0] * invDet;
-		if (t < 0.0f) 
+		if (t < 0.0f)
 		{
 			return false;
 		}
