@@ -46,7 +46,7 @@ void Field::Initialize()
 	assert(hModel_ >= 0);
 	fieldPosList_ = { {0,-1,0} };
 
-	hWall_ = Model::Load("Assets\\Model\\TestWall.fbx");
+	hWall_ = Model::Load("Assets\\Model\\TestBill.fbx");
 	HandleCheck(hWall_, "•Ç‚Ìƒ‚ƒfƒ‹‚ª‚È‚¢");
 	transform_.position_={0,0,0};
 
@@ -66,12 +66,12 @@ void Field::Draw()
 		Model::Draw(hModel_);
 		Model::SetTransform(hWall_, trans);
 		Model::Draw(hWall_);
-		XMFLOAT3 leftbone = Model::GetBonePosition(hWall_, "WallLeft");
-		BoxCollider* collider = new BoxCollider(leftbone, XMFLOAT3(1, 10, 1));
-		AddCollider(collider);
-		XMFLOAT3 rightbone = Model::GetBonePosition(hWall_, "WallRight");
-		BoxCollider* collider2 = new BoxCollider(rightbone, XMFLOAT3(1, 10, 1));
-		AddCollider(collider2);
+		//XMFLOAT3 leftbone = Model::GetBonePosition(hWall_, "WallLeft");
+		//BoxCollider* collider = new BoxCollider(leftbone, XMFLOAT3(1, 10, 1));
+		//AddCollider(collider);
+		//XMFLOAT3 rightbone = Model::GetBonePosition(hWall_, "WallRight");
+		//BoxCollider* collider2 = new BoxCollider(rightbone, XMFLOAT3(1, 10, 1));
+		//AddCollider(collider2);
 	}
 	colliderList_;
 }
@@ -84,6 +84,8 @@ void Field::Release()
 
 bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name, float _limit)
 {
+
+	//’n–Ê‚Ì”»’è
 	for (int i = 0; i < fieldPosList_.size(); i++) {
 
 		//ƒŒƒC
@@ -113,6 +115,7 @@ bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name, fl
 			}
 		}
 	}
+
 	return false;
 }
 
