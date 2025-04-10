@@ -4,7 +4,7 @@
 #include "Player.h"
 
 namespace {
-	const XMFLOAT2 FIELDSIZE{ 50,50 };
+	const XMFLOAT2 FIELDSIZE{ 100,100 };
 	const XMINT2 FIELDGRID{ 3,3 };
 }
 
@@ -45,9 +45,12 @@ void Field::Initialize()
 	hModel_ = Model::Load("Assets\\Model\\Test_Ground.fbx");
 	assert(hModel_ >= 0);
 	fieldPosList_ = { {0,-1,0} };
+	
+	for (int i = 0; i < FIELDNUM; i++) {
+		hWall_[i] = Model::Load("Assets\\Model\\WallObjects\\WallBldg" + std::to_string(i) + ".fbx");
+		//HandleCheck(hWall_[i], "•Ç‚Ìƒ‚ƒfƒ‹‚ª‚È‚¢");
+	}
 
-	hWall_ = Model::Load("Assets\\Model\\TestBill.fbx");
-	HandleCheck(hWall_, "•Ç‚Ìƒ‚ƒfƒ‹‚ª‚È‚¢");
 	transform_.position_={0,0,0};
 
 }
@@ -64,8 +67,8 @@ void Field::Draw()
 		trans.position_= fieldPosList_[i];
 		Model::SetTransform(hModel_, trans);
 		Model::Draw(hModel_);
-		Model::SetTransform(hWall_, trans);
-		Model::Draw(hWall_);
+		Model::SetTransform(hWall_[i], trans);
+		Model::Draw(hWall_[i]);
 		//XMFLOAT3 leftbone = Model::GetBonePosition(hWall_, "WallLeft");
 		//BoxCollider* collider = new BoxCollider(leftbone, XMFLOAT3(1, 10, 1));
 		//AddCollider(collider);

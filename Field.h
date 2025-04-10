@@ -2,6 +2,10 @@
 #include "Engine/GameObject.h"
 #include <vector>
 
+namespace {
+	const int FIELDNUM{ 9 };	//地面を出現させる数
+}
+
 //地面
 class Field :public GameObject
 {
@@ -17,7 +21,7 @@ class Field :public GameObject
 	//地面を消す
 	XMFLOAT3 DeleteField(int num);
 
-	int hWall_;
+	int hWall_[FIELDNUM];
 
 public:
 	Field(GameObject* parent);
