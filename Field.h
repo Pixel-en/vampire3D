@@ -11,6 +11,8 @@ class Field :public GameObject
 {
 	int hModel_;
 
+	int hWall_[FIELDNUM];
+
 	std::vector<XMFLOAT3> fieldPosList_;	//地面のリスト
 
 	//プレイヤーのいる地面の配列番号
@@ -21,7 +23,8 @@ class Field :public GameObject
 	//地面を消す
 	XMFLOAT3 DeleteField(int num);
 
-	int hWall_[FIELDNUM];
+	//座標からオブジェクトのタイルポジションに計算
+	XMINT2 ObjectPosConvert(XMINT2 _pos);
 
 public:
 	Field(GameObject* parent);

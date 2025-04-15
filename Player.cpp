@@ -19,7 +19,7 @@
 
 namespace {
 	const float MOVESPEED{ 50.0f };
-	const float PLAYERHEIGHT{ 1.5f };
+	const float PLAYERHEIGHT{ 2.5f };
 	const float ROTATESPEED{ 70.0f };
 	const float RAYHEIGHT{ 5.0f };
 	const float GRAVITY{ 9.8f / 2.0f / 60.0f };
