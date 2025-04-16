@@ -122,6 +122,36 @@ void Field::Release()
 bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name, float _limit)
 {
 
+	for (int i = 0; i < fieldPosList_.size(); i++) {
+		//レイ
+		RayCastData data;
+		data.start = _pos;   //レイの発射位置
+		data.start.y += _rayHeight;
+		data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
+
+		//ハンドルにポジションをセットしなおす
+		Transform trans;
+		trans.position_ = fieldPosList_[i];
+		for (int j = 0; j < FIELDNUM; j++) {
+			if(hWall_[j]== -1)
+				continue;
+
+			Model::SetTransform(hWall_[j], trans);
+			Model::RayCast(hWall_[j], &data); //レイを発射
+
+
+			//レイが当たったら
+			if (data.hit)
+			{
+				if (data.dist - _rayHeight >= -_limit && data.dist - _rayHeight <= _limit) {
+					_pos.y -= data.dist - _rayHeight;
+					return true;
+					break;
+				}
+			}
+		}
+	}
+
 	//地面の判定
 	for (int i = 0; i < fieldPosList_.size(); i++) {
 
