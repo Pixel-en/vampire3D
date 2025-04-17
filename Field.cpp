@@ -24,6 +24,8 @@ void Field::SpawnField(int num)
 	currentNum_ = fieldPosList_.size() / 2;
 	Debug::Log(temp);
 	Debug::Log("を中心に生成", true);
+	//ここで壁のtransformをセットする
+
 }
 
 XMFLOAT3 Field::DeleteField(int num)
@@ -64,9 +66,13 @@ void Field::Initialize()
 	assert(hModel_ >= 0);
 	fieldPosList_ = { {0,-1,0} };
 
+	Transform trans;
+	trans.position_.y = 100000;
+
 	for (int i = 0; i < FIELDNUM; i++) {
 		hWall_[i] = Model::Load("Assets\\Model\\WallObjects\\WallBldg" + std::to_string(i + 1) + ".fbx");
 		//HandleCheck(hWall_[i], "壁のモデルがない");
+		Model::SetTransform(hWall_[i], trans);
 	}
 
 	transform_.position_ = { 0,0,0 };
@@ -122,32 +128,26 @@ void Field::Release()
 bool Field::RayCastField(XMFLOAT3& _pos, float _rayHeight, std::string _name, float _limit)
 {
 
-	for (int i = 0; i < fieldPosList_.size(); i++) {
+
+	for (int j = 0; j < FIELDNUM; j++) {
+		if (hWall_[j] == -1)
+			continue;
 		//レイ
 		RayCastData data;
 		data.start = _pos;   //レイの発射位置
 		data.start.y += _rayHeight;
 		data.dir = XMFLOAT3(0, -1, 0);       //レイの方向
 
-		//ハンドルにポジションをセットしなおす
-		Transform trans;
-		trans.position_ = fieldPosList_[i];
-		for (int j = 0; j < FIELDNUM; j++) {
-			if(hWall_[j]== -1)
-				continue;
-
-			Model::SetTransform(hWall_[j], trans);
-			Model::RayCast(hWall_[j], &data); //レイを発射
+		Model::RayCast(hWall_[j], &data); //レイを発射
 
 
-			//レイが当たったら
-			if (data.hit)
-			{
-				if (data.dist - _rayHeight >= -_limit && data.dist - _rayHeight <= _limit) {
-					_pos.y -= data.dist - _rayHeight;
-					return true;
-					break;
-				}
+		//レイが当たったら
+		if (data.hit)
+		{
+			if (data.dist - _rayHeight >= -_limit && data.dist - _rayHeight <= _limit) {
+				_pos.y -= data.dist - _rayHeight;
+				return true;
+				break;
 			}
 		}
 	}

@@ -29,7 +29,7 @@ namespace {
 Player::Player(GameObject* parent)
 	:GameObject(parent, "Player"), hModel_(-1), hImage_(-1)
 {
-	transform_.position_ = { 0,1,0 };
+	transform_.position_ = { 0,2,0 };
 	lookHeight_ = PLAYERHEIGHT;
 	onGround_ = false;
 	gravity = 0.0f;

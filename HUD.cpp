@@ -67,18 +67,23 @@ void HUD::Release()
 
 void HUD::RadarInitialize()
 {
-	hRadar_ = -1;
+	hRadarBack_ = -1;
+	hRadarFrame_ = -1;
 	hREnemy_ = -1;
+	hRPlayer_ = -1;
 	RadarTransform_ = transform_;
 	REnemyTransform_ = transform_;
 	RPlayerTransform_ = transform_;
 
-	hRadar_ = Image::Load("Assets\\Image\\Radar192.png");
-	assert(hRadar_ >= 0);
+
+	hRadarBack_ = Image::Load("Assets\\Image\\Radar192-2Back.png");
+	HandleCheck(hRadarBack_, "レーダーの背景の画像がない");
+	hRadarFrame_ = Image::Load("Assets\\Image\\Radar192-5Frame.png");
+	HandleCheck(hRadarFrame_, "レーダーのフレームの画像がない");
 	hREnemy_ = Image::Load("Assets\\Image\\RadarEnemy.png");
-	assert(hREnemy_ >= 0);
+	HandleCheck(hREnemy_, "レーダーの敵の画像がない");
 	hRPlayer_ = Image::Load("Assets\\Image\\RadarPlayer.png");
-	assert(hRPlayer_ >= 0);
+	HandleCheck(hRPlayer_, "レーダーのプレイヤーの画像がない");
 
 }
 
@@ -123,17 +128,18 @@ void HUD::RadarUpdate()
 void HUD::RadarDraw()
 {
 	//透明度変更
-	Image::SetAlpha(hRadar_, RADAR::RADARALPHA);
 	Image::SetAlpha(hREnemy_, RADAR::RADARALPHA);
-	Image::SetAlpha(hRPlayer_, RADAR::RADARALPHA);
-
-	//レーダーの一を右下に
+	Image::SetAlpha(hRadarFrame_, RADAR::RADARALPHA);
+	Image::SetAlpha(hRadarBack_, RADAR::RADARALPHA);
+	Image::SetAlpha(hRadarBack_, 100);
+	//レーダーの位置を右下に
 	RadarTransform_.position_ = RADAR::RADARPOS;
 	RPlayerTransform_.position_ = RADAR::RADARPOS;
-
 	//レーダーの背景
-	Image::SetTransform(hRadar_, RadarTransform_);
-	Image::Draw(hRadar_);
+	Image::SetTransform(hRadarBack_, RadarTransform_);
+	Image::Draw(hRadarBack_);
+	Image::SetTransform(hRadarFrame_, RadarTransform_);
+	Image::Draw(hRadarFrame_);
 
 	//レーダーのプレイヤー
 	Image::SetTransform(hRPlayer_, RPlayerTransform_);

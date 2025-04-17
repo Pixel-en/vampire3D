@@ -8,7 +8,8 @@
 class HUD :public GameObject
 {
 	/*------レーダー-----*/
-	int hRadar_;	//レーダー用の画像ハンドル
+	int hRadarFrame_;	//レーダーのフレーム用画像ハンドル
+	int hRadarBack_;	//レーダーの背景用画像ハンドル
 	int hREnemy_;	//レーダー上の敵用画像ハンドル
 	int hRPlayer_;	//レーダー上のプレイヤー用画像ハンドル
 
