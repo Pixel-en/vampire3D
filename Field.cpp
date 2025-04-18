@@ -26,6 +26,8 @@ void Field::SpawnField(int num)
 	Debug::Log("を中心に生成", true);
 	//ここで壁のtransformをセットする
 
+
+
 }
 
 XMFLOAT3 Field::DeleteField(int num)
