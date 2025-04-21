@@ -83,6 +83,10 @@ void Field::Initialize()
 
 void Field::Update()
 {
+	ClearCollider();
+	XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[5], "joint13x13_1");
+	BoxCollider* collider = new BoxCollider(bonePos, XMFLOAT3(13, 5, 13));
+	AddCollider(collider);
 }
 
 void Field::Draw()
@@ -92,7 +96,6 @@ void Field::Draw()
 									{-1,0},{0,0},{1,0},
 									{-1,1},{0,1},{1,1} };
 
-	ClearCollider();
 	for (int i = 0; i < fieldPosList_.size(); i++) {
 		Transform trans;
 		trans.position_ = fieldPosList_[i];
@@ -105,6 +108,7 @@ void Field::Draw()
 			if (objPosNum[j].x == objPos.x && objPosNum[j].y == objPos.y) {
 				Model::SetTransform(hWall_[j], trans);
 				Model::Draw(hWall_[j]);
+
 				break;
 			}
 		}
