@@ -83,8 +83,11 @@ void Field::Initialize()
 
 void Field::Update()
 {
+	//ƒvƒƒOƒ‰ƒ€‚Æmaya‚Å‚Í‚š²‚ª‹t
+
+
 	ClearCollider();
-	XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[5], "joint13x13_1");
+	XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[4], "joint13x13_1");
 	BoxCollider* collider = new BoxCollider(bonePos, XMFLOAT3(13, 5, 13));
 	AddCollider(collider);
 }
