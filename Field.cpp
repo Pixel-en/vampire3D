@@ -4,8 +4,9 @@
 #include "Player.h"
 
 namespace {
-	const XMFLOAT2 FIELDSIZE{ 100,100 };
+	const XMINT2 FIELDSIZE{ 100,100 };
 	const XMINT2 FIELDGRID{ 3,3 };
+	const float TOLERANCE{ 0.001f };
 }
 
 void Field::SpawnField(int num)
@@ -16,7 +17,7 @@ void Field::SpawnField(int num)
 	//左下(-100,-100)から生成
 	for (int i = 0; i < FIELDGRID.y; i++) {
 		for (int j = 0; j < FIELDGRID.x; j++) {
-			XMFLOAT3 data = { temp.x + (FIELDSIZE.x * (j - (int)(FIELDGRID.x / 2))),-1,temp.z + (FIELDSIZE.y * (i - (int)(FIELDGRID.y / 2))) };
+			XMFLOAT3 data = { temp.x + (FIELDSIZE.x * (j - (int)(FIELDGRID.x / 2))),0,temp.z + (FIELDSIZE.y * (i - (int)(FIELDGRID.y / 2))) };
 			fieldPosList_.push_back(data);
 		}
 	}
@@ -26,7 +27,64 @@ void Field::SpawnField(int num)
 	Debug::Log("を中心に生成", true);
 	//ここで壁のtransformをセットする
 
+	//オブジェクトのタイル配置位置
 
+	XMINT2 objPosNum[FIELDNUM] = { {-1,-1},{0,-1},{1,-1},
+								{-1,0},{0,0},{1,0},
+								{-1,1},{0,1},{1,1} };
+
+
+	for (int i = 0;i < FIELDNUM;i++) {
+
+		Transform trans;
+		trans.position_ = fieldPosList_[i];
+
+		bool ismatch = false;
+
+		//ボーンの場所と比較して移動しているか調べる
+		for (int j = 0;j < FIELDNUM;j++) {
+			if (hWall_[j] == -1)
+				continue;
+
+			XMFLOAT3 CenterBonePos = Model::GetBonePosition(hWall_[j], "CenterBone");
+			XMVECTOR pos = XMLoadFloat3(&trans.position_);
+			XMVECTOR bone = XMLoadFloat3(&CenterBonePos);
+			
+			XMVECTOR vTolerance = XMVectorReplicate(TOLERANCE);
+
+			if (XMVector3NearEqual(pos, bone, vTolerance)) {
+				ismatch = true;
+				break;
+			}
+		}
+
+		if (ismatch)
+			continue;
+
+		//特定のタイルに特定のオブジェクトを置くように計算
+		XMINT2 objPos = ObjectPosConvert({ (int)fieldPosList_[i].x, (int)fieldPosList_[i].z });
+		for (int j = 0; j < FIELDNUM; j++) {
+			if (objPosNum[j].x == objPos.x && objPosNum[j].y == objPos.y) {
+				
+				if (hWall_[j] == -1)
+					continue;
+
+				//前の位置と移動後の位置を比較して移動量を求める
+				XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[j], "CenterBone");
+				XMFLOAT3 moveVal = { fieldPosList_[i].x - bonePos.x,fieldPosList_[i].y - bonePos.y,fieldPosList_[i].z - bonePos.z };
+
+				//コライダーリスト
+				for (auto it = colliderList_.begin(); it != colliderList_.end(); it++)
+				{
+					if ((*it)->GetName() == "Collider:F" + std::to_string(j))
+						(*it)->SetPosition((*it)->GetPosition() + moveVal);
+				}
+
+				Model::SetTransform(hWall_[j], trans);
+				break;
+			}
+		}
+	}
 
 }
 
@@ -79,51 +137,34 @@ void Field::Initialize()
 
 	transform_.position_ = { 0,0,0 };
 
+
+	XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[5], "joint13x13_1");
+	bonePos.z *= -1;
+	BoxCollider* collider = new BoxCollider(bonePos, XMFLOAT3(13, 5, 13));
+	collider->SetName("Collider:F" + std::to_string(5));
+	AddCollider(collider);
+
 }
 
 void Field::Update()
 {
 	//プログラムとmayaではｚ軸が逆
+	//mayaのモデルの中心にボーンを用意してそこの読む
+	//位置が異なっていたら移動先-移動前の位置を足していく
+	
 
-
-	ClearCollider();
-	XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[4], "joint13x13_1");
-	BoxCollider* collider = new BoxCollider(bonePos, XMFLOAT3(13, 5, 13));
-	AddCollider(collider);
 }
 
 void Field::Draw()
 {
-	//オブジェクトのタイル配置位置
-	XMINT2 objPosNum[FIELDNUM] = { {-1,-1},{0,-1},{1,-1},
-									{-1,0},{0,0},{1,0},
-									{-1,1},{0,1},{1,1} };
 
 	for (int i = 0; i < fieldPosList_.size(); i++) {
 		Transform trans;
 		trans.position_ = fieldPosList_[i];
 		Model::SetTransform(hModel_, trans);
 		Model::Draw(hModel_);
+		Model::Draw(hWall_[i]);
 
-		//特定のタイルに特定のオブジェクトを置くように計算
-		XMINT2 objPos = ObjectPosConvert({ (int)fieldPosList_[i].x, (int)fieldPosList_[i].z });
-		for (int j = 0; j < FIELDNUM; j++) {
-			if (objPosNum[j].x == objPos.x && objPosNum[j].y == objPos.y) {
-				Model::SetTransform(hWall_[j], trans);
-				Model::Draw(hWall_[j]);
-
-				break;
-			}
-		}
-
-		//Model::SetTransform(hWall_[i], trans);
-		//Model::Draw(hWall_[i]);
-		//XMFLOAT3 leftbone = Model::GetBonePosition(hWall_, "WallLeft");
-		//BoxCollider* collider = new BoxCollider(leftbone, XMFLOAT3(1, 10, 1));
-		//AddCollider(collider);
-		//XMFLOAT3 rightbone = Model::GetBonePosition(hWall_, "WallRight");
-		//BoxCollider* collider2 = new BoxCollider(rightbone, XMFLOAT3(1, 10, 1));
-		//AddCollider(collider2);
 	}
 	colliderList_;
 }

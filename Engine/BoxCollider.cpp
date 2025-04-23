@@ -11,6 +11,7 @@ BoxCollider::BoxCollider(XMFLOAT3 basePos, XMFLOAT3 size)
 	center_ = basePos;
 	size_ = size;
 	type_ = COLLIDER_BOX;
+	name_ = "";
 
 	//ƒŠƒŠ[ƒX‚Í”»’è˜g‚Í•\¦‚µ‚È‚¢
 #ifdef _DEBUG

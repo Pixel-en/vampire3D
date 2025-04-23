@@ -1,6 +1,7 @@
 #pragma once
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <string>
 using namespace DirectX;
 
 //クラスの前方宣言
@@ -31,6 +32,7 @@ protected:
 	XMFLOAT3		center_;		//中心位置（ゲームオブジェクトの原点から見た位置）
 	XMFLOAT3		size_;			//判定サイズ（幅、高さ、奥行き）
 	int				hDebugModel_;	//デバッグ表示用のモデルのID
+	std::string 	name_;			//名前
 
 public:
 	//コンストラクタ
@@ -69,12 +71,20 @@ public:
 	//セッター
 	void SetGameObject(GameObject* gameObject) { pGameObject_ = gameObject; }
 
-	GameObject* GetGameObject() { return pGameObject_; }
-
 	void ChengeSize(float _size) { ChengeSize({ _size,_size,_size }); }
 
 	void ChengeSize(XMFLOAT3 _size) { size_ = _size; }
 
 	void SetPosition(XMFLOAT3 _center) { center_ = _center; };
+
+	void SetName(std::string _name) { name_ = _name; }
+
+	//ゲッター
+	GameObject* GetGameObject() { return pGameObject_; }
+
+	std::string GetName() { return name_; }
+
+	XMFLOAT3 GetPosition() { return center_; }
+
 };
 

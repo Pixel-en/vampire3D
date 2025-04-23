@@ -10,6 +10,7 @@ SphereCollider::SphereCollider(XMFLOAT3 center, float radius)
 	center_ = center;
 	size_ = XMFLOAT3(radius, radius, radius);
 	type_ = COLLIDER_CIRCLE;
+	name_ = "";
 
 	//ƒŠƒŠ[ƒX‚Í”»’è˜g‚Í•\¦‚µ‚È‚¢
 #ifdef _DEBUG
