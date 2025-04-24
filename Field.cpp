@@ -1,7 +1,10 @@
 #include "Field.h"
 #include "Engine/Model.h"
 #include "Engine/BoxCollider.h"
+#include "Engine/CsvReader.h"
 #include "Player.h"
+#include <sstream>
+
 
 namespace {
 	const XMINT2 FIELDSIZE{ 100,100 };
@@ -43,7 +46,7 @@ void Field::SpawnField(int num)
 
 		//ボーンの場所と比較して移動しているか調べる
 		for (int j = 0;j < FIELDNUM;j++) {
-			if (hWall_[j] == -1)
+			if (hWall_[j] <0)
 				continue;
 
 			XMFLOAT3 CenterBonePos = Model::GetBonePosition(hWall_[j], "CenterBone");
@@ -66,7 +69,7 @@ void Field::SpawnField(int num)
 		for (int j = 0; j < FIELDNUM; j++) {
 			if (objPosNum[j].x == objPos.x && objPosNum[j].y == objPos.y) {
 				
-				if (hWall_[j] == -1)
+				if (hWall_[j] <0)
 					continue;
 
 				//前の位置と移動後の位置を比較して移動量を求める
@@ -113,6 +116,9 @@ XMINT2 Field::ObjectPosConvert(XMINT2 _pos)
 Field::Field(GameObject* parent)
 	:GameObject(parent, "Field"), hModel_(-1), currentNum_(-1)
 {
+	for (int i = 0; i < FIELDNUM; i++) {
+		hWall_[i] = -1;
+	}
 }
 
 Field::~Field()
@@ -136,12 +142,50 @@ void Field::Initialize()
 
 	transform_.position_ = { 0,0,0 };
 
+	CsvReader csv;
+	csv.Load("Assets\\CSV\\WallBoneList.csv");
+	for (int i = 0; i < csv.GetHeight(); i++) {
+		if (hWall_[i] <0)
+			continue;
+		for (int j = 1; j < csv.GetWidth(); j++) {
+			std::string str = csv.GetString(j, i);
+			XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[i], "joint" + str);
+			bonePos.z *= -1;
+			//ボーンの名前を分割して大きさを出す
+			XMFLOAT3 size = { 0,0,0 };
+			std::stringstream ss(str);
+			std::string s;
+			int count = 0;
+			while (std::getline(ss, s, 'x')) {
+				switch (count)
+				{
+				case 0:
+					size.x = std::stof(s);
+					break;
+				case 1:
+					size.y = std::stof(s);
+					break;
+				case 2:
+					size.z = std::stof(s);
+					break;
+				default:
+					break;
+				}
+				count++;
+			}
+
+			BoxCollider* collider = new BoxCollider(bonePos, size);
+			collider->SetName("Collider:F" + std::to_string(i));
+			AddCollider(collider);
+		}
+	}
+
 	//ボーンの取得を書くよ
-	XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[5], "joint13x13_1");
-	bonePos.z *= -1;
-	BoxCollider* collider = new BoxCollider(bonePos, XMFLOAT3(13, 5, 13));
-	collider->SetName("Collider:F" + std::to_string(5));
-	AddCollider(collider);
+	//XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[5], "joint13x13_1");
+	//bonePos.z *= -1;
+	//BoxCollider* collider = new BoxCollider(bonePos, XMFLOAT3(13, 5, 13));
+	//collider->SetName("Collider:F" + std::to_string(5));
+	//AddCollider(collider);
 
 }
 

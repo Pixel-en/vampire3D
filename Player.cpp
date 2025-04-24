@@ -305,6 +305,11 @@ void Player::OnCollision(GameObject* pTarget)
 			}
 		}
 	}
+
+	else if (pTarget->GetObjectName() == "Field") {
+		Field* field = GetRootJob()->FindGameObject<Field>();
+
+	}
 }
 
 void Player::AcquisitionEXP(int _exp)
