@@ -5,7 +5,7 @@ namespace {
 	const int SPAWNAREA{ 10 };
 	const int SPAWNAREALIMIT{ 50 };
 	const float SPAWNTIME{ 1.0f };
-	const int SPAWNLIMIT{ 1 };
+	const int SPAWNLIMIT{ 50 };
 }
 
 

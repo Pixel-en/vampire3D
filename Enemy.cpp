@@ -24,7 +24,7 @@ Enemy::Enemy(GameObject* parent)
 	status_.power_ = 5;
 	status_.speed_ = 5.0f;
 	status_.hp_ = 5;
-	status_.exp_ = 2;
+	status_.exp_ = 3;
 
 
 	status_.speed_ = MOVESPEED;
@@ -160,13 +160,13 @@ void Enemy::Draw()
 	for (int i = 0; i < ANIMATION::MAX; i++) {
 		Model::SetTransform(hModel_[i], tempTrans);
 	}
-	Model::SetTransform(hModelLow_, transform_);
+	//Model::SetTransform(hModelLow_, transform_);
 
 	if (!isLow_) {
 		Model::Draw(hModel_[anim_]);
 	}
 	else {
-		Model::Draw(hModelLow_);
+		//Model::Draw(hModelLow_);
 	}
 }
 

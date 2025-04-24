@@ -18,7 +18,7 @@ namespace {
 	namespace RADAR {
 		const float RADARSCALE{ 1000.0f };			//レーダーのサイズに縮小
 		const float RADARRANGE{ 14.0f / 100.0f };	//レーダーの感知範囲
-		const XMFLOAT3 RADARPOS{ 0.84f,-0.72f,0.0f };
+		const XMFLOAT3 RADARPOS{ 0.84f,0.63f,0.0f };
 		const int RADARALPHA{ 200 };
 	}
 	namespace LEVEL {

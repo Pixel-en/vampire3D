@@ -48,7 +48,7 @@ Player::Player(GameObject* parent)
 	status_.resist_ = 0.0;
 	status_.level_ = 1;
 	status_.currentExp_ = 0;
-	status_.nextLvExp_ = 5;
+	status_.nextLvExp_ = 3;
 	status_.totalExp_ = 0;
 
 	PauseON_ = false;
