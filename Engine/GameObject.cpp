@@ -435,8 +435,6 @@ GameObject* GameObject::GetRootJob()
 }
 
 
-
-
 void GameObject::UpdateSub()
 {
 	SuperUpdate();

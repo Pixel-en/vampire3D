@@ -85,7 +85,6 @@ void Field::SpawnField(int num)
 			}
 		}
 	}
-
 }
 
 XMFLOAT3 Field::DeleteField(int num)
@@ -137,7 +136,7 @@ void Field::Initialize()
 
 	transform_.position_ = { 0,0,0 };
 
-
+	//ƒ{[ƒ“‚Ìæ“¾‚ğ‘‚­‚æ
 	XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[5], "joint13x13_1");
 	bonePos.z *= -1;
 	BoxCollider* collider = new BoxCollider(bonePos, XMFLOAT3(13, 5, 13));
