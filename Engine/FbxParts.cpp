@@ -689,7 +689,7 @@ void FbxParts::DrawMeshAnime(Transform& transform, FbxTime time, FbxScene* scene
 	//// Fbx形式の行列からDirectX形式の行列へのコピー（4×4の行列）
 	//for (DWORD x = 0; x < 4; x++)
 	//{
-	//	for (DWORD y = 0; y < 4; y++)
+	//	for (DWORD y = 0; y < 4; y++) 
 	//	{
 	//		_localMatrix(x, y) = (float)mCurrentOrentation.Get(x, y);
 	//	}

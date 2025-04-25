@@ -258,7 +258,7 @@ void Player::Move()
 	LookPos_ = { transform_.position_.x,transform_.position_.y + PLAYERHEIGHT,transform_.position_.z };
 	LookTarget_ = { tar.x, tar.y + lookHeight_ - PLAYERHEIGHT, tar.z };
 
-	Debug::Log(transform_.position_,true);
+	//Debug::Log(transform_.position_,true);
 }
 
 void Player::Draw()

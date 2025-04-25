@@ -6,8 +6,9 @@
 #include "Knife.h"
 
 namespace {
-	const float DISMAX{ 10.0f };
+	const float DISMAX{ 20.0f };
 	const float MOVESPEED{ 70.0f };
+	const int ANIMENDFRAME{ 120 };
 }
 
 void EXP::LoadModel()
@@ -15,6 +16,8 @@ void EXP::LoadModel()
 
 	if (expValue_ <= SMALL) {
 		hModel_ = Model::Load("Assets\\Model\\EXP_Blue.fbx");
+
+		HandleCheck(hModel_);
 	}
 	else if(expValue_ <= MEDIUM) {
 		hModel_ = Model::Load("Assets\\Model\\EXP_Yellow.fbx");
@@ -25,7 +28,8 @@ void EXP::LoadModel()
 	else {
 		hModel_ = Model::Load("Assets\\Model\\EXP_Red.fbx");
 	}
-	assert(hModel_ >= 0);
+
+	Model::SetAnimFrame(hModel_, 0, ANIMENDFRAME, 1.0f);
 }
 
 EXP::EXP(GameObject* parent)
@@ -44,12 +48,15 @@ void EXP::Initialize()
 {
 	LoadModel();
 
+
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0.5f, 0), 0.5f);
 	AddCollider(collision);
 }
 
 void EXP::Update()
 {
+
+	Debug::Log(Model::GetAnimFrame(hModel_), true);
 	//ˆê’è”ÍˆÍ“à‚ÉƒvƒŒƒCƒ„[‚ª‚¢‚½‚ç‹ß‚Ã‚­
 	Player* player = GetParent()->FindGameObject<Player>();
 	XMFLOAT3 pPos = player->GetPosition();
@@ -65,7 +72,6 @@ void EXP::Update()
 	direction = XMVector3Normalize(direction);
 
 	transform_.position_ += direction * speed_ * Time::DeltaTime();
-
 }
 
 void EXP::Draw()

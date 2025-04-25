@@ -24,7 +24,7 @@ Enemy::Enemy(GameObject* parent)
 	status_.power_ = 5;
 	status_.speed_ = 5.0f;
 	status_.hp_ = 5;
-	status_.exp_ = 3;
+	status_.exp_ = 2;
 
 
 	status_.speed_ = MOVESPEED;
