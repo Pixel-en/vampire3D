@@ -318,12 +318,12 @@ void Player::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator My
 		Vec = Vec * XMVectorSet(1, 0, 1, 0);
 		Vec = XMVector3Normalize(Vec);
 		//コライダーの範囲
-		float AreaDis = std::sqrtf(((*MyItr)->GetSize().x - (*TargetItr)->GetSize().x) * ((*MyItr)->GetSize().x - (*TargetItr)->GetSize().x) +
-			((*MyItr)->GetSize().z - (*TargetItr)->GetSize().z) * ((*MyItr)->GetSize().z - (*TargetItr)->GetSize().z));
+		float AreaDis = std::sqrtf(((*MyItr)->GetSize().x/2.0f - (*TargetItr)->GetSize().x/2.0f) * ((*MyItr)->GetSize().x/2.0f - (*TargetItr)->GetSize().x/2.0f) +
+			((*MyItr)->GetSize().z/2.0f - (*TargetItr)->GetSize().z/2.0f) * ((*MyItr)->GetSize().z/2.0f - (*TargetItr)->GetSize().z/2.0f));
 		//壁とプレイヤーの距離
 		float Distance = std::sqrtf( (transform_.position_.x- (*TargetItr)->GetPosition().x)*(transform_.position_.x - (*TargetItr)->GetPosition().x)+
 			(transform_.position_.z - (*TargetItr)->GetPosition().z) * (transform_.position_.z - (*TargetItr)->GetPosition().z) );
-		Vec = Vec * ((AreaDis - Distance)/2);
+		Vec = Vec * (AreaDis - Distance);
 		transform_.position_ += Vec;
 	}
 }
