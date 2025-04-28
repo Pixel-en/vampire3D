@@ -87,6 +87,9 @@ public:
 	//ˆø”FpTarget “–‚½‚Á‚½‘Šè
 	void OnCollision(GameObject* pTarget) override;
 
+	//‰½‚©‚É“–‚½‚Á‚½
+	void OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr) override;
+
 	/// <summary>
 	/// ŒoŒ±’l‚ğæ“¾
 	/// </summary>

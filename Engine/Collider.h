@@ -86,5 +86,7 @@ public:
 
 	XMFLOAT3 GetPosition() { return center_; }
 
+	XMFLOAT3 GetSize() { return size_; }
+
 };
 

@@ -144,6 +144,11 @@ void Field::Initialize()
 
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\WallBoneList.csv");
+
+	enum BONE
+	{
+		X,Y,Z
+	};
 	for (int i = 0; i < csv.GetHeight(); i++) {
 		if (hWall_[i] <0)
 			continue;
@@ -159,13 +164,13 @@ void Field::Initialize()
 			while (std::getline(ss, s, 'x')) {
 				switch (count)
 				{
-				case 0:
+				case BONE::X:
 					size.x = std::stof(s);
 					break;
-				case 1:
+				case BONE::Y:
 					size.y = std::stof(s);
 					break;
-				case 2:
+				case BONE::Z:
 					size.z = std::stof(s);
 					break;
 				default:
@@ -180,20 +185,10 @@ void Field::Initialize()
 		}
 	}
 
-	//ボーンの取得を書くよ
-	//XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[5], "joint13x13_1");
-	//bonePos.z *= -1;
-	//BoxCollider* collider = new BoxCollider(bonePos, XMFLOAT3(13, 5, 13));
-	//collider->SetName("Collider:F" + std::to_string(5));
-	//AddCollider(collider);
-
 }
 
 void Field::Update()
 {
-	//プログラムとmayaではｚ軸が逆
-	//mayaのモデルの中心にボーンを用意してそこの読む
-	//位置が異なっていたら移動先-移動前の位置を足していく
 	
 
 }

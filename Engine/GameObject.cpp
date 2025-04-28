@@ -390,6 +390,7 @@ void GameObject::Collision(GameObject* pTarget)
 					{
 						//“–‚½‚Á‚½
 						this->OnCollision(pTarget);
+						this->OnCollisions(pTarget, i, j);
 					}
 				}
 

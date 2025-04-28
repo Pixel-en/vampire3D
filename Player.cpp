@@ -305,10 +305,26 @@ void Player::OnCollision(GameObject* pTarget)
 			}
 		}
 	}
+}
 
-	else if (pTarget->GetObjectName() == "Field") {
-		Field* field = GetRootJob()->FindGameObject<Field>();
+void Player::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr)
+{
+	if (pTarget->GetObjectName() == "Field") {
+		XMFLOAT3 TargetPos = (*TargetItr)->GetPosition();
+		XMVECTOR TargetColliderVec = XMLoadFloat3(&TargetPos);
+		XMVECTOR myVec = XMLoadFloat3(&transform_.position_);
 
+		XMVECTOR Vec = myVec - TargetColliderVec;
+		Vec = Vec * XMVectorSet(1, 0, 1, 0);
+		Vec = XMVector3Normalize(Vec);
+		//コライダーの範囲
+		float AreaDis = std::sqrtf(((*MyItr)->GetSize().x - (*TargetItr)->GetSize().x) * ((*MyItr)->GetSize().x - (*TargetItr)->GetSize().x) +
+			((*MyItr)->GetSize().z - (*TargetItr)->GetSize().z) * ((*MyItr)->GetSize().z - (*TargetItr)->GetSize().z));
+		//壁とプレイヤーの距離
+		float Distance = std::sqrtf( (transform_.position_.x- (*TargetItr)->GetPosition().x)*(transform_.position_.x - (*TargetItr)->GetPosition().x)+
+			(transform_.position_.z - (*TargetItr)->GetPosition().z) * (transform_.position_.z - (*TargetItr)->GetPosition().z) );
+		Vec = Vec * ((AreaDis - Distance)/2);
+		transform_.position_ += Vec;
 	}
 }
 
