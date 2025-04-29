@@ -310,20 +310,34 @@ void Player::OnCollision(GameObject* pTarget)
 void Player::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr)
 {
 	if (pTarget->GetObjectName() == "Field") {
+		//ポジションをXMVECTORに変換
 		XMFLOAT3 TargetPos = (*TargetItr)->GetPosition();
 		XMVECTOR TargetColliderVec = XMLoadFloat3(&TargetPos);
 		XMVECTOR myVec = XMLoadFloat3(&transform_.position_);
 
+		//壁からプレイヤーに向けたベクトルを出す(プレイヤーの移動してきたベクトル)
 		XMVECTOR Vec = myVec - TargetColliderVec;
 		Vec = Vec * XMVectorSet(1, 0, 1, 0);
 		Vec = XMVector3Normalize(Vec);
+
 		//コライダーの範囲
-		float AreaDis = std::sqrtf(((*MyItr)->GetSize().x/2.0f - (*TargetItr)->GetSize().x/2.0f) * ((*MyItr)->GetSize().x/2.0f - (*TargetItr)->GetSize().x/2.0f) +
-			((*MyItr)->GetSize().z/2.0f - (*TargetItr)->GetSize().z/2.0f) * ((*MyItr)->GetSize().z/2.0f - (*TargetItr)->GetSize().z/2.0f));
-		//壁とプレイヤーの距離
-		float Distance = std::sqrtf( (transform_.position_.x- (*TargetItr)->GetPosition().x)*(transform_.position_.x - (*TargetItr)->GetPosition().x)+
-			(transform_.position_.z - (*TargetItr)->GetPosition().z) * (transform_.position_.z - (*TargetItr)->GetPosition().z) );
-		Vec = Vec * (AreaDis - Distance);
+		
+		float DisX = ((*MyItr)->GetSize().x / 2.0f + (*TargetItr)->GetSize().x / 2.0f) - (transform_.position_.x - (*TargetItr)->GetPosition().x);
+		float DisZ = ((*MyItr)->GetSize().z / 2.0f + (*TargetItr)->GetSize().z / 2.0f) - (transform_.position_.z - (*TargetItr)->GetPosition().z);
+		Vec = Vec * XMVectorSet(DisX, 0, DisZ, 0);
+
+		//float AreaDis = std::sqrtf(((*MyItr)->GetSize().x/2.0f - (*TargetItr)->GetSize().x/2.0f) * ((*MyItr)->GetSize().x/2.0f - (*TargetItr)->GetSize().x/2.0f) +
+		//	((*MyItr)->GetSize().z/2.0f - (*TargetItr)->GetSize().z/2.0f) * ((*MyItr)->GetSize().z/2.0f - (*TargetItr)->GetSize().z/2.0f));
+		////壁とプレイヤーの距離
+		//float Distance = std::sqrtf( (transform_.position_.x- (*TargetItr)->GetPosition().x)*(transform_.position_.x - (*TargetItr)->GetPosition().x)+
+		//	(transform_.position_.z - (*TargetItr)->GetPosition().z) * (transform_.position_.z - (*TargetItr)->GetPosition().z) );
+		
+		////案1
+		//Vec = Vec *(AreaDis - Distance);
+		////案2
+		//Vec = Vec * status_.speed_ * Time::DeltaTime();
+
+
 		transform_.position_ += Vec;
 	}
 }
