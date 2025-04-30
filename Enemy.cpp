@@ -29,6 +29,7 @@ Enemy::Enemy(GameObject* parent)
 
 	status_.speed_ = MOVESPEED;
 	transform_.position_ = { 0,0,0 };
+	prePos_ = transform_.position_;
 
 	for (int i = 0; i < ANIMATION::MAX; i++) {
 		hModel_[i] = -1;
@@ -57,7 +58,8 @@ void Enemy::Initialize()
 	hModelLow_ = Model::Load("Assets\\Model\\Character\\Enemy-Low.fbx");
 	HandleCheck(hModelLow_);
 
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), 3.0f);
+	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 2, 0), 3.0f);
+	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1.5f, 0), XMFLOAT3(3.0f, 3.0, 3.0f));
 	AddCollider(collision);
 }
 
@@ -146,6 +148,8 @@ void Enemy::Move()
 		transform_.rotate_.y += XMConvertToDegrees(angle);
 	}
 
+	prePos_ = transform_.position_;
+
 	transform_.position_ += epDistance * status_.speed_ * Time::DeltaTime();
 
 	field->RayCastField(transform_.position_, 3);
@@ -220,5 +224,12 @@ void Enemy::HitDamege(int _damege, float _knock)
 int Enemy::CausedDamege()
 {
 	return status_.power_;
+}
+
+void Enemy::OnCollision(GameObject* pTarget)
+{
+	if (pTarget->GetObjectName() == "Field") {
+		transform_.position_ = prePos_;
+	}
 }
 

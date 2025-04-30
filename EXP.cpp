@@ -56,7 +56,6 @@ void EXP::Initialize()
 void EXP::Update()
 {
 
-	Debug::Log(Model::GetAnimFrame(hModel_), true);
 	//ˆê’è”ÍˆÍ“à‚ÉƒvƒŒƒCƒ„[‚ª‚¢‚½‚ç‹ß‚Ã‚­
 	Player* player = GetParent()->FindGameObject<Player>();
 	XMFLOAT3 pPos = player->GetPosition();

@@ -38,6 +38,8 @@ class Enemy :public GameObject
 	bool prevPause_;
 	bool isLow_;
 
+	XMFLOAT3 prePos_;
+
 public:
 	Enemy(GameObject* parent);
 
@@ -83,6 +85,8 @@ public:
 	/// </summary>
 	/// <returns>É_ÉÅÅ[ÉW</returns>
 	int CausedDamege();
+
+	void OnCollision(GameObject* pTarget) override;
 
 };
 

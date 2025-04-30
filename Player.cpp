@@ -70,7 +70,7 @@ void Player::Initialize()
 	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
 	HandleCheck(hImage_, "クロスヘアがない");
 
-	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), 3.0f);
+	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1.5, 0), 2);
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1, 0), XMFLOAT3(1.0f, 3.0, 1.0f));
 	AddCollider(collision);
 
@@ -252,6 +252,11 @@ void Player::Move()
 		onGround_ = true;
 	}
 
+	XMFLOAT3 tar = { 0,0,0 };
+	XMStoreFloat3(&tar, rotCamtarVec);
+	LookPos_ = { transform_.position_.x,transform_.position_.y + PLAYERHEIGHT,transform_.position_.z };
+	LookTarget_ = { tar.x, tar.y + lookHeight_ - PLAYERHEIGHT, tar.z };
+
 	//Debug::Log(transform_.position_,true);
 }
 
@@ -301,7 +306,6 @@ void Player::OnCollision(GameObject* pTarget)
 		}
 	}
 
-	//壁に当たったら前の位置に戻す
 	if (pTarget->GetObjectName() == "Field")
 	{
 		transform_.position_ = prePos_;

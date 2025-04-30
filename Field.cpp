@@ -154,6 +154,9 @@ void Field::Initialize()
 			continue;
 		for (int j = 1; j < csv.GetWidth(); j++) {
 			std::string str = csv.GetString(j, i);
+			if(str=="0")
+				continue;
+
 			XMFLOAT3 bonePos = Model::GetBonePosition(hWall_[i], "joint" + str);
 			bonePos.z *= -1;
 			//ボーンの名前を分割して大きさを出す
