@@ -30,6 +30,7 @@ Player::Player(GameObject* parent)
 	:GameObject(parent, "Player"), hModel_(-1), hImage_(-1)
 {
 	transform_.position_ = { 0,2,0 };
+	prePos_ = transform_.position_;
 	lookHeight_ = PLAYERHEIGHT;
 	onGround_ = false;
 	gravity = 0.0f;
@@ -94,12 +95,8 @@ void Player::Update()
 	Move();
 
 	
-	if (InvincibleTimer_ <= 0.0) {
-		Clash();
-	}
-	else {
+	if (InvincibleTimer_ > 0.0) {
 		InvincibleTimer_ -= Time::DeltaTime();
-		NonClash();
 		if(InvincibleTimer_ <= INVINCIBLETIME/2.0f)
 			Input::SetPadVibration(0, 0);
 	}
@@ -228,19 +225,8 @@ void Player::Move()
 	XMVECTOR rotCamtarVec = XMVector3TransformCoord(camtarVec, rot);
 	rotCamtarVec = XMVector3Normalize(rotCamtarVec);
 
-	transform_.position_ += rotMoveVec * status_.speed_ * Time::DeltaTime() + Gravity * gravity;
-
-	//フィールドからモデルのハンドルをとってくる
-	Field* field = GetParent()->FindGameObject<Field>();
-	NullCheck(field);
-	//レイがあたった距離下げる
-	onGround_ = false;
-	if (field->RayCastField(transform_.position_, RAYHEIGHT, "Player")) {
-		onGround_ = true;
-	}
-
-
 	//カメラ
+	//前フレームの位置でカメラを動かすことで壁でがくがくするのを防ぐ
 	if (Input::IsKey(DIK_SPACE)) {
 		//俯瞰モード
 		Camera::SetPosition({ transform_.position_.x,transform_.position_.y + 15,transform_.position_.z - 10 });
@@ -253,10 +239,18 @@ void Player::Move()
 		Camera::SetTarget({ tarPos.x, tarPos.y + lookHeight_, tarPos.z });
 	}
 
-	XMFLOAT3 tar = { 0,0,0 };
-	XMStoreFloat3(&tar, rotCamtarVec);
-	LookPos_ = { transform_.position_.x,transform_.position_.y + PLAYERHEIGHT,transform_.position_.z };
-	LookTarget_ = { tar.x, tar.y + lookHeight_ - PLAYERHEIGHT, tar.z };
+	prePos_ = transform_.position_;
+
+	transform_.position_ += rotMoveVec * status_.speed_ * Time::DeltaTime() + Gravity * gravity;
+
+	//フィールドからモデルのハンドルをとってくる
+	Field* field = GetParent()->FindGameObject<Field>();
+	NullCheck(field);
+	//レイがあたった距離下げる
+	onGround_ = false;
+	if (field->RayCastField(transform_.position_, RAYHEIGHT, "Player")) {
+		onGround_ = true;
+	}
 
 	//Debug::Log(transform_.position_,true);
 }
@@ -286,6 +280,9 @@ void Player::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectName() == "Enemy")
 	{
+		if (InvincibleTimer_ > 0.0f)
+			return;
+
 		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
 		std::vector<Enemy*> List = ep->GetEnemyList();
 		for (int i = 0; i < List.size(); i++) {
@@ -297,48 +294,17 @@ void Player::OnCollision(GameObject* pTarget)
 					sc->ChangeScene(SCENE_ID_GAMEOVER);
 					Input::SetPadVibration(0, 0);
 				}
-
-				NonClash();
 				isDamege_ = true;
 				InvincibleTimer_ = INVINCIBLETIME;
 				break;
 			}
 		}
 	}
-}
 
-void Player::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr)
-{
-	if (pTarget->GetObjectName() == "Field") {
-		//ポジションをXMVECTORに変換
-		XMFLOAT3 TargetPos = (*TargetItr)->GetPosition();
-		XMVECTOR TargetColliderVec = XMLoadFloat3(&TargetPos);
-		XMVECTOR myVec = XMLoadFloat3(&transform_.position_);
-
-		//壁からプレイヤーに向けたベクトルを出す(プレイヤーの移動してきたベクトル)
-		XMVECTOR Vec = myVec - TargetColliderVec;
-		Vec = Vec * XMVectorSet(1, 0, 1, 0);
-		Vec = XMVector3Normalize(Vec);
-
-		//コライダーの範囲
-		
-		float DisX = ((*MyItr)->GetSize().x / 2.0f + (*TargetItr)->GetSize().x / 2.0f) - (transform_.position_.x - (*TargetItr)->GetPosition().x);
-		float DisZ = ((*MyItr)->GetSize().z / 2.0f + (*TargetItr)->GetSize().z / 2.0f) - (transform_.position_.z - (*TargetItr)->GetPosition().z);
-		Vec = Vec * XMVectorSet(DisX, 0, DisZ, 0);
-
-		//float AreaDis = std::sqrtf(((*MyItr)->GetSize().x/2.0f - (*TargetItr)->GetSize().x/2.0f) * ((*MyItr)->GetSize().x/2.0f - (*TargetItr)->GetSize().x/2.0f) +
-		//	((*MyItr)->GetSize().z/2.0f - (*TargetItr)->GetSize().z/2.0f) * ((*MyItr)->GetSize().z/2.0f - (*TargetItr)->GetSize().z/2.0f));
-		////壁とプレイヤーの距離
-		//float Distance = std::sqrtf( (transform_.position_.x- (*TargetItr)->GetPosition().x)*(transform_.position_.x - (*TargetItr)->GetPosition().x)+
-		//	(transform_.position_.z - (*TargetItr)->GetPosition().z) * (transform_.position_.z - (*TargetItr)->GetPosition().z) );
-		
-		////案1
-		//Vec = Vec *(AreaDis - Distance);
-		////案2
-		//Vec = Vec * status_.speed_ * Time::DeltaTime();
-
-
-		transform_.position_ += Vec;
+	//壁に当たったら前の位置に戻す
+	if (pTarget->GetObjectName() == "Field")
+	{
+		transform_.position_ = prePos_;
 	}
 }
 

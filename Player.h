@@ -28,6 +28,9 @@ private:
 		unsigned long long totalExp_;	//取得した経験値量(実数値)
 	};
 
+	//前のポジション
+	XMFLOAT3 prePos_;
+
 	Status status_;
 
 	void WeaponCSVLoad();
@@ -36,9 +39,6 @@ private:
 	std::map<std::string, WeaponObject::Status> WeaponState_;
 public:
 	std::vector<WeaponObject*> MyWeaponList_;
-
-	XMFLOAT3 LookPos_;
-	XMFLOAT3 LookTarget_;
 
 	//武器のステータスを書き込む
 	//引数：name　武器の名前
@@ -86,9 +86,6 @@ public:
 	//何かに当たった
 	//引数：pTarget 当たった相手
 	void OnCollision(GameObject* pTarget) override;
-
-	//何かに当たった
-	void OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr) override;
 
 	/// <summary>
 	/// 経験値を取得
