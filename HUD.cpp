@@ -318,7 +318,7 @@ void HUD::LevelDraw()
 			std::string level = "new";
 			int Lv = 0;
 			FontData data;
-			data.font = TextFont::GetFontName(FontList::Gkktt);
+			data.font = TextFont::GetFontName(FontList::Makinas);
 			data.Color = D2D1::ColorF(255, 255, 255);
 			data.fontSize = 30;
 

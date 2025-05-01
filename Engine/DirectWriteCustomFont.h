@@ -30,6 +30,7 @@ namespace FontList
 		Kenney,
 		Gkktt,
 		Kaisotai,
+		Makinas,
 		MAX
 	};
 
@@ -38,6 +39,7 @@ namespace FontList
 		L"Assets\\Font\\Kenney Pixel.ttf",
 		L"Assets\\Font\\851Gkktt_005.ttf",
 		L"Assets\\Font\\Kaisotai-Next-UP-B.ttf",
+		L"Assets\\Font\\Makinas-4-Square.otf",
 	};
 }
 

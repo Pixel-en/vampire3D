@@ -72,8 +72,8 @@ void Player::Initialize()
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1, 0), XMFLOAT3(1.0f, 3.0, 1.0f));
 	AddCollider(collision);
 
-	//Knife* k = Instantiate<Knife>(GetParent());
-	//MyWeaponList_.push_back(k);
+	Knife* k = Instantiate<Knife>(GetParent());
+	MyWeaponList_.push_back(k);
 }
 
 void Player::SuperUpdate()

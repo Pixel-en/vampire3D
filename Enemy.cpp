@@ -55,7 +55,7 @@ void Enemy::Initialize()
 	Model::SetAnimFrame(hModel_[ANIMATION::DEATH], 0, DEATHENDFRAME * 2, 1.0f);
 
 
-	hModelLow_ = Model::Load("Assets\\Model\\Character\\Enemy-Low.fbx");
+	hModelLow_ = Model::Load("Assets\\Model\\Character\\Enemy-middle.fbx");
 	HandleCheck(hModelLow_);
 
 	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 2, 0), 3.0f);
