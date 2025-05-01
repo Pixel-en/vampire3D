@@ -164,13 +164,13 @@ void Enemy::Draw()
 	for (int i = 0; i < ANIMATION::MAX; i++) {
 		Model::SetTransform(hModel_[i], tempTrans);
 	}
-	//Model::SetTransform(hModelLow_, transform_);
+	Model::SetTransform(hModelLow_, transform_);
 
 	if (!isLow_) {
 		Model::Draw(hModel_[anim_]);
 	}
 	else {
-		//Model::Draw(hModelLow_);
+		Model::Draw(hModelLow_);
 	}
 }
 

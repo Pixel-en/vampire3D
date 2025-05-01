@@ -166,7 +166,7 @@ bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
 void Player::Move()
 {
 	//移動方向ベクトル
-	XMVECTOR moveVec = XMVECTOR{ 0,0,0 };
+	XMVECTOR moveDirVec = XMVECTOR{ 0,0,0 };
 	//カメラターゲット用ベクトル
 	XMVECTOR camtarVec = XMVECTOR{ 0, 0, 1, 0 };
 
@@ -187,13 +187,13 @@ void Player::Move()
 	//移動
 	if (onGround_) {
 		if (Input::IsKey(DIK_W) || Input::GetPadStickL().y >= 0.5f)
-			moveVec = XMVectorSetZ(moveVec, 1.0);
+			moveDirVec = XMVectorSetZ(moveDirVec, 1.0);
 		if (Input::IsKey(DIK_S) || Input::GetPadStickL().y <= -0.5f)
-			moveVec = XMVectorSetZ(moveVec, -1.0);
+			moveDirVec = XMVectorSetZ(moveDirVec, -1.0);
 		if (Input::IsKey(DIK_A) || Input::GetPadStickL().x <= -0.5f)
-			moveVec = XMVectorSetX(moveVec, -1.0);
+			moveDirVec = XMVectorSetX(moveDirVec, -1.0);
 		if (Input::IsKey(DIK_D) || Input::GetPadStickL().x >= 0.5f)
-			moveVec = XMVectorSetX(moveVec, 1.0);
+			moveDirVec = XMVectorSetX(moveDirVec, 1.0);
 	}
 
 	//カメラ縦
@@ -217,16 +217,13 @@ void Player::Move()
 	XMMATRIX rot = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
 
 	//移動方向ベクトルに回転マトリクスをかけ回転させたベクトルを作る
-	XMVECTOR rotMoveVec = XMVector3TransformCoord(moveVec, rot);
+	XMVECTOR rotMoveVec = XMVector3TransformCoord(moveDirVec, rot);
 	rotMoveVec = XMVector3Normalize(rotMoveVec);
 
 	//ターゲット用ベクトルに回転マトリクスをかけ回転させたベクトルを作る
 	XMVECTOR rotCamtarVec = XMVector3TransformCoord(camtarVec, rot);
 	rotCamtarVec = XMVector3Normalize(rotCamtarVec);
 
-	Debug::Log(XMVectorGetX(rotMoveVec));
-	Debug::Log(",");
-	Debug::Log(XMVectorGetZ(rotMoveVec),true);
 
 	//カメラ
 	//前フレームの位置でカメラを動かすことで壁でがくがくするのを防ぐ
@@ -244,6 +241,8 @@ void Player::Move()
 
 	//移動前の場所を取っておく
 	prePos_ = transform_.position_;
+	//移動方向を取っておく
+	MoveVec_ = rotMoveVec;
 
 	//移動
 	transform_.position_ += rotMoveVec * status_.speed_ * Time::DeltaTime() + Gravity * gravity;
@@ -318,23 +317,25 @@ void Player::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator My
 		//移動前の戻す
 		transform_.position_ = prePos_;
 
-		//プレイヤーの位置を取得
+		//移動方向をXとZに分解
+		XMVECTOR VecX = XMVectorSet(XMVectorGetX(MoveVec_), 0, 0, 0);
+		XMVECTOR VecZ = XMVectorSet(0, 0, XMVectorGetZ(MoveVec_), 0);
 
-		//transform_.position_ += VecX * status_.speed_ * Time::DeltaTime();
-		//if ((*MyItr)->IsHit(*TargetItr)) {
-		//	transform_.position_ = prePos_;
-		//}
-		//else {
-		//	prePos_ = transform_.position_;
-		//}
+		transform_.position_ += VecX * status_.speed_ * Time::DeltaTime();
+		if ((*MyItr)->IsHit(*TargetItr)) {
+			transform_.position_ = prePos_;
+		}
+		else {
+			prePos_ = transform_.position_;
+		}
 
-		//transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
-		//if ((*MyItr)->IsHit(*TargetItr)) {
-		//	transform_.position_ = prePos_;
-		//}
-		//else {
-		//	prePos_ = transform_.position_;
-		//}
+		transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
+		if ((*MyItr)->IsHit(*TargetItr)) {
+			transform_.position_ = prePos_;
+		}
+		else {
+			prePos_ = transform_.position_;
+		}
 
 	}
 }

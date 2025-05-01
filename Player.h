@@ -30,6 +30,8 @@ private:
 
 	//前のポジション
 	XMFLOAT3 prePos_;
+	//移動ベクトル
+	XMVECTOR MoveVec_;
 
 	Status status_;
 
