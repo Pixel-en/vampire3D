@@ -86,7 +86,8 @@ public:
 	/// <returns>ƒ_ƒ[ƒW</returns>
 	int CausedDamege();
 
-	void OnCollision(GameObject* pTarget) override;
+
+	void OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr) override;
 
 };
 

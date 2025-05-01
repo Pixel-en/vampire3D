@@ -15,8 +15,6 @@
 #include "Knife.h"
 #include "HUD.h"
 
-#include "Bomb.h"
-
 namespace {
 	const float MOVESPEED{ 50.0f };
 	const float PLAYERHEIGHT{ 2.5f };
@@ -74,8 +72,8 @@ void Player::Initialize()
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1, 0), XMFLOAT3(1.0f, 3.0, 1.0f));
 	AddCollider(collision);
 
-	Knife* k = Instantiate<Knife>(GetParent());
-	MyWeaponList_.push_back(k);
+	//Knife* k = Instantiate<Knife>(GetParent());
+	//MyWeaponList_.push_back(k);
 }
 
 void Player::SuperUpdate()
@@ -104,7 +102,7 @@ void Player::Update()
 
 void Player::WeaponCSVLoad()
 {
-	//プレイヤーで読み込むのがいいのかも
+	//武器のステータスを読み込む
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\WeaponInitStatus.csv");
 	  
@@ -140,6 +138,7 @@ void Player::WeaponCSVLoad()
 
 void Player::PlayerStatusLoad()
 {
+	//プレイヤーのステータスを読み込む
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\PlayerStatus.csv");
 
@@ -225,6 +224,10 @@ void Player::Move()
 	XMVECTOR rotCamtarVec = XMVector3TransformCoord(camtarVec, rot);
 	rotCamtarVec = XMVector3Normalize(rotCamtarVec);
 
+	Debug::Log(XMVectorGetX(rotMoveVec));
+	Debug::Log(",");
+	Debug::Log(XMVectorGetZ(rotMoveVec),true);
+
 	//カメラ
 	//前フレームの位置でカメラを動かすことで壁でがくがくするのを防ぐ
 	if (Input::IsKey(DIK_SPACE)) {
@@ -239,8 +242,10 @@ void Player::Move()
 		Camera::SetTarget({ tarPos.x, tarPos.y + lookHeight_, tarPos.z });
 	}
 
+	//移動前の場所を取っておく
 	prePos_ = transform_.position_;
 
+	//移動
 	transform_.position_ += rotMoveVec * status_.speed_ * Time::DeltaTime() + Gravity * gravity;
 
 	//フィールドからモデルのハンドルをとってくる
@@ -252,12 +257,11 @@ void Player::Move()
 		onGround_ = true;
 	}
 
+	//カメラ場所をと見ている場所をとる
 	XMFLOAT3 tar = { 0,0,0 };
 	XMStoreFloat3(&tar, rotCamtarVec);
 	LookPos_ = { transform_.position_.x,transform_.position_.y + PLAYERHEIGHT,transform_.position_.z };
 	LookTarget_ = { tar.x, tar.y + lookHeight_ - PLAYERHEIGHT, tar.z };
-
-	//Debug::Log(transform_.position_,true);
 }
 
 void Player::Draw()
@@ -306,9 +310,32 @@ void Player::OnCollision(GameObject* pTarget)
 		}
 	}
 
-	if (pTarget->GetObjectName() == "Field")
-	{
+}
+
+void Player::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr)
+{
+	if (pTarget->GetObjectName() == "Field") {
+		//移動前の戻す
 		transform_.position_ = prePos_;
+
+		//プレイヤーの位置を取得
+
+		//transform_.position_ += VecX * status_.speed_ * Time::DeltaTime();
+		//if ((*MyItr)->IsHit(*TargetItr)) {
+		//	transform_.position_ = prePos_;
+		//}
+		//else {
+		//	prePos_ = transform_.position_;
+		//}
+
+		//transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
+		//if ((*MyItr)->IsHit(*TargetItr)) {
+		//	transform_.position_ = prePos_;
+		//}
+		//else {
+		//	prePos_ = transform_.position_;
+		//}
+
 	}
 }
 

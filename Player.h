@@ -91,9 +91,11 @@ public:
 	//引数：pTarget 当たった相手
 	void OnCollision(GameObject* pTarget) override;
 
+	void OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr) override;
+
 	/// <summary>
 	/// 経験値を取得
-	/// </summary>
+	/// </summary>	
 	/// <param name="_exp">取得した経験値</param>
 	void AcquisitionEXP(int _exp);
 };

@@ -388,7 +388,7 @@ void GameObject::Collision(GameObject* pTarget)
 
 					if ((*i)->IsHit(*j))
 					{
-						//this->OnCollisions(pTarget, i, j);
+						this->OnCollisions(pTarget, i, j);
 
 						//“–‚½‚Á‚½
 						this->OnCollision(pTarget);

@@ -226,10 +226,34 @@ int Enemy::CausedDamege()
 	return status_.power_;
 }
 
-void Enemy::OnCollision(GameObject* pTarget)
+void Enemy::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr)
 {
+
 	if (pTarget->GetObjectName() == "Field") {
+		//移動前の戻す
 		transform_.position_ = prePos_;
+
+		//プレイヤーの位置を取得
+		Player* player = GetRootJob()->FindGameObject<Player>();
+		XMVECTOR VecX = XMVector3Normalize(XMVectorSet(player->GetPosition().x - transform_.position_.x, 0, 0, 0));
+		XMVECTOR VecZ = XMVector3Normalize(XMVectorSet(0, 0, player->GetPosition().z - transform_.position_.z, 0));
+
+		transform_.position_ += VecX * status_.speed_ * Time::DeltaTime();
+		if ((*MyItr)->IsHit(*TargetItr)) {
+			transform_.position_ = prePos_;
+		}
+		else {
+			prePos_ = transform_.position_;
+		}
+
+		transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
+		if ((*MyItr)->IsHit(*TargetItr)) {
+			transform_.position_ = prePos_;
+		}
+		else {
+			prePos_ = transform_.position_;
+		}
+		
 	}
 }
 
