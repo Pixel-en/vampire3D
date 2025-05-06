@@ -41,6 +41,8 @@ namespace Direct3D
 	int						screenWidth_ = 0;
 	int						screenHeight_ = 0;
 
+	const XMFLOAT4 BackColor = {135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f, 1.0f};
+
 
 
 	//‰Šú‰»ˆ—
@@ -406,7 +408,8 @@ namespace Direct3D
 
 		//”wŒi‚ÌF
 		//float clearColor[4] = { 135.0f / 255.0f, 206.0f / 255.0f, 235.0f / 255.0f, 1.0f };//R,G,B,A
-		float clearColor[4] = { 0.1f, 0.2f, 0.2f, 1.0f };//R,G,B,A
+		//float clearColor[4] = { 0.1f, 0.2f, 0.2f, 1.0f };//R,G,B,A
+		float clearColor[4] = { BackColor.x, BackColor.y, BackColor.z, BackColor.w };//R,G,B,A
 
 		//‰æ–Ê‚ðƒNƒŠƒA
 		pContext_->ClearRenderTargetView(pRenderTargetView_, clearColor);
