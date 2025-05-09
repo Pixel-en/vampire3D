@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Field.h"
 #include "EXPManager.h"
+#include "Engine/Camera.h"
 
 namespace {
 	const float MOVESPEED{ 5.0f };
