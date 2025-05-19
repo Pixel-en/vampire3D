@@ -80,7 +80,7 @@ void Player::SuperUpdate()
 {
 	if (PauseON_) {
 		Input::SetPadVibration(0, 0);
-		if (Input::IsKeyDown(DIK_RETURN)||Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
+		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			GetParent()->SetFlags(0b11101);
 			//GetParent()->SetChildFlags(0b11101);
 			PauseON_ = false;
@@ -92,10 +92,10 @@ void Player::Update()
 {
 	Move();
 
-	
+
 	if (InvincibleTimer_ > 0.0) {
 		InvincibleTimer_ -= Time::DeltaTime();
-		if(InvincibleTimer_ <= INVINCIBLETIME/2.0f)
+		if (InvincibleTimer_ <= INVINCIBLETIME / 2.0f)
 			Input::SetPadVibration(0, 0);
 	}
 }
@@ -105,7 +105,7 @@ void Player::WeaponCSVLoad()
 	//武器のステータスを読み込む
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\WeaponInitStatus.csv");
-	  
+
 	for (int i = 0; i < csv.GetHeight(); i++) {
 		std::string str;
 		str = csv.GetString(0, i);
@@ -151,6 +151,7 @@ void Player::PlayerStatusLoad()
 	status_.criticalBoost_ = csv.GetValue(7, 2);
 	status_.area_ = csv.GetValue(8, 2);
 	status_.resist_ = csv.GetValue(9, 2);
+	status_.maxHp_ = status_.hp_;
 }
 
 bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
@@ -277,7 +278,7 @@ void Player::Draw()
 	data.Color = D2D1::ColorF(255, 255, 255);
 	data.fontSize = 35;
 
-	TextFont::Draw("体力"+std::to_string(status_.hp_), {30,30}, data);
+	//TextFont::Draw("体力" + std::to_string(status_.hp_), { 30,30 }, data);
 }
 
 void Player::Release()
@@ -311,7 +312,7 @@ void Player::OnCollision(GameObject* pTarget)
 
 }
 
-void Player::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr)
+void Player::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list)
 {
 	if (pTarget->GetObjectName() == "Field") {
 		//移動前の戻す
@@ -322,20 +323,28 @@ void Player::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator My
 		XMVECTOR VecZ = XMVectorSet(0, 0, XMVectorGetZ(MoveVec_), 0);
 
 		transform_.position_ += VecX * status_.speed_ * Time::DeltaTime();
-		if ((*MyItr)->IsHit(*TargetItr)) {
-			transform_.position_ = prePos_;
-		}
-		else {
-			prePos_ = transform_.position_;
-		}
 
-		transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
-		if ((*MyItr)->IsHit(*TargetItr)) {
-			transform_.position_ = prePos_;
+		bool hit = false;
+
+		for (auto TargetItr = list.begin(); TargetItr != list.end(); ++TargetItr) {
+			if ((*MyItr)->IsHit(*TargetItr)) {
+				transform_.position_ = prePos_;
+				hit = true;
+			}
 		}
-		else {
+		if (!hit)
 			prePos_ = transform_.position_;
+
+		hit = false;
+		transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
+		for (auto TargetItr = list.begin(); TargetItr != list.end(); ++TargetItr) {
+			if ((*MyItr)->IsHit(*TargetItr)) {
+				transform_.position_ = prePos_;
+				hit = true;
+			}
 		}
+		if (!hit)
+			prePos_ = transform_.position_;
 
 	}
 }

@@ -41,6 +41,7 @@ void HUD::Initialize()
 {
 	RadarInitialize();
 	LevelInitialize();
+	HPInitialize();
 }
 
 void HUD::SuperUpdate()
@@ -52,6 +53,8 @@ void HUD::Update()
 {
 	LevelUpdate();
 	RadarUpdate();
+	
+	HPUpdate();
 }
 
 void HUD::Draw()
@@ -59,6 +62,7 @@ void HUD::Draw()
 	TimerDraw();
 	RadarDraw();
 	LevelDraw();
+	HPDraw();
 }
 
 void HUD::Release()
@@ -445,4 +449,31 @@ void HUD::TimerDraw()
 	minutes.insert(0, 2 - minutes.length(), '0');
 	seconds.insert(0, 2 - seconds.length(), '0');
 	TextFont::Draw(minutes + ":" + seconds.c_str(), { 600,30 }, data);
+}
+
+void HUD::HPInitialize()
+{
+	hHPBack_ = Image::Load("Assets\\Image\\HPBack.png");
+	HandleCheck(hHPBack_);
+	hHPFrame_ = Image::Load("Assets\\Image\\HP.png");
+	HandleCheck(hHPFrame_);
+	HPBackTransform_.position_ = { -0.8f,0.8f,0 };
+	HPFrameTransform_.position_ = { -0.8f,0.8f,0 };
+}
+
+void HUD::HPUpdate()
+{
+	Player* player = GetParent()->FindGameObject<Player>();
+	NullCheck(player);
+	//HP‚Ì‘å‚«‚³‚ð•Ï‚¦‚é
+	float ratio = player->GetStatus().hp_ / player->GetStatus().maxHp_;
+	HPFrameTransform_.scale_ = { ratio,1,1 };
+}
+
+void HUD::HPDraw()
+{
+	Image::SetTransform(hHPBack_, HPBackTransform_);
+	Image::Draw(hHPBack_);
+	Image::SetTransform(hHPFrame_, HPFrameTransform_);
+	Image::Draw(hHPFrame_);
 }

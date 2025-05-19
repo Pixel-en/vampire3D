@@ -63,6 +63,15 @@ class HUD :public GameObject
 	float PlayTime_;
 	void TimerDraw();
 
+	/*--------HP--------*/
+	int hHPBack_;	//HPの背景用画像
+	int hHPFrame_;	//HPのフレーム用画像
+	Transform HPBackTransform_;	//HPのトランスフォーム
+	Transform HPFrameTransform_;	//HPのフレームのトランスフォーム
+	void HPInitialize();
+	void HPUpdate();
+	void HPDraw();
+
 public:
 	HUD(GameObject* parent);
 

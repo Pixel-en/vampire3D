@@ -238,6 +238,12 @@ public:
 	//引数：TargetItr　相手のコライダーリストのイテレーター
 	virtual void OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr) {};
 
+	//何かに衝突した場合に呼ばれる(オーバーライド用)
+	//引数：pTarget 衝突した相手
+	//引数：MyItr　自分のコライダーリストのイテレーター
+	//引数：list　相手のコライダーリスト
+	virtual void OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list) {};
+
 	//コライダー（衝突判定）を削除
 	void ClearCollider();
 

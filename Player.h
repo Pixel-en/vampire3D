@@ -12,6 +12,7 @@ private:
 	{
 		//ゲーム中にパワーアップが取得できるもの
 		int hp_;				//体力(実数値)
+		float maxHp_;			//最大体力(実数値)
 		float speed_;			//移動速度(実数値)
 		float strength_;		//攻撃力(割合)
 		int critical_;		//クリティカル率(割合)
@@ -93,7 +94,7 @@ public:
 	//引数：pTarget 当たった相手
 	void OnCollision(GameObject* pTarget) override;
 
-	void OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr) override;
+	void OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list) override;
 
 	/// <summary>
 	/// 経験値を取得

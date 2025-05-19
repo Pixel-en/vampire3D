@@ -227,9 +227,8 @@ int Enemy::CausedDamege()
 	return status_.power_;
 }
 
-void Enemy::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*>::iterator TargetItr)
+void Enemy::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list)
 {
-
 	if (pTarget->GetObjectName() == "Field") {
 		//ˆÚ“®‘O‚Ì–ß‚·
 		transform_.position_ = prePos_;
@@ -240,21 +239,30 @@ void Enemy::OnCollisions(GameObject* pTarget, std::list<Collider*>::iterator MyI
 		XMVECTOR VecZ = XMVector3Normalize(XMVectorSet(0, 0, player->GetPosition().z - transform_.position_.z, 0));
 
 		transform_.position_ += VecX * status_.speed_ * Time::DeltaTime();
-		if ((*MyItr)->IsHit(*TargetItr)) {
-			transform_.position_ = prePos_;
-		}
-		else {
-			prePos_ = transform_.position_;
-		}
 
-		transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
-		if ((*MyItr)->IsHit(*TargetItr)) {
-			transform_.position_ = prePos_;
+		bool hit = false;
+
+		for (auto TargetItr = list.begin(); TargetItr != list.end(); ++TargetItr) {
+			if ((*MyItr)->IsHit(*TargetItr)) {
+				transform_.position_ = prePos_;
+				hit = true;
+			}
 		}
-		else {
+		if (!hit)
 			prePos_ = transform_.position_;
+
+		hit = false;
+		transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
+		for (auto TargetItr = list.begin(); TargetItr != list.end(); ++TargetItr) {
+			if ((*MyItr)->IsHit(*TargetItr)) {
+				transform_.position_ = prePos_;
+				hit = true;
+			}
 		}
-		
+		if (!hit)
+			prePos_ = transform_.position_;
+
 	}
 }
+
 
