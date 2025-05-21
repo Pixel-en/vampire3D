@@ -65,7 +65,7 @@ void Player::Initialize()
 	hModel_ = Model::Load("Assets\\Model\\Character\\Player.fbx");
 	HandleCheck(hModel_, "プレイヤーモデルがない");
 
-	hImage_ = Image::Load("Assets\\Image\\Test_Crosshair.png");
+	hImage_ = Image::Load("Assets\\Image\\UI\\Test_Crosshair.png");
 	HandleCheck(hImage_, "クロスヘアがない");
 
 	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1.5, 0), 2);

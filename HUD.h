@@ -12,10 +12,15 @@ class HUD :public GameObject
 	int hRadarBack_;	//レーダーの背景用画像ハンドル
 	int hREnemy_;	//レーダー上の敵用画像ハンドル
 	int hRPlayer_;	//レーダー上のプレイヤー用画像ハンドル
+	enum RADARTYPE
+	{
+		RADAR,
+		RADARENEMY,
+		RADARPLAYER,
+		MAX,
+	};
+	Transform RadarTransformArray_[RADARTYPE::MAX];
 
-	Transform RadarTransform_;	//レーダー用トランスフォーム
-	Transform REnemyTransform_;	//レーダー上の敵用トランスフォーム
-	Transform RPlayerTransform_;//レーダー上のプレイヤー用トランスフォーム
 	std::vector<XMFLOAT3> REnemyPosList_;	//レーダー上の敵の位置のリスト
 	void RadarInitialize();
 	void RadarUpdate();
@@ -47,12 +52,17 @@ class HUD :public GameObject
 	bool StickTriggerY_;					//前フレームでスティックを倒しているか
 
 	void WeaponRoll();	//武器のロール
+	enum LEVELTYPE
+	{
+		LEVELBACK,
+		GAUGEFRAME,
+		GAUGEBAR,
+		LEVELCURSOR,
+		LEVELFRAME,
+		MAX
+	};
+	Transform LEVELTransformArray_[LEVELTYPE::MAX];	//レベルアップのトランスフォーム
 
-	Transform LBackTransform_;
-	Transform LGFrameTransform_;
-	Transform LGBarTransform_;
-	Transform LCursorTransform_;
-	Transform LFrameTransform_;
 	void LevelInitialize();
 	void LevelSuperUpdate();
 	void LevelUpdate();
@@ -62,18 +72,29 @@ class HUD :public GameObject
 	/*-----タイマー-----*/
 	float PlayTime_;
 	void TimerDraw();
+	XMFLOAT2 TimerPos_;
 
 	/*--------HP--------*/
 	int hHPBack_;	//HPの背景用画像
+	int hHPGauge_;	//HPのゲージ用画像
 	int hHPFrame_;	//HPのフレーム用画像
+	int hHPFull_;
 	int hHPIcon_;
-	Transform HPBackTransform_;	//HPのトランスフォーム
-	Transform HPFrameTransform_;	//HPのフレームのトランスフォーム
-	Transform HPIconTransform_;	//HPのアイコンのトランスフォーム
+	enum HPTYPE
+	{
+		HPBACK,
+		HPGAUGE,
+		HPFRAME,
+		HPICON,
+		MAX
+	};
+	Transform HPTTransformArray_[HPTYPE::MAX];	//HPのトランスフォーム
 	void HPInitialize();
 	void HPUpdate();
 	void HPDraw();
 
+
+	void UIPosRead();
 public:
 	HUD(GameObject* parent);
 

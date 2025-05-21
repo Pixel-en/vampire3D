@@ -21,9 +21,9 @@ void SceneManager::Initialize()
 {
 	Time::Init();
 	//最初のシーンを準備
-	currentSceneID_ = SCENE_ID_TITLE;
+	currentSceneID_ = SCENE_ID_PLAY;
 	nextSceneID_ = currentSceneID_;
-	Instantiate<TitleScene>(this);
+	Instantiate<PlayScene>(this);
 }
 
 //更新

@@ -18,7 +18,6 @@ namespace {
 	namespace RADAR {
 		const float RADARSCALE{ 1000.0f };			//レーダーのサイズに縮小
 		const float RADARRANGE{ 14.0f / 100.0f };	//レーダーの感知範囲
-		const XMFLOAT3 RADARPOS{ 0.84f,0.63f,0.0f };
 		const int RADARALPHA{ 200 };
 	}
 	namespace LEVEL {
@@ -26,6 +25,26 @@ namespace {
 		const float LEVELGAUGEBARXPOS{ -1.0f };
 		const int WEAPONCHOICEVAL{ 4 };
 	}
+}
+
+
+void HUD::UIPosRead()
+{
+	CsvReader csv;
+	csv.Load("Assets\\UI.csv");
+	for (int i = 0;i < csv.GetHeight();i++) {
+		std::string type = csv.GetString(0, i);
+		if (type == "RADAR") {
+			//RadarTransformArray_[]
+		}
+		if (type == "LEVEL") {
+
+		}
+		if (type == "HP") {
+
+		}
+	}
+
 }
 
 HUD::HUD(GameObject* parent)
@@ -75,18 +94,15 @@ void HUD::RadarInitialize()
 	hRadarFrame_ = -1;
 	hREnemy_ = -1;
 	hRPlayer_ = -1;
-	RadarTransform_ = transform_;
-	REnemyTransform_ = transform_;
-	RPlayerTransform_ = transform_;
 
 
-	hRadarBack_ = Image::Load("Assets\\Image\\Radar192-2Back.png");
+	hRadarBack_ = Image::Load("Assets\\Image\\UI\\Radar192-2Back.png");
 	HandleCheck(hRadarBack_, "レーダーの背景の画像がない");
-	hRadarFrame_ = Image::Load("Assets\\Image\\Radar192-5Frame.png");
+	hRadarFrame_ = Image::Load("Assets\\Image\\UI\\Radar192-5Frame.png");
 	HandleCheck(hRadarFrame_, "レーダーのフレームの画像がない");
-	hREnemy_ = Image::Load("Assets\\Image\\RadarEnemy.png");
+	hREnemy_ = Image::Load("Assets\\Image\\UI\\RadarEnemy.png");
 	HandleCheck(hREnemy_, "レーダーの敵の画像がない");
-	hRPlayer_ = Image::Load("Assets\\Image\\RadarPlayer.png");
+	hRPlayer_ = Image::Load("Assets\\Image\\UI\\RadarPlayer.png");
 	HandleCheck(hRPlayer_, "レーダーのプレイヤーの画像がない");
 
 }
@@ -126,7 +142,7 @@ void HUD::RadarUpdate()
 	}
 
 	//ここもzとy入れ替え+逆回転になってるので－
-	RPlayerTransform_.rotate_.z = -player->GetRotate().y;
+	RadarTransformArray_[RADARTYPE::RADARPLAYER].rotate_.z = -player->GetRotate().y;
 }
 
 void HUD::RadarDraw()
@@ -136,23 +152,21 @@ void HUD::RadarDraw()
 	Image::SetAlpha(hRadarFrame_, RADAR::RADARALPHA);
 	Image::SetAlpha(hRadarBack_, RADAR::RADARALPHA);
 	Image::SetAlpha(hRadarBack_, 100);
-	//レーダーの位置を右下に
-	RadarTransform_.position_ = RADAR::RADARPOS;
-	RPlayerTransform_.position_ = RADAR::RADARPOS;
 	//レーダーの背景
-	Image::SetTransform(hRadarBack_, RadarTransform_);
+	Image::SetTransform(hRadarBack_, RadarTransformArray_[RADARTYPE::RADAR]);
 	Image::Draw(hRadarBack_);
-	Image::SetTransform(hRadarFrame_, RadarTransform_);
+	Image::SetTransform(hRadarFrame_, RadarTransformArray_[RADARTYPE::RADAR]);
 	Image::Draw(hRadarFrame_);
 
 	//レーダーのプレイヤー
-	Image::SetTransform(hRPlayer_, RPlayerTransform_);
+	Image::SetTransform(hRPlayer_, RadarTransformArray_[RADARTYPE::RADARPLAYER]);
 	Image::Draw(hRPlayer_);
 
 	//レーダーの敵
 	for (auto I : REnemyPosList_) {
-		REnemyTransform_.position_ = I + RADAR::RADARPOS;
-		Image::SetTransform(hREnemy_, REnemyTransform_);
+		Transform enemyTransform = RadarTransformArray_[RADARTYPE::RADARENEMY];
+		enemyTransform.position_ = I + enemyTransform.position_;
+		Image::SetTransform(hREnemy_, RadarTransformArray_[RADARTYPE::RADARENEMY]);
 		Image::Draw(hREnemy_);
 	}
 
@@ -161,7 +175,6 @@ void HUD::RadarDraw()
 //レベルアップした時の処理
 void HUD::LevelUP()
 {
-	LGBarTransform_.scale_ = { 1,1,1 };
 
 	Pause_ = true;
 
@@ -206,25 +219,18 @@ void HUD::LevelInitialize()
 	hLevelFrameImage_ = -1;
 	hLevelCursorImage_ = -1;
 
-	LBackTransform_ = transform_;
-	LGFrameTransform_ = transform_;
-	LGBarTransform_ = transform_;
-	LCursorTransform_ = transform_;
 
-	LGFrameTransform_.position_ = { 0,LEVEL::LEVELGAUGEYPOS,0 };
-	LGBarTransform_.position_ = { LEVEL::LEVELGAUGEBARXPOS,LEVEL::LEVELGAUGEYPOS,0 };
-
-	hLevelBack_ = Image::Load("Assets\\Image\\LevelUpBackGround0.6.png");
+	hLevelBack_ = Image::Load("Assets\\Image\\UI\\LevelUpBackGround0.6.png");
 	HandleCheck(hLevelBack_);
-	hLevelGaugeFrame_ = Image::Load("Assets\\Image\\LevelFrame.png");
+	hLevelGaugeFrame_ = Image::Load("Assets\\Image\\UI\\LevelFrame.png");
 	HandleCheck(hLevelGaugeFrame_);
-	hLevelGaugeBar_ = Image::Load("Assets\\Image\\LevelBar.png");
+	hLevelGaugeBar_ = Image::Load("Assets\\Image\\UI\\LevelBar.png");
 	HandleCheck(hLevelGaugeBar_);
-	hLevelCursor_ = Image::Load("Assets\\Image\\LevelCursor.png");
+	hLevelCursor_ = Image::Load("Assets\\Image\\UI\\LevelCursor.png");
 	HandleCheck(hLevelCursor_);
-	hLevelFrameImage_ = Image::Load("Assets\\Image\\LevelUpFrame.png");
+	hLevelFrameImage_ = Image::Load("Assets\\Image\\UI\\LevelUpFrame.png");
 	HandleCheck(hLevelFrameImage_);
-	hLevelCursorImage_ = Image::Load("Assets\\Image\\LevelUpCursor.png");
+	hLevelCursorImage_ = Image::Load("Assets\\Image\\UI\\LevelUpCursor.png");
 	HandleCheck(hLevelCursorImage_);
 
 	CsvReader csv,effect;
@@ -268,8 +274,8 @@ void HUD::LevelSuperUpdate()
 		if (levelCursor_ < 0)
 			levelCursor_ = 3;
 
-		//LCursorTransform_.position_.y = 0.6 + -0.1 * levelCursor_;
-		LCursorTransform_.position_= { 330 / (screenWidth / 2.0f),(310 - (80 + levelCursor_ * 170)) / (screenHeight / 2.0f) ,0 };
+
+		LEVELTransformArray_[LEVELTYPE::LEVELCURSOR].position_ = {330 / (screenWidth / 2.0f),(310 - (80 + levelCursor_ * 170)) / (screenHeight / 2.0f) ,0};
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
@@ -294,19 +300,19 @@ void HUD::LevelUpdate()
 
 void HUD::LevelDraw()
 {
-	Image::SetTransform(hLevelGaugeFrame_, LGFrameTransform_);
+	Image::SetTransform(hLevelGaugeFrame_, LEVELTransformArray_[LEVELTYPE::GAUGEFRAME]);
 	Image::Draw(hLevelGaugeFrame_);
 
-	Image::SetTransform(hLevelGaugeBar_, LGBarTransform_);
+	Image::SetTransform(hLevelGaugeBar_, LEVELTransformArray_[LEVELTYPE::GAUGEBAR]);
 	Image::Draw(hLevelGaugeBar_);
 
 	if (Pause_) {
-		Image::SetTransform(hLevelBack_, LBackTransform_);
+		Image::SetTransform(hLevelBack_, LEVELTransformArray_[LEVELTYPE::LEVELBACK]);
 		Image::Draw(hLevelBack_);
 		
 		//Image::SetTransform(hLevelCursor_, LCursorTransform_);
 		//Image::Draw(hLevelCursor_);
-		Image::SetTransform(hLevelCursorImage_, LCursorTransform_);
+		Image::SetTransform(hLevelCursorImage_, LEVELTransformArray_[LEVELTYPE::LEVELCURSOR]);
 		Image::Draw(hLevelCursorImage_);
 
 		Player* player = GetParent()->FindGameObject<Player>();
@@ -453,14 +459,17 @@ void HUD::TimerDraw()
 
 void HUD::HPInitialize()
 {
-	hHPBack_ = Image::Load("Assets\\Image\\HPBack.png");
+	hHPBack_ = Image::Load("Assets\\Image\\UI\\HPBack.png");
 	HandleCheck(hHPBack_);
-	hHPFrame_ = Image::Load("Assets\\Image\\HP.png");
+	hHPGauge_ = Image::Load("Assets\\Image\\UI\\HP.png");
+	HandleCheck(hHPGauge_);
+	hHPFrame_ = Image::Load("Assets\\Image\\UI\\HPFrame.png");
 	HandleCheck(hHPFrame_);
-	hHPIcon_ = Image::Load("Assets\\Image\\Heart.png");
-	HPBackTransform_.position_ = { -0.9f,0.84f,0 };
-	HPFrameTransform_.position_ = { -0.9f,0.84f,0 };
-	HPIconTransform_.position_ = { -0.95f,0.82f,0 };
+	hHPIcon_ = Image::Load("Assets\\Image\\UI\\Heart.png");
+	HandleCheck(hHPIcon_);
+	hHPFull_ = Image::Load("Assets\\Image\\UI\\FullHP.png");
+	HandleCheck(hHPFull_);
+
 }
 
 void HUD::HPUpdate()
@@ -468,17 +477,37 @@ void HUD::HPUpdate()
 	Player* player = GetParent()->FindGameObject<Player>();
 	NullCheck(player);
 	//HPの大きさを変える
-	float ratio = player->GetStatus().hp_ / player->GetStatus().maxHp_;
-	HPFrameTransform_.scale_ = { ratio,1,1 };
+	float ratio = player->GetStatus().hp_ / (float)player->GetStatus().maxHp_;
+	HPTTransformArray_[HPTYPE::HPGAUGE].scale_ = {1- ratio,1,1 };
 }
 
 void HUD::HPDraw()
 {
-	Image::SetTransform(hHPIcon_, HPIconTransform_);
+
+	Player* player = GetParent()->FindGameObject<Player>();
+	NullCheck(player);
+
+	Image::SetTransform(hHPIcon_, HPTTransformArray_[HPTYPE::HPICON]);
 	Image::Draw(hHPIcon_);
-	Image::SetTransform(hHPBack_, HPBackTransform_);
+
+	if (player->GetStatus().hp_ == player->GetStatus().maxHp_) {
+		Image::SetTransform(hHPFull_, HPTTransformArray_[HPTYPE::HPGAUGE]);
+		Image::Draw(hHPFull_);
+	}
+	else {
+		Image::SetTransform(hHPGauge_, HPTTransformArray_[HPTYPE::HPGAUGE]);
+		Image::Draw(hHPGauge_);
+	}
+	
+	Image::SetTransform(hHPBack_, HPTTransformArray_[HPTYPE::HPBACK]);
 	Image::Draw(hHPBack_);
-	Image::SetTransform(hHPFrame_, HPFrameTransform_);
+	Image::SetTransform(hHPFrame_, HPTTransformArray_[HPTYPE::HPFRAME]);
 	Image::Draw(hHPFrame_);
 
+	FontData data;
+	data.font = TextFont::GetFontName(FontList::Gkktt);
+	data.Color = D2D1::ColorF(0, 0, 0);
+	data.fontSize = 20;
+	//HPの大きさを変える
+	TextFont::Draw(std::to_string(player->GetStatus().hp_)+ "/" + std::to_string(player->GetStatus().maxHp_), {130,37}, data);
 }

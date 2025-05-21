@@ -12,7 +12,7 @@ private:
 	{
 		//ゲーム中にパワーアップが取得できるもの
 		int hp_;				//体力(実数値)
-		float maxHp_;			//最大体力(実数値)
+		int maxHp_;			//最大体力(実数値)
 		float speed_;			//移動速度(実数値)
 		float strength_;		//攻撃力(割合)
 		int critical_;		//クリティカル率(割合)
