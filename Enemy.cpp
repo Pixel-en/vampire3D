@@ -62,6 +62,8 @@ void Enemy::Initialize()
 	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 2, 0), 3.0f);
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1.5f, 0), XMFLOAT3(3.0f, 3.0, 3.0f));
 	AddCollider(collision);
+
+
 }
 
 void Enemy::SuperUpdate()

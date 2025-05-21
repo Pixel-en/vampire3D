@@ -1,4 +1,5 @@
 #include "EnemySpawn.h"
+#include "Field.h"
 #include "Player.h"
 
 namespace {
@@ -33,9 +34,12 @@ void EnemySpawn::Update()
 	if (timer <= 0.0) {
 		if (EnemyList_.size() < SPAWNLIMIT)
 		{
-
+			Field* field = GetRootJob()->FindGameObject<Field>();
 			Enemy* e = Instantiate<Enemy>(this);
 			//oŒ»êŠ‚ðŒˆ‚ß‚é
+			do
+			{
+
 			int x, z;
 			x = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
 			z = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
@@ -49,7 +53,10 @@ void EnemySpawn::Update()
 				z = z * -1;
 
 			e->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
+			} while (e->SelfCollision(field));
+
 			e->SetEnemyNumber(number_);
+
 			EnemyList_.push_back(e);
 			timer = SPAWNTIME;
 			number_++;

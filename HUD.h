@@ -66,8 +66,10 @@ class HUD :public GameObject
 	/*--------HP--------*/
 	int hHPBack_;	//HPの背景用画像
 	int hHPFrame_;	//HPのフレーム用画像
+	int hHPIcon_;
 	Transform HPBackTransform_;	//HPのトランスフォーム
 	Transform HPFrameTransform_;	//HPのフレームのトランスフォーム
+	Transform HPIconTransform_;	//HPのアイコンのトランスフォーム
 	void HPInitialize();
 	void HPUpdate();
 	void HPDraw();

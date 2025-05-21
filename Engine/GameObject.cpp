@@ -349,6 +349,46 @@ void GameObject::AddCollider(Collider* collider)
 	colliderList_.push_back(collider);
 }
 
+bool GameObject::SelfCollision(GameObject* pTarget)
+{
+	//自分同士の当たり判定はしない
+	if (pTarget == nullptr || this == pTarget)
+	{
+		return false;
+	}
+
+	//ターゲット指定がない又は相手がターゲットであるとき
+	if (this->targetName_ == "" || this->targetName_ == pTarget->GetObjectName()) {
+
+		if (this->IsClash() && pTarget->IsClash()) {
+
+			//自分とpTargetのコリジョン情報を使って当たり判定
+			//1つのオブジェクトが複数のコリジョン情報を持ってる場合もあるので二重ループ
+			for (auto i = this->colliderList_.begin(); i != this->colliderList_.end(); i++)
+			{
+				for (auto j = pTarget->colliderList_.begin(); j != pTarget->colliderList_.end(); j++)
+				{
+					//途中で判定しなくなったら終わる
+					if (!this->IsClash())
+						return false;
+
+					if (!pTarget->IsClash())
+						break;
+
+					if ((*i)->IsHit(*j))
+					{
+						return true;
+					}
+				}
+
+				if (!pTarget->IsClash())
+					break;
+			}
+		}
+	}
+	return false;
+}
+
 //コライダー（衝突判定）を削除
 void GameObject::ClearCollider()
 {

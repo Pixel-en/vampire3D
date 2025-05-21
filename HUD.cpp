@@ -457,8 +457,10 @@ void HUD::HPInitialize()
 	HandleCheck(hHPBack_);
 	hHPFrame_ = Image::Load("Assets\\Image\\HP.png");
 	HandleCheck(hHPFrame_);
-	HPBackTransform_.position_ = { -0.8f,0.8f,0 };
-	HPFrameTransform_.position_ = { -0.8f,0.8f,0 };
+	hHPIcon_ = Image::Load("Assets\\Image\\Heart.png");
+	HPBackTransform_.position_ = { -0.9f,0.84f,0 };
+	HPFrameTransform_.position_ = { -0.9f,0.84f,0 };
+	HPIconTransform_.position_ = { -0.95f,0.82f,0 };
 }
 
 void HUD::HPUpdate()
@@ -472,8 +474,11 @@ void HUD::HPUpdate()
 
 void HUD::HPDraw()
 {
+	Image::SetTransform(hHPIcon_, HPIconTransform_);
+	Image::Draw(hHPIcon_);
 	Image::SetTransform(hHPBack_, HPBackTransform_);
 	Image::Draw(hHPBack_);
 	Image::SetTransform(hHPFrame_, HPFrameTransform_);
 	Image::Draw(hHPFrame_);
+
 }
