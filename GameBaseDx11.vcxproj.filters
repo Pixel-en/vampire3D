@@ -114,9 +114,6 @@
     <ClCompile Include="PlayScene.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>PlayScene</Filter>
-    </ClCompile>
     <ClCompile Include="EnemySpawn.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
@@ -159,6 +156,7 @@
     </ClCompile>
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameClearScene.cpp" />
+    <ClCompile Include="Enemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -247,9 +245,6 @@
     <ClInclude Include="PlayScene.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
-      <Filter>PlayScene</Filter>
-    </ClInclude>
     <ClInclude Include="EnemySpawn.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
@@ -292,6 +287,7 @@
     </ClInclude>
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameClearScene.h" />
+    <ClInclude Include="Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">

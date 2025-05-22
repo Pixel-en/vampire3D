@@ -21,7 +21,6 @@ namespace {
 		const int RADARALPHA{ 200 };
 	}
 	namespace LEVEL {
-		const float LEVELGAUGEYPOS{ 0.955f };
 		const float LEVELGAUGEBARXPOS{ -1.0f };
 		const int WEAPONCHOICEVAL{ 4 };
 	}
@@ -30,21 +29,33 @@ namespace {
 
 void HUD::UIPosRead()
 {
-	CsvReader csv;
-	csv.Load("Assets\\UI.csv");
-	for (int i = 0;i < csv.GetHeight();i++) {
-		std::string type = csv.GetString(0, i);
-		if (type == "RADAR") {
-			//RadarTransformArray_[]
-		}
-		if (type == "LEVEL") {
+	enum CSVData
+	{
+		Type,
+		Name,
+		PosX,
+		PosY,
+		PosZ,
+		RotX,
+		RotY,
+		RotZ,
+		ScaX,
+		ScaY,
+		ScaZ,
+	};
 
-		}
-		if (type == "HP") {
+	CsvReader csvTrans;
+	if (!csvTrans.Load("Assets\\CSV\\UI.csv"))
+		return;
 
-		}
+	for (int i = 1;i < csvTrans.GetHeight();i++) {
+		//初期化
+		HUDTransforms_[i-1] = transform_;
+		//読み込み
+		HUDTransforms_[i-1].position_ = { csvTrans.GetValue(CSVData::PosX,i),csvTrans.GetValue(CSVData::PosY,i) ,csvTrans.GetValue(CSVData::PosZ,i) };
+		HUDTransforms_[i-1].rotate_ = { csvTrans.GetValue(CSVData::RotX,i),csvTrans.GetValue(CSVData::RotY,i) ,csvTrans.GetValue(CSVData::RotZ,i) };
+		HUDTransforms_[i-1].scale_ = { csvTrans.GetValue(CSVData::ScaX,i),csvTrans.GetValue(CSVData::ScaY,i) ,csvTrans.GetValue(CSVData::ScaZ,i) };
 	}
-
 }
 
 HUD::HUD(GameObject* parent)
@@ -61,6 +72,7 @@ void HUD::Initialize()
 	RadarInitialize();
 	LevelInitialize();
 	HPInitialize();
+	UIPosRead();
 }
 
 void HUD::SuperUpdate()
@@ -142,7 +154,7 @@ void HUD::RadarUpdate()
 	}
 
 	//ここもzとy入れ替え+逆回転になってるので－
-	RadarTransformArray_[RADARTYPE::RADARPLAYER].rotate_.z = -player->GetRotate().y;
+	HUDTransforms_[TRANSFORMTYPE::RADARPLAYER].rotate_.z = -player->GetRotate().y;
 }
 
 void HUD::RadarDraw()
@@ -153,20 +165,20 @@ void HUD::RadarDraw()
 	Image::SetAlpha(hRadarBack_, RADAR::RADARALPHA);
 	Image::SetAlpha(hRadarBack_, 100);
 	//レーダーの背景
-	Image::SetTransform(hRadarBack_, RadarTransformArray_[RADARTYPE::RADAR]);
+	Image::SetTransform(hRadarBack_, HUDTransforms_[TRANSFORMTYPE::RADAR]);
 	Image::Draw(hRadarBack_);
-	Image::SetTransform(hRadarFrame_, RadarTransformArray_[RADARTYPE::RADAR]);
+	Image::SetTransform(hRadarFrame_, HUDTransforms_[TRANSFORMTYPE::RADAR]);
 	Image::Draw(hRadarFrame_);
 
 	//レーダーのプレイヤー
-	Image::SetTransform(hRPlayer_, RadarTransformArray_[RADARTYPE::RADARPLAYER]);
+	Image::SetTransform(hRPlayer_, HUDTransforms_[TRANSFORMTYPE::RADARPLAYER]);
 	Image::Draw(hRPlayer_);
 
 	//レーダーの敵
 	for (auto I : REnemyPosList_) {
-		Transform enemyTransform = RadarTransformArray_[RADARTYPE::RADARENEMY];
+		Transform enemyTransform = HUDTransforms_[TRANSFORMTYPE::RADARENEMY];
 		enemyTransform.position_ = I + enemyTransform.position_;
-		Image::SetTransform(hREnemy_, RadarTransformArray_[RADARTYPE::RADARENEMY]);
+		Image::SetTransform(hREnemy_,enemyTransform);
 		Image::Draw(hREnemy_);
 	}
 
@@ -275,7 +287,7 @@ void HUD::LevelSuperUpdate()
 			levelCursor_ = 3;
 
 
-		LEVELTransformArray_[LEVELTYPE::LEVELCURSOR].position_ = {330 / (screenWidth / 2.0f),(310 - (80 + levelCursor_ * 170)) / (screenHeight / 2.0f) ,0};
+		HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_ = {330 / (screenWidth / 2.0f),(310 - (80 + levelCursor_ * 170)) / (screenHeight / 2.0f) ,0};
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
@@ -295,24 +307,24 @@ void HUD::LevelUpdate()
 
 	float ratio = current / next;
 
-	LGBarTransform_.scale_ = { ratio,1,1 };
+	HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEBAR].scale_ = {ratio,1,1};
 }
 
 void HUD::LevelDraw()
 {
-	Image::SetTransform(hLevelGaugeFrame_, LEVELTransformArray_[LEVELTYPE::GAUGEFRAME]);
+	Image::SetTransform(hLevelGaugeFrame_, HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEFRAME]);
 	Image::Draw(hLevelGaugeFrame_);
 
-	Image::SetTransform(hLevelGaugeBar_, LEVELTransformArray_[LEVELTYPE::GAUGEBAR]);
+	Image::SetTransform(hLevelGaugeBar_, HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEBAR]);
 	Image::Draw(hLevelGaugeBar_);
 
 	if (Pause_) {
-		Image::SetTransform(hLevelBack_, LEVELTransformArray_[LEVELTYPE::LEVELBACK]);
+		Image::SetTransform(hLevelBack_, HUDTransforms_[TRANSFORMTYPE::LEVELBACK]);
 		Image::Draw(hLevelBack_);
 		
 		//Image::SetTransform(hLevelCursor_, LCursorTransform_);
 		//Image::Draw(hLevelCursor_);
-		Image::SetTransform(hLevelCursorImage_, LEVELTransformArray_[LEVELTYPE::LEVELCURSOR]);
+		Image::SetTransform(hLevelCursorImage_, HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR]);
 		Image::Draw(hLevelCursorImage_);
 
 		Player* player = GetParent()->FindGameObject<Player>();
@@ -321,8 +333,8 @@ void HUD::LevelDraw()
 		auto itr = RollListNum_.begin();
 		for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
 			//														初期値-画像の縦の長さ/2+i*画像の長さ+バッファ
-			LFrameTransform_.position_ = { 330 / (screenWidth / 2.0f),(310-(80+i*170)) / (screenHeight / 2.0f) ,0 };
-			Image::SetTransform(hLevelFrameImage_, LFrameTransform_);
+			HUDTransforms_[TRANSFORMTYPE::LEVELFRAME].position_ = {330 / (screenWidth / 2.0f),(310 - (80 + i * 170)) / (screenHeight / 2.0f) ,0};
+			Image::SetTransform(hLevelFrameImage_, HUDTransforms_[TRANSFORMTYPE::LEVELFRAME]);
 			Image::Draw(hLevelFrameImage_);
 
 			std::string level = "new";
@@ -478,7 +490,7 @@ void HUD::HPUpdate()
 	NullCheck(player);
 	//HPの大きさを変える
 	float ratio = player->GetStatus().hp_ / (float)player->GetStatus().maxHp_;
-	HPTTransformArray_[HPTYPE::HPGAUGE].scale_ = {1- ratio,1,1 };
+	HUDTransforms_[TRANSFORMTYPE::HPBACK].scale_ = {1- ratio,1,1 };
 }
 
 void HUD::HPDraw()
@@ -487,21 +499,21 @@ void HUD::HPDraw()
 	Player* player = GetParent()->FindGameObject<Player>();
 	NullCheck(player);
 
-	Image::SetTransform(hHPIcon_, HPTTransformArray_[HPTYPE::HPICON]);
+	Image::SetTransform(hHPIcon_, HUDTransforms_[TRANSFORMTYPE::HPICON]);
 	Image::Draw(hHPIcon_);
 
 	if (player->GetStatus().hp_ == player->GetStatus().maxHp_) {
-		Image::SetTransform(hHPFull_, HPTTransformArray_[HPTYPE::HPGAUGE]);
+		Image::SetTransform(hHPFull_, HUDTransforms_[TRANSFORMTYPE::HPGAUGE]);
 		Image::Draw(hHPFull_);
 	}
 	else {
-		Image::SetTransform(hHPGauge_, HPTTransformArray_[HPTYPE::HPGAUGE]);
+		Image::SetTransform(hHPGauge_, HUDTransforms_[TRANSFORMTYPE::HPGAUGE]);
 		Image::Draw(hHPGauge_);
 	}
 	
-	Image::SetTransform(hHPBack_, HPTTransformArray_[HPTYPE::HPBACK]);
+	Image::SetTransform(hHPBack_, HUDTransforms_[TRANSFORMTYPE::HPBACK]);
 	Image::Draw(hHPBack_);
-	Image::SetTransform(hHPFrame_, HPTTransformArray_[HPTYPE::HPFRAME]);
+	Image::SetTransform(hHPFrame_, HUDTransforms_[TRANSFORMTYPE::HPFRAME]);
 	Image::Draw(hHPFrame_);
 
 	FontData data;
@@ -509,5 +521,5 @@ void HUD::HPDraw()
 	data.Color = D2D1::ColorF(0, 0, 0);
 	data.fontSize = 20;
 	//HPの大きさを変える
-	TextFont::Draw(std::to_string(player->GetStatus().hp_)+ "/" + std::to_string(player->GetStatus().maxHp_), {130,37}, data);
+	TextFont::Draw(std::to_string(player->GetStatus().hp_)+ "/" + std::to_string(player->GetStatus().maxHp_), {130,23}, data);
 }

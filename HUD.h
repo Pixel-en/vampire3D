@@ -7,19 +7,34 @@
 
 class HUD :public GameObject
 {
+	enum TRANSFORMTYPE
+	{
+		//レーダー
+		RADAR,
+		RADARENEMY,
+		RADARPLAYER,
+		//レベル
+		LEVELBACK,
+		LEVELGAUGEFRAME,
+		LEVELGAUGEBAR,
+		LEVELCURSOR,
+		LEVELFRAME,
+		//HP
+		HPBACK,
+		HPGAUGE,
+		HPFRAME,
+		HPICON,
+
+		MAX
+	};
+
+	Transform HUDTransforms_[TRANSFORMTYPE::MAX];	//UIのTransform
+
 	/*------レーダー-----*/
 	int hRadarFrame_;	//レーダーのフレーム用画像ハンドル
 	int hRadarBack_;	//レーダーの背景用画像ハンドル
 	int hREnemy_;	//レーダー上の敵用画像ハンドル
 	int hRPlayer_;	//レーダー上のプレイヤー用画像ハンドル
-	enum RADARTYPE
-	{
-		RADAR,
-		RADARENEMY,
-		RADARPLAYER,
-		MAX,
-	};
-	Transform RadarTransformArray_[RADARTYPE::MAX];
 
 	std::vector<XMFLOAT3> REnemyPosList_;	//レーダー上の敵の位置のリスト
 	void RadarInitialize();
@@ -52,16 +67,6 @@ class HUD :public GameObject
 	bool StickTriggerY_;					//前フレームでスティックを倒しているか
 
 	void WeaponRoll();	//武器のロール
-	enum LEVELTYPE
-	{
-		LEVELBACK,
-		GAUGEFRAME,
-		GAUGEBAR,
-		LEVELCURSOR,
-		LEVELFRAME,
-		MAX
-	};
-	Transform LEVELTransformArray_[LEVELTYPE::MAX];	//レベルアップのトランスフォーム
 
 	void LevelInitialize();
 	void LevelSuperUpdate();
@@ -80,15 +85,6 @@ class HUD :public GameObject
 	int hHPFrame_;	//HPのフレーム用画像
 	int hHPFull_;
 	int hHPIcon_;
-	enum HPTYPE
-	{
-		HPBACK,
-		HPGAUGE,
-		HPFRAME,
-		HPICON,
-		MAX
-	};
-	Transform HPTTransformArray_[HPTYPE::MAX];	//HPのトランスフォーム
 	void HPInitialize();
 	void HPUpdate();
 	void HPDraw();
