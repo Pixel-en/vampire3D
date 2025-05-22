@@ -4,53 +4,24 @@
 //オブジェクトコピー用
 class Enemy :public GameObject
 {
-	enum ENEMYTYPE
-	{
-		BLUE,
-		YELLOW,
-		GREEN,
-		RED,
-		MAX
-	};
-	enum HP {
-		FULL,
-		HALF,
-		MINI,
-		MAX
-	};
-	enum ANIMATION
-	{
-		MOVE,
-		DAMEGE,
-		DEATH,
-		MAX
-	};
-	enum LOD
-	{
-		HIGH,
-		MIDDLE,
-		LOW,
-		MAX
-	};
-	int hModel_[ENEMYTYPE::MAX][HP::MAX][ANIMATION::MAX][LOD::MAX];
-	
 
 public:
 	Enemy(GameObject* parent);
+	Enemy(GameObject* parent, const std::string& name);
 
-	~Enemy();
+	virtual ~Enemy();
 
 	//初期化
-	void Initialize() override;
+	virtual void Initialize() override;
 
 	//更新
-	void Update() override;
+	virtual void Update() override;
 
 	//描画
-	void Draw() override;
+	virtual void Draw() override;
 
 	//開放
-	void Release() override;
+	virtual void Release() override;
 
 	/// <summary>
 	/// 与えたダメージ

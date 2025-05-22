@@ -30,6 +30,9 @@
     <Filter Include="PlayScene\Weapon">
       <UniqueIdentifier>{a330cf5e-a0f9-436a-9a6d-37192dde7af0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PlayScene\Enemy">
+      <UniqueIdentifier>{f640c4a4-d9b8-4963-8ef4-aa69036cf628}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\BoxCollider.cpp">
@@ -157,7 +160,10 @@
     <ClCompile Include="GameOverScene.cpp" />
     <ClCompile Include="GameClearScene.cpp" />
     <ClCompile Include="Enemy.cpp">
-      <Filter>PlayScene</Filter>
+      <Filter>PlayScene\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="Humanoid.cpp">
+      <Filter>PlayScene\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -290,7 +296,10 @@
     <ClInclude Include="GameOverScene.h" />
     <ClInclude Include="GameClearScene.h" />
     <ClInclude Include="Enemy.h">
-      <Filter>PlayScene</Filter>
+      <Filter>PlayScene\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="Humanoid.h">
+      <Filter>PlayScene\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,6 +1,13 @@
 #include "Enemy.h"
 
+
 Enemy::Enemy(GameObject* parent)
+	:GameObject(parent,"")
+{
+}
+
+Enemy::Enemy(GameObject* parent, const std::string& name)
+	:GameObject(parent,name)
 {
 }
 
