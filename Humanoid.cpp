@@ -1,7 +1,36 @@
 #include "Humanoid.h"
 #include "Engine/Model.h"
 
-using std::string;
+namespace {
+	const int MOVEANIMFRAME{ 23 };
+	const int DEATHANIMFRAME{ 56 };
+	const int HITANIMFRAME{ 19 };
+}
+
+void Humanoid::SetAnimation()
+{
+	for (int i = 0;i < HP::MAX;i++) {
+		for (int j = 0;j < LOD::MAX;j++) {
+			for (int k = 0;k < ANIMATION::MAX;i + k++) {
+
+				switch (k)
+				{
+				case Enemy::MOVE:
+					Model::SetAnimFrame(hModel_[i][j][k], 0, MOVEANIMFRAME * 2, 1.0f);
+					break;
+				case Enemy::HIT:
+					Model::SetAnimFrame(hModel_[i][j][k], 0, HITANIMFRAME * 2, 1.0f);
+					break;
+				case Enemy::DEATH:
+					Model::SetAnimFrame(hModel_[i][j][k], 0, DEATHANIMFRAME * 2, 1.0f);
+					break;
+				default:
+					break;
+				}
+			}
+		}
+	}
+}
 
 Humanoid::Humanoid(GameObject* parent)
 	:Enemy(parent,"Humanoid")
@@ -14,21 +43,6 @@ Humanoid::~Humanoid()
 
 void Humanoid::Initialize()
 {
-	//モデルのロード
-	string color[ENEMYTYPE::MAX] = { "Blue", "Yellow", "Green", "Red" };
-	string hp[HP::MAX] = { "Full", "Half", "Mini" };
-	string animation[ANIMATION::MAX] = { "Run", "Hit", "Death" };
-	string lod[LOD::MAX] = { "", "Middle", "Low" };
-	for (int i = 0; i < ENEMYTYPE::MAX; i++) {
-		for (int j = 0; j < HP::MAX; j++) {
-			for (int k = 0; k < ANIMATION::MAX; k++) {
-				for (int n = 0; n < LOD::MAX; n++) {
-					hModel_[i][j][k][n] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy" + '-' + color[i] + '-' + hp[j] + '-' + lod[n] + '-' + animation[k] + ".fbx");
-					HandleCheck(hModel_[i][j][k][n], color[i] + ',' + hp[j] + ',' + lod[n] + ',' + animation[k] + "の敵のモデルがない");
-				}
-			}
-		}
-	}
 }
 
 void Humanoid::Update()

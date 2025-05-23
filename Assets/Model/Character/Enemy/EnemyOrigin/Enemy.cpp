@@ -1,4 +1,4 @@
-#include "Enemy.h"
+#include "enemy.h"
 #include "Engine/Model.h"
 #include "Engine/SphereCollider.h"
 #include <algorithm>
@@ -18,8 +18,8 @@ namespace {
 	const int DEATHENDFRAME{ 35 };
 }
 
-Enemy::Enemy(GameObject* parent)
-	:GameObject(parent, "Enemy"), hModelLow_(-1)
+enemy::enemy(GameObject* parent)
+	:GameObject(parent, "enemy"), hModelLow_(-1)
 {
 
 	status_.power_ = 5;
@@ -40,11 +40,11 @@ Enemy::Enemy(GameObject* parent)
 
 }
 
-Enemy::~Enemy()
+enemy::~enemy()
 {
 }
 
-void Enemy::Initialize()
+void enemy::Initialize()
 {
 	hModel_[ANIMATION::MOVE] = Model::Load("Assets\\Model\\Character\\Enemy-Run.fbx");
 	hModel_[ANIMATION::DEATH] = Model::Load("Assets\\Model\\Character\\Enemy-Death.fbx");
@@ -66,7 +66,7 @@ void Enemy::Initialize()
 
 }
 
-void Enemy::SuperUpdate()
+void enemy::SuperUpdate()
 {
 	if (!IsEntered()) {
 		int currentFrame = Model::GetAnimFrame(hModel_[anim_]);
@@ -82,7 +82,7 @@ void Enemy::SuperUpdate()
 	}
 }
 
-void Enemy::Update()
+void enemy::Update()
 {
 	if (anim_ == ANIMATION::MOVE) {
 		if (InvincibleTimer_ <= 0.0f)
@@ -104,7 +104,7 @@ void Enemy::Update()
 	}
 }
 
-void Enemy::Move()
+void enemy::Move()
 {
 	isLow_ = true;
 	//レイキャスト
@@ -158,7 +158,7 @@ void Enemy::Move()
 	field->RayCastField(transform_.position_, 3);
 }
 
-void Enemy::Draw()
+void enemy::Draw()
 {
 	//モデルが前後反転するため一時的に
 	Transform tempTrans = transform_;
@@ -177,11 +177,11 @@ void Enemy::Draw()
 	}
 }
 
-void Enemy::Release()
+void enemy::Release()
 {
 }
 
-void Enemy::HitDamege(int _damege, float _knock)
+void enemy::HitDamege(int _damege, float _knock)
 {
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
@@ -224,12 +224,12 @@ void Enemy::HitDamege(int _damege, float _knock)
 	}
 }
 
-int Enemy::CausedDamege()
+int enemy::CausedDamege()
 {
 	return status_.power_;
 }
 
-void Enemy::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list)
+void enemy::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list)
 {
 	if (pTarget->GetObjectName() == "Field") {
 		//移動前の戻す

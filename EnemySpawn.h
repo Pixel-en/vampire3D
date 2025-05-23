@@ -6,9 +6,11 @@
 //敵を出現させる
 class EnemySpawn :public GameObject
 {
+	//敵の識別番号
 	unsigned int number_;
+	//敵のスポーンタイマー
 	float timer;
-
+	//敵のリスト
 	std::vector<Enemy*> EnemyList_;
 
 public:

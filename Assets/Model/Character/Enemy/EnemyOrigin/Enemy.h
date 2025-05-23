@@ -2,7 +2,7 @@
 #include "Engine/GameObject.h"
 
 //“GŒÂl
-class Enemy :public GameObject
+class enemy :public GameObject
 {
 	enum ANIMATION {
 		MOVE,
@@ -41,9 +41,9 @@ class Enemy :public GameObject
 	XMFLOAT3 prePos_;
 
 public:
-	Enemy(GameObject* parent);
+	esnemy(GameObject* parent);
 
-	~Enemy();
+	~enemy();
 
 	//‰Šú‰»
 	void Initialize() override;
