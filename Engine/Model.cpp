@@ -75,7 +75,8 @@ namespace Model
 		}
 
 		//アニメーションを進める
-		_datas[handle]->nowFrame += _datas[handle]->animSpeed;
+		if (_datas[handle]->IsPlay_)
+			_datas[handle]->nowFrame += _datas[handle]->animSpeed;
 
 		//最後までアニメーションしたら戻す
 		if (_datas[handle]->nowFrame > (float)_datas[handle]->endFrame)
@@ -146,6 +147,16 @@ namespace Model
 	int GetAnimFrame(int handle)
 	{
 		return (int)_datas[handle]->nowFrame;
+	}
+
+	void AnimPause(int handle)
+	{
+		_datas[handle]->IsPlay_ = false;
+	}
+
+	void AnimPlay(int handle)
+	{
+		_datas[handle]->IsPlay_ = true;
 	}
 
 

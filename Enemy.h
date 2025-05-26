@@ -3,7 +3,7 @@
 
 namespace {
 	//敵の強さ
-	enum LEVEL {
+	enum ELEVEL {
 		BLUE,
 		YELLOW,
 		GREEN,
@@ -20,24 +20,24 @@ protected:
 		FULL,
 		HALF,
 		MINI,
-		MAX
+		HMAX
 	};
 	enum ANIMATION
 	{
 		MOVE,
 		HIT,
 		DEATH,
-		MAX
+		AMAX
 	};
 	enum LOD
 	{
 		HIGH,
 		MIDDLE,
 		LOW,
-		MAX
+		LMAX
 	};
 	//モデル
-	int hModel_[HP::MAX][LOD::MAX][ANIMATION::MAX];
+	int hModel_[HP::HMAX][LOD::LMAX][ANIMATION::AMAX];
 
 private:
 	struct Status
@@ -45,15 +45,21 @@ private:
 		int power_;	//攻撃力
 		float speed_;	//スピード
 		int hp_;		//体力
+		int maxhp_;	//最大体力
 		int exp_;		//経験値
-		LEVEL level_;	//敵のレベル
+		ELEVEL level_;	//敵のレベル
 		unsigned int number_;	//識別番号
+		float invincibletime_;	//無敵時間
 	};
 	Status status_;
 	
+	//モデル
 	HP ModelHP_;	//モデルのHP
 	LOD ModelLOD_;
 	ANIMATION ModelAnim_;
+
+	//タイマー
+	float InvincibleTimer_;	//無敵時間
 
 	//動作
 	//移動前のポジション
@@ -62,13 +68,15 @@ private:
 	bool onGround_;
 	//フレームごとの重力加速
 	float gravity_;
-
 	//動き
 	void Move();
 
 protected:
 	//モデルにアニメーションをセットする
 	virtual void SetAnimation() {};
+	//アニメーションのフレームをゲット
+	virtual int GetDeathAnimFrame() const {};
+	virtual int GetHitFrame() const {};
 
 public:
 	Enemy(GameObject* parent);
@@ -84,7 +92,9 @@ public:
 	/// </summary>
 	/// <param name="_level">敵のレベル(enum)</param>
 	/// <param name="_number">敵の識別番号</param>
-	virtual void Load(LEVEL _level, unsigned int _number);
+	virtual void Load(ELEVEL _level, unsigned int _number);
+
+	virtual void SuperUpdate() override;
 
 	//更新
 	virtual void Update() override;

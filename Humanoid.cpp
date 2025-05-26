@@ -3,15 +3,15 @@
 
 namespace {
 	const int MOVEANIMFRAME{ 23 };
-	const int DEATHANIMFRAME{ 56 };
+	const int DEATHANIMFRAME{ 56 } ;
 	const int HITANIMFRAME{ 19 };
 }
 
 void Humanoid::SetAnimation()
 {
-	for (int i = 0;i < HP::MAX;i++) {
-		for (int j = 0;j < LOD::MAX;j++) {
-			for (int k = 0;k < ANIMATION::MAX;i + k++) {
+	for (int i = 0;i < HP::HMAX;i++) {
+		for (int j = 0;j < LOD::LMAX;j++) {
+			for (int k = 0;k < ANIMATION::AMAX;i + k++) {
 
 				switch (k)
 				{

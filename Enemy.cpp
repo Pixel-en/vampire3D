@@ -1,9 +1,11 @@
 #include "Enemy.h"
-#include "Field.h"
-#include "Player.h"
 #include "Engine/Model.h"
 #include "Engine/CsvReader.h"
 #include <algorithm>
+
+#include "Field.h"
+#include "Player.h"
+#include "EXPManager.h"
 
 
 using std::string;
@@ -12,16 +14,16 @@ namespace {
 	const float HIGHDISTANCE{ 50.0f };
 	const float MIDDLEDISTANCE{ 70.0f };
 	const float LOWDISTANCE{ 120.0f };
-	
+
 }
 
 Enemy::Enemy(GameObject* parent)
-	:GameObject(parent,"")
+	:GameObject(parent, "")
 {
 }
 
 Enemy::Enemy(GameObject* parent, const std::string& name)
-	:GameObject(parent,name)
+	:GameObject(parent, name)
 {
 }
 
@@ -36,34 +38,36 @@ void Enemy::Initialize()
 	ModelAnim_ = ANIMATION::MOVE;
 }
 
-void Enemy::Load(LEVEL _level,unsigned int _number)
+void Enemy::Load(ELEVEL _level, unsigned int _number)
 {
 	status_.number_ = _number;
 	status_.level_ = _level;
 
-	string Level[LEVEL::END] = { "Blue","Yellow","Green","Red" };
+	string Level[ELEVEL::END] = { "Blue","Yellow","Green","Red" };
 
 	//CSVからステータスの読み込み
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\EnemyStatus.csv");
 	for (int i = 1;i < csv.GetHeight();i++) {
-		if (csv.GetString(0, i) == objectName_ && csv.GetString(1,i)==Level[_level]) {
+		if (csv.GetString(0, i) == objectName_ && csv.GetString(1, i) == Level[_level]) {
 			status_.power_ = csv.GetValue(2, i);
 			status_.speed_ = csv.GetValue(3, i);
 			status_.hp_ = csv.GetValue(4, i);
+			status_.maxhp_ = status_.hp_;
 			status_.exp_ = csv.GetValue(5, i);
+			status_.invincibletime_ = csv.GetValue(6, i);
 		}
 	}
 
 	//モデルのロード
-	string hp[HP::MAX] = { "Full", "Half", "Mimi" };
-	string anim[ANIMATION::MAX] = { "Move", "Hit", "Death" };
-	string lod[LOD::MAX] = { "", "Middle", "Low" };
-	for (int i = 0;i < HP::MAX;i++) {
-		for (int j = 0;j < LOD::MAX;j++) {
-			for (int k = 0;k < ANIMATION::MAX;i + k++) {
-				hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-"+Level[status_.level_] +"-" + hp[i]+ "-" + lod[j] + "-" + anim[k] + ".fbx");
-				HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k]+ "のEnemyモデルがない");
+	string hp[HP::HMAX] = { "Full", "Half", "Mimi" };
+	string anim[ANIMATION::AMAX] = { "Move", "Hit", "Death" };
+	string lod[LOD::LMAX] = { "", "Middle", "Low" };
+	for (int i = 0;i < HP::HMAX;i++) {
+		for (int j = 0;j < LOD::LMAX;j++) {
+			for (int k = 0;k < ANIMATION::AMAX;i + k++) {
+				hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
+				HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
 
 			}
 		}
@@ -71,8 +75,42 @@ void Enemy::Load(LEVEL _level,unsigned int _number)
 
 }
 
+void Enemy::SuperUpdate()
+{
+	Model::AnimPause(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
+}
+
 void Enemy::Update()
 {
+	Model::AnimPlay(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
+
+	switch (ModelAnim_)
+	{
+	case Enemy::MOVE:
+		Move();
+		break;
+	case Enemy::HIT:
+		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetHitFrame()) {
+			ModelAnim_ = ANIMATION::MOVE; //ヒットアニメーションが終わったら移動アニメーションに戻る
+		}
+		break;
+	case Enemy::DEATH:
+		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetDeathAnimFrame()) {
+			EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
+			EManager->SpawnEXP(transform_.position_, status_.exp_);
+			KillMe();
+		}
+		break;
+	default:
+		break;
+	}
+
+	//死んでいないときは無敵時間の計算をする
+	if (ModelAnim_ != ANIMATION::DEATH) {
+		if (InvincibleTimer_ > 0.0f) {
+			InvincibleTimer_ -= Time::DeltaTime();
+		}
+	}
 }
 
 void Enemy::Move()
@@ -105,16 +143,16 @@ void Enemy::Move()
 	XMVECTOR epDistance = pVec - eVec;
 
 	//LODの設定
-	ModelLOD_ = LOD::MAX;
+	ModelLOD_ = LOD::LMAX;
 	if (XMVectorGetX(XMVector3Length(epDistance)) <= LOWDISTANCE) {
 		ModelLOD_ = LOD::LOW;
 		if (XMVectorGetX(XMVector3Length(epDistance)) <= MIDDLEDISTANCE) {
 			ModelLOD_ = LOD::MIDDLE;
 			if (XMVectorGetX(XMVector3Length(epDistance)) <= HIGHDISTANCE) {
-				ModelLOD_ = LOD::HIGH;	
+				ModelLOD_ = LOD::HIGH;
 			}
 		}
-		
+
 	}
 
 	//回転のマトリクスを作る
@@ -141,7 +179,7 @@ void Enemy::Move()
 	else {
 		transform_.rotate_.y += XMConvertToDegrees(angle);
 	}
-
+	//移動前の場所を取っておく
 	prePos_ = transform_.position_;
 	transform_.position_ += epDistance * status_.speed_ * Time::DeltaTime() + Gravity * gravity_;
 
@@ -157,6 +195,9 @@ void Enemy::Release()
 
 void Enemy::HitDamege(int _damege, float _knock)
 {
+	if (InvincibleTimer_ > 0.0f)
+		return; //無敵時間中はダメージを受けない
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
 	float dBoost = 1.0;
@@ -167,6 +208,45 @@ void Enemy::HitDamege(int _damege, float _knock)
 		}
 	}
 
+	status_.hp_ -= _damege * dBoost;
+	InvincibleTimer_ = status_.invincibletime_;
+
+	if (status_.hp_ <= 0) {
+		ModelAnim_ = ANIMATION::DEATH;
+	}
+	else {
+		float HPratio = (float)status_.hp_ / status_.maxhp_;
+		if (HPratio >= 0.5f) {
+			ModelHP_ = HP::FULL;
+		}
+		else if (HPratio >= 0.3f) {
+			ModelHP_ = HP::HALF;
+		}
+		else {
+			ModelHP_ = HP::MINI;
+		}
+
+		Player* player = GetRootJob()->FindGameObject<Player>();
+		if (player == nullptr)
+			return;
+
+		XMFLOAT3 pPos = player->GetPosition();
+		XMFLOAT3 ePos = transform_.position_;
+
+		XMVECTOR pPosVec = XMLoadFloat3(&pPos);
+		XMVECTOR ePosVec = XMLoadFloat3(&ePos);
+
+		//プレイヤーと敵の距離のベクトル
+		XMVECTOR epDistance = pPosVec - ePosVec;
+
+		//ノックバック
+		XMVECTOR knockVec = epDistance;
+
+		knockVec = XMVectorSetY(knockVec, 0);
+		knockVec = XMVector3Normalize(knockVec);
+
+		transform_.position_ += -knockVec * status_.speed_ * _knock;
+	}
 
 }
 

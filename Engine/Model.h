@@ -27,6 +27,9 @@ namespace Model
 		float nowFrame, animSpeed;
 		int startFrame, endFrame;
 
+		//アニメーションを再生するかどうか
+		bool IsPlay_ = true;
+
 
 		//初期化
 		ModelData() : pFbx(nullptr), nowFrame(0), startFrame(0), endFrame(0), animSpeed(0)
@@ -77,6 +80,16 @@ namespace Model
 
 	//現在のアニメーションのフレームを取得
 	int GetAnimFrame(int handle);
+
+	//アニメーションを止める
+	//引数：handle		止めたいモデルの番号
+	void AnimPause(int handle);
+
+	//アニメーションを再生する
+	//引数：handle		再生したいモデルの番号
+	void AnimPlay(int handle);
+
+
 
 	//任意のボーンの位置を取得
 	//引数：handle		調べたいモデルの番号

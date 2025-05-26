@@ -6,7 +6,8 @@ MiniのモデルはテクスチャHSV{種類による,0.25,1.0}でつくる
 HeadはFullの時の色
 AmbientはHSV{種類による,体力による,0.7}でつくる
 
-RunはMixamoのStandard Runを使わせていただく
+Humanoid
+MoveはMixamoのStandard Runを使わせていただく
 フレームは23
 DeathはMixamoのDeath From The Backを使わせていただく
 速度を80に
