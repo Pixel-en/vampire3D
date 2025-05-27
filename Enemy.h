@@ -1,16 +1,14 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-namespace {
-	//敵の強さ
-	enum ELEVEL {
-		BLUE,
-		YELLOW,
-		GREEN,
-		RED,
-		END
-	};
-}
+//敵の強さ
+enum ELEVEL {
+	BLUE = 0,
+	YELLOW = 1,
+	GREEN = 2,
+	RED = 3,
+	END
+};
 
 //オブジェクトコピー用
 class Enemy :public GameObject
@@ -52,7 +50,7 @@ private:
 		float invincibletime_;	//無敵時間
 	};
 	Status status_;
-	
+
 	//モデル
 	HP ModelHP_;	//モデルのHP
 	LOD ModelLOD_;
@@ -75,8 +73,8 @@ protected:
 	//モデルにアニメーションをセットする
 	virtual void SetAnimation() {};
 	//アニメーションのフレームをゲット
-	virtual int GetDeathAnimFrame() const {};
-	virtual int GetHitFrame() const {};
+	virtual int GetDeathAnimFrame() const = 0;
+	virtual int GetHitFrame() const = 0;
 
 public:
 	Enemy(GameObject* parent);
@@ -92,7 +90,7 @@ public:
 	/// </summary>
 	/// <param name="_level">敵のレベル(enum)</param>
 	/// <param name="_number">敵の識別番号</param>
-	virtual void Load(ELEVEL _level, unsigned int _number);
+	void Load(ELEVEL _level, unsigned int _number);
 
 	virtual void SuperUpdate() override;
 

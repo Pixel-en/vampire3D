@@ -1,12 +1,14 @@
 #include "EnemySpawn.h"
 #include "Field.h"
 #include "Player.h"
+#include "Humanoid.h"
 
 namespace {
 	const int SPAWNAREA{ 10 };
 	const int SPAWNAREALIMIT{ 50 };
 	const float SPAWNTIME{ 1.0f };
 	const int SPAWNLIMIT{ 1 };
+	const int ENEMYTYPE{ 1 }; //“G‚Ìí—Ş”
 }
 
 
@@ -35,7 +37,16 @@ void EnemySpawn::Update()
 		if (EnemyList_.size() < SPAWNLIMIT)
 		{
 			Field* field = GetRootJob()->FindGameObject<Field>();
-			Enemy* e = Instantiate<Enemy>(this);
+			Enemy* enemy;
+			int type = rand() % ENEMYTYPE; //“G‚Ìí—Ş‚ğƒ‰ƒ“ƒ_ƒ€‚É‘I‚Ô
+			switch (type)
+			{
+			case 0: //Humanoid
+				enemy = Instantiate<Humanoid>(this);
+				break;
+			default:
+				break;
+			}
 			//oŒ»êŠ‚ğŒˆ‚ß‚é
 			do
 			{
@@ -52,12 +63,12 @@ void EnemySpawn::Update()
 			if (signZ == 1)
 				z = z * -1;
 
-			e->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
-			} while (e->SelfCollision(field));
+			enemy->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
+			} while (enemy->SelfCollision(field));
 
-			e->SetEnemyNumber(number_);
+			enemy->Load(ELEVEL::BLUE, number_);
 
-			EnemyList_.push_back(e);
+			EnemyList_.push_back(enemy);
 			timer = SPAWNTIME;
 			number_++;
 		}

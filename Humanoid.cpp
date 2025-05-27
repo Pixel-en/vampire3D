@@ -32,24 +32,22 @@ void Humanoid::SetAnimation()
 	}
 }
 
+int Humanoid::GetDeathAnimFrame() const
+{
+	return DEATHANIMFRAME;
+}
+
+int Humanoid::GetHitFrame() const
+{
+	return HITANIMFRAME;
+}
+
 Humanoid::Humanoid(GameObject* parent)
 	:Enemy(parent,"Humanoid")
 {
 }
 
 Humanoid::~Humanoid()
-{
-}
-
-void Humanoid::Initialize()
-{
-}
-
-void Humanoid::Update()
-{
-}
-
-void Humanoid::Draw()
 {
 }
 

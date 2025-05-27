@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include "Engine/Model.h"
 #include "Engine/CsvReader.h"
+#include "Engine/BoxCollider.h"
 #include <algorithm>
 
 #include "Field.h"
@@ -36,6 +37,8 @@ void Enemy::Initialize()
 	ModelHP_ = HP::FULL;
 	ModelLOD_ = LOD::HIGH;
 	ModelAnim_ = ANIMATION::MOVE;
+	
+
 }
 
 void Enemy::Load(ELEVEL _level, unsigned int _number)
@@ -66,12 +69,16 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 	for (int i = 0;i < HP::HMAX;i++) {
 		for (int j = 0;j < LOD::LMAX;j++) {
 			for (int k = 0;k < ANIMATION::AMAX;i + k++) {
+				hModel_[i][j][k] = -1; //初期化
 				hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
 				HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
 
 			}
 		}
 	}
+
+	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1.5f, 0), XMFLOAT3(3.0f, 3.0f, 3.0f));
+	AddCollider(collision);
 
 }
 
@@ -187,6 +194,11 @@ void Enemy::Move()
 
 void Enemy::Draw()
 {
+	Transform tempTrans = transform_;
+	tempTrans.rotate_.y += 180; //モデルが前後反転するため一時的に
+
+	Model::SetTransform(hModel_[ModelHP_][ModelLOD_][ModelAnim_], tempTrans);
+	Model::Draw(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
 }
 
 void Enemy::Release()
