@@ -147,7 +147,7 @@ void Bomb::cBomb::Release()
 
 void Bomb::cBomb::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetObjectName() == "Enemy")
+	if (pTarget->GetObjectTag() == "Enemy")
 	{
 		if (!ignite_) {
 			ignite_ = true;

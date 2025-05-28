@@ -7,6 +7,7 @@ GameObject::GameObject(void) :
 	GameObject(nullptr, "")
 {
 	targetName_ = "";
+	objectTag_ = "";
 }
 
 //コンストラクタ（名前なし）
@@ -14,6 +15,7 @@ GameObject::GameObject(GameObject* parent) :
 	GameObject(parent, "")
 {
 	targetName_ = "";
+	objectTag_ = "";
 }
 
 //コンストラクタ（標準）
@@ -28,6 +30,7 @@ GameObject::GameObject(GameObject* parent, const std::string& name)
 
 	screenWidth = Direct3D::screenWidth_;
 	screenHeight = Direct3D::screenHeight_;
+	objectTag_ = "";
 }
 
 //デストラクタ
@@ -257,6 +260,11 @@ GameObject* GameObject::FindChildObject(const std::string& name)
 const std::string& GameObject::GetObjectName(void) const
 {
 	return objectName_;
+}
+
+const std::string& GameObject::GetObjectTag() const
+{
+	return objectTag_;
 }
 
 //子オブジェクトを追加（リストの最後へ）

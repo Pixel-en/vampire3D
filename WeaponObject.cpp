@@ -168,7 +168,7 @@ void WeaponObject::Release()
 void WeaponObject::OnCollision(GameObject* pTarget)
 {
 
-	if (pTarget->GetObjectName() == "Enemy")
+	if (pTarget->GetObjectTag() == "Enemy")
 	{
 		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
 		std::vector<Enemy*> List = ep->GetEnemyList();

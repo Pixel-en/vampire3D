@@ -50,6 +50,8 @@ void EnemySpawn::Update()
 			if (enemy == nullptr)
 				return;
 
+			enemy->Load(ELEVEL::BLUE, number_);
+
 			//oŒ»êŠ‚ðŒˆ‚ß‚é
 			do
 			{
@@ -66,10 +68,8 @@ void EnemySpawn::Update()
 			if (signZ == 1)
 				z = z * -1;
 
-			enemy->SetPosition(p->GetPosition().x + x, 1, p->GetPosition().z + z);
+			enemy->SetPosition(x, 3, z);
 			} while (enemy->SelfCollision(field));
-
-			enemy->Load(ELEVEL::BLUE, number_);
 
 			EnemyList_.push_back(enemy);
 			timer = SPAWNTIME;

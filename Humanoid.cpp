@@ -30,6 +30,10 @@ void Humanoid::SetAnimation()
 			}
 		}
 	}
+
+
+	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1.5f, 0), XMFLOAT3(3.0f, 3.0f, 3.0f));
+	AddCollider(collision);
 }
 
 int Humanoid::GetDeathAnimFrame() const

@@ -287,7 +287,7 @@ void Player::Release()
 
 void Player::OnCollision(GameObject* pTarget)
 {
-	if (pTarget->GetObjectName() == "Enemy")
+	if (pTarget->GetObjectTag() == "Enemy")
 	{
 		if (InvincibleTimer_ > 0.0f)
 			return;

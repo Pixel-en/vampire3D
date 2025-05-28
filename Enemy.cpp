@@ -12,20 +12,22 @@
 using std::string;
 namespace {
 	const float GRAVITY{ 9.8f / 2.0f / 60.0f };
-	const float HIGHDISTANCE{ 50.0f };
+	const float HIGHDISTANCE{ 40.0f };
 	const float MIDDLEDISTANCE{ 70.0f };
-	const float LOWDISTANCE{ 120.0f };
+	const float LOWDISTANCE{ 100.0f };
 
 }
 
 Enemy::Enemy(GameObject* parent)
 	:GameObject(parent, "")
 {
+	objectTag_ = "Enemy";
 }
 
 Enemy::Enemy(GameObject* parent, const std::string& name)
 	:GameObject(parent, name)
 {
+	objectTag_ = "Enemy";
 }
 
 Enemy::~Enemy()
@@ -79,9 +81,6 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 	}
 
 	SetAnimation();
-
-	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1.5f, 0), XMFLOAT3(3.0f, 3.0f, 3.0f));
-	AddCollider(collision);
 
 }
 
@@ -198,6 +197,13 @@ void Enemy::Move()
 		onGround_ = true;
 	}
 
+	//地面下に落下したときは死ぬ
+	if (transform_.position_.y <= -2000) {
+		ModelAnim_ = ANIMATION::AMAX; //死ぬアニメーションにする
+		transform_.position_.y = 5;
+		Debug::Log("落下", true);
+		//KillMe();
+	}
 }
 
 void Enemy::Draw()
@@ -267,6 +273,7 @@ void Enemy::HitDamege(int _damege, float _knock)
 		knockVec = XMVector3Normalize(knockVec);
 
 		transform_.position_ += -knockVec * status_.speed_ * _knock;
+		ModelAnim_ = ANIMATION::HIT; //ヒットアニメーションにする
 	}
 
 }

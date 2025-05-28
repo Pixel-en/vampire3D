@@ -29,6 +29,9 @@ protected:
 	//オブジェクトの名前
 	std::string				objectName_;
 
+	//オブジェクトのタグ
+	std::string				objectTag_;
+
 	//衝突判定リスト
 	std::list<Collider*>	colliderList_;	
 
@@ -212,6 +215,10 @@ public:
 	//戻値：名前
 	const std::string& GetObjectName(void) const;
 
+	//オブジェクトのタグを取得
+	//戻り値：タグ
+	const std::string& GetObjectTag() const;
+
 	//子オブジェクトを追加（リストの最後へ）
 	//引数：追加するオブジェクト
 	void PushBackChild(GameObject* obj);
@@ -222,8 +229,6 @@ public:
 
 	//子オブジェクトを全て削除
 	void KillAllChildren();
-
-
 
 	//コライダー（衝突判定）を追加する
 	void AddCollider(Collider * collider);
