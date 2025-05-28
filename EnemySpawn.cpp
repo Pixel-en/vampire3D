@@ -37,7 +37,7 @@ void EnemySpawn::Update()
 		if (EnemyList_.size() < SPAWNLIMIT)
 		{
 			Field* field = GetRootJob()->FindGameObject<Field>();
-			Enemy* enemy;
+			Enemy* enemy = nullptr;
 			int type = rand() % ENEMYTYPE; //“G‚ÌŽí—Þ‚ðƒ‰ƒ“ƒ_ƒ€‚É‘I‚Ô
 			switch (type)
 			{
@@ -47,6 +47,9 @@ void EnemySpawn::Update()
 			default:
 				break;
 			}
+			if (enemy == nullptr)
+				return;
+
 			//oŒ»êŠ‚ðŒˆ‚ß‚é
 			do
 			{
@@ -63,7 +66,7 @@ void EnemySpawn::Update()
 			if (signZ == 1)
 				z = z * -1;
 
-			enemy->SetPosition(p->GetPosition().x + x, 0, p->GetPosition().z + z);
+			enemy->SetPosition(p->GetPosition().x + x, 1, p->GetPosition().z + z);
 			} while (enemy->SelfCollision(field));
 
 			enemy->Load(ELEVEL::BLUE, number_);

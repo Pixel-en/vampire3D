@@ -26,6 +26,7 @@ namespace Audio
 
 		//ファイル名
 		std::string fileName;
+
 	};
 	std::vector<AudioData>	audioDatas;
 }
@@ -142,6 +143,7 @@ int Audio::Load(std::string fileName, bool isLoop, int svNum)
 		pXAudio->CreateSourceVoice(&ad.pSourceVoice[i], &fmt);
 	}
 	ad.svNum = svNum;
+
 	audioDatas.push_back(ad);
 
 	//SAFE_DELETE_ARRAY(pBuffer);
@@ -174,6 +176,21 @@ void Audio::Stop(int ID)
 		audioDatas[ID].pSourceVoice[i]->Stop();
 		audioDatas[ID].pSourceVoice[i]->FlushSourceBuffers();
 	}
+}
+
+bool Audio::isPlaying(int ID)
+{
+	for (int i = 0; i < audioDatas[ID].svNum; i++)
+	{
+		XAUDIO2_VOICE_STATE state;
+		audioDatas[ID].pSourceVoice[i]->GetState(&state);
+
+		if (state.BuffersQueued > 0)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 //シーンごとの解放

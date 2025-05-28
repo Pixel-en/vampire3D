@@ -63,19 +63,22 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 	}
 
 	//モデルのロード
-	string hp[HP::HMAX] = { "Full", "Half", "Mimi" };
+	string hp[HP::HMAX] = { "Full", "Half", "Mini" };
 	string anim[ANIMATION::AMAX] = { "Move", "Hit", "Death" };
-	string lod[LOD::LMAX] = { "", "Middle", "Low" };
+	string lod[LOD::LMAX] = { "High", "Middle", "Low" };
 	for (int i = 0;i < HP::HMAX;i++) {
 		for (int j = 0;j < LOD::LMAX;j++) {
 			for (int k = 0;k < ANIMATION::AMAX;i + k++) {
 				hModel_[i][j][k] = -1; //初期化
 				hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
+				//hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\EnemyOrigin\\Enemy-" + lod[j] + "-" + anim[k] + ".fbx");
 				HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
 
 			}
 		}
 	}
+
+	SetAnimation();
 
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1.5f, 0), XMFLOAT3(3.0f, 3.0f, 3.0f));
 	AddCollider(collision);
@@ -190,6 +193,11 @@ void Enemy::Move()
 	prePos_ = transform_.position_;
 	transform_.position_ += epDistance * status_.speed_ * Time::DeltaTime() + Gravity * gravity_;
 
+	onGround_ = false;
+	if (field->RayCastField(transform_.position_, 3)) {
+		onGround_ = true;
+	}
+
 }
 
 void Enemy::Draw()
@@ -198,7 +206,8 @@ void Enemy::Draw()
 	tempTrans.rotate_.y += 180; //モデルが前後反転するため一時的に
 
 	Model::SetTransform(hModel_[ModelHP_][ModelLOD_][ModelAnim_], tempTrans);
-	Model::Draw(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
+	if (ModelLOD_ != LOD::LMAX)
+		Model::Draw(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
 }
 
 void Enemy::Release()

@@ -2,9 +2,9 @@
 #include "Engine/Model.h"
 
 namespace {
-	const int MOVEANIMFRAME{ 23 };
-	const int DEATHANIMFRAME{ 56 } ;
-	const int HITANIMFRAME{ 19 };
+	const int MOVEANIMFRAME{ 43 };
+	const int DEATHANIMFRAME{ 111 } ;
+	const int HITANIMFRAME{ 35 };
 }
 
 void Humanoid::SetAnimation()
@@ -16,13 +16,13 @@ void Humanoid::SetAnimation()
 				switch (k)
 				{
 				case Enemy::MOVE:
-					Model::SetAnimFrame(hModel_[i][j][k], 0, MOVEANIMFRAME * 2, 1.0f);
+					Model::SetAnimFrame(hModel_[i][j][k], 0, MOVEANIMFRAME , 1.0f);
 					break;
 				case Enemy::HIT:
-					Model::SetAnimFrame(hModel_[i][j][k], 0, HITANIMFRAME * 2, 1.0f);
+					Model::SetAnimFrame(hModel_[i][j][k], 0, HITANIMFRAME, 1.0f);
 					break;
 				case Enemy::DEATH:
-					Model::SetAnimFrame(hModel_[i][j][k], 0, DEATHANIMFRAME * 2, 1.0f);
+					Model::SetAnimFrame(hModel_[i][j][k], 0, DEATHANIMFRAME, 1.0f);
 					break;
 				default:
 					break;

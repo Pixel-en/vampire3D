@@ -25,6 +25,10 @@ namespace Audio
 	//引数：handle	止めたいサウンドの番号
 	void Stop(int ID);
 
+	//再生中かどうか
+	//引数：ID		確認したいサウンドの番号
+	bool isPlaying(int ID);
+
 	//シーンごとの解放（ロードしたサウンドを解放）
 	void Release();
 
