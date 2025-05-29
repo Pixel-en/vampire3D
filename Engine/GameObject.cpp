@@ -520,19 +520,19 @@ void GameObject::UpdateSub()
 
 void GameObject::DrawSub()
 {
-	if (IsVisibled())
+	if (IsVisibled()) {
 		Draw();
 
 
-	//リリース時は削除
+		//リリース時は削除
 #ifdef _DEBUG
 		//コリジョンの描画
-	if (Direct3D::isDrawCollision_)
-	{
-		CollisionDraw();
-	}
+		if (Direct3D::isDrawCollision_)
+		{
+			CollisionDraw();
+		}
 #endif
-
+	}
 	//その子オブジェクトの描画処理
 	for (auto it = childList_.begin(); it != childList_.end(); it++)
 	{

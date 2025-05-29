@@ -151,19 +151,6 @@ void Enemy::Move()
 	//プレイヤーと敵のベクトルを取る
 	XMVECTOR epDistance = pVec - eVec;
 
-	//LODの設定
-	ModelLOD_ = LOD::LMAX;
-	if (XMVectorGetX(XMVector3Length(epDistance)) <= LOWDISTANCE) {
-		ModelLOD_ = LOD::LOW;
-		if (XMVectorGetX(XMVector3Length(epDistance)) <= MIDDLEDISTANCE) {
-			ModelLOD_ = LOD::MIDDLE;
-			if (XMVectorGetX(XMVector3Length(epDistance)) <= HIGHDISTANCE) {
-				ModelLOD_ = LOD::HIGH;
-			}
-		}
-
-	}
-
 	//回転のマトリクスを作る
 	XMMATRIX RotMat = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
 
@@ -191,10 +178,34 @@ void Enemy::Move()
 	//移動前の場所を取っておく
 	prePos_ = transform_.position_;
 	transform_.position_ += epDistance * status_.speed_ * Time::DeltaTime() + Gravity * gravity_;
+	
 
-	onGround_ = false;
-	if (field->RayCastField(transform_.position_, RAYHEIGHT)) {
-		onGround_ = true;
+	//LODの設定
+	if (XMVectorGetX(XMVector3Length(epDistance)) <= LOWDISTANCE * 2) {
+		if (XMVectorGetX(XMVector3Length(epDistance)) <= LOWDISTANCE) {
+			ModelLOD_ = LOD::LOW;
+			if (XMVectorGetX(XMVector3Length(epDistance)) <= MIDDLEDISTANCE) {
+				ModelLOD_ = LOD::MIDDLE;
+				if (XMVectorGetX(XMVector3Length(epDistance)) <= HIGHDISTANCE) {
+					ModelLOD_ = LOD::HIGH;
+				}
+			}
+
+			//重力判定するか
+			onGround_ = false;
+			if (field->RayCastField(transform_.position_, RAYHEIGHT)) {
+				onGround_ = true;
+			}
+		}
+		else {
+			onGround_ = false; //プレイヤーから遠いときは地面がないので落下しないようにする
+			ModelLOD_ = LOD::LMAX;
+		}
+	}
+	else {
+		//敵がプレイヤーからあまりに遠いときは殺す
+		Debug::Log("あまりにも離れすぎた");
+		KillMe();
 	}
 
 	//地面下に落下したときは死ぬ

@@ -13,40 +13,34 @@
 
 namespace {
 	const float PLAYTIME{ 900.0f };
+	const int OBJECTNUM{ 5 }; //ロードするオブジェクトの数
 }
 
-void PlayScene::LoadResource()
+void PlayScene::LoadObject()
 {
-	static int cnt= 0;
 
-	switch (cnt)
+	switch (LoadCount_)
 	{
 	case 0:
-		Instantiate<Field>(this);
+		Instantiate<EXPManager>(this);
 		break;
 	case 1:
-		Instantiate<EnemySpawn>(this);
+		Instantiate<Field>(this);
 		break;
 	case 2:
-		Instantiate<Player>(this);
+		Instantiate<EnemySpawn>(this);
 		break;
 	case 3:
-		Instantiate<EXPManager>(this);
+		Instantiate<Player>(this);
 		break;
 	case 4:
 		Instantiate<HUD>(this);
 		break;
 	default:
-		isLoaded_ = true;
 		break;
 	}
-	//Instantiate<Field>(this);
-	//Instantiate<EnemySpawn>(this);
-	//Instantiate<Player>(this);
-	//Instantiate<EXPManager>(this);
-	//Instantiate<HUD>(this);
-	cnt++;
-	return;
+
+	LoadCount_++;
 
 }
 
@@ -59,27 +53,35 @@ PlayScene::PlayScene(GameObject* parent)
 void PlayScene::Initialize()
 {
 	Instantiate<PlayLoad>(this);
-	isLoaded_ = false;	
+	isLoaded_ = false;
 
 	hIntroSound_ = Audio::Load("Assets\\Audio\\BGM\\Play_intro.wav");
 	HandleCheck(hIntroSound_, "プレイのイントロがない");
 	hLoopSound_ = Audio::Load("Assets\\Audio\\BGM\\Play_loop.wav", true);
 	HandleCheck(hLoopSound_, "プレイのループBGMがない");
+	LoadCount_ = 0;
 }
 
 void PlayScene::Update()
 {
 	if (!isLoaded_) {
-		if (Input::IsKeyDown(DIK_SPACE)) {
-			LoadResource();
-			if (isLoaded_) {
-				Audio::Play(hIntroSound_);
-				PlayLoad* PL = FindGameObject<PlayLoad>();
-				PL->KillMe();
+		PlayLoad* PL = FindGameObject<PlayLoad>();
+		if (PL->GetIsStart()) {
+			LoadObject();
+			SetChildFlags(0b10001);
+			PL->SetFlags(0b11101);
+			PL->SetBarScale((float)LoadCount_ / OBJECTNUM);
+			if (LoadCount_ >= OBJECTNUM) {
+				if (Input::IsKeyDown(DIK_SPACE)) {
+					isLoaded_ = true;
+					SetChildFlags(0b11101);
+					PL->KillMe();
+				}
 			}
 		}
 	}
 	else {
+		//イントロが終わったらループに入る
 		if (!Audio::isPlaying(hIntroSound_) && !Audio::isPlaying(hLoopSound_)) {
 			Audio::Play(hLoopSound_);
 			Audio::Stop(hIntroSound_);
@@ -97,7 +99,7 @@ void PlayScene::Update()
 			scene->ChangeScene(SCENE_ID_GAMECLEAR);
 		}
 	}
-	Debug::Log(PlayTimer_, true);
+	//Debug::Log(PlayTimer_, true);
 }
 
 void PlayScene::Draw()

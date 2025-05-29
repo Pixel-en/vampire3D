@@ -11,7 +11,9 @@ class PlayScene : public GameObject
 	//ロードしたか
 	bool isLoaded_;
 
-	void LoadResource();
+	//オブジェクトのロード
+	void LoadObject();
+	int LoadCount_;
 
 public:
 	//コンストラクタ
