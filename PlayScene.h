@@ -8,6 +8,11 @@ class PlayScene : public GameObject
 	int hIntroSound_;
 	int hLoopSound_;
 
+	//ロードしたか
+	bool isLoaded_;
+
+	void LoadResource();
+
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）

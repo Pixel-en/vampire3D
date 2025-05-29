@@ -167,6 +167,7 @@
     <ClCompile Include="Laser.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayLoad.cpp" />
     <ClCompile Include="PlayScene.cpp" />
     <ClCompile Include="PoisonThrow.cpp" />
     <ClCompile Include="SpikeOrb.cpp" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Laser.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayLoad.h" />
     <ClInclude Include="PlayScene.h" />
     <ClInclude Include="PoisonThrow.h" />
     <ClInclude Include="SpikeOrb.h" />
