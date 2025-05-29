@@ -277,8 +277,12 @@ void Player::Draw()
 	data.font = TextFont::GetFontName(FontList::Gkktt);
 	data.Color = D2D1::ColorF(255, 255, 255);
 	data.fontSize = 35;
-
+#ifdef _DEBUG
+	TextFont::Draw("x=" + std::to_string(transform_.position_.x), { 30, 200 }, data);
+	TextFont::Draw("y=" + std::to_string(transform_.position_.y), { 30, 230 }, data);
+	TextFont::Draw("z=" + std::to_string(transform_.position_.z), { 30, 260 }, data);
 	//TextFont::Draw("体力" + std::to_string(status_.hp_), { 30,30 }, data);
+#endif
 }
 
 void Player::Release()
@@ -296,7 +300,12 @@ void Player::OnCollision(GameObject* pTarget)
 		std::vector<Enemy*> List = ep->GetEnemyList();
 		for (int i = 0; i < List.size(); i++) {
 			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
-				status_.hp_ -= List[i]->CausedDamege();
+				//ダメージを取得
+				int damege = List[i]->CausedDamege();
+				if (damege <= 0)
+					return; //ダメージが0以下なら何もしない
+
+				status_.hp_ -= damege;
 				Input::SetPadVibration(0.5f * 65535, 0.5f * 65535);
 				if (status_.hp_ <= 0) {
 					SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();

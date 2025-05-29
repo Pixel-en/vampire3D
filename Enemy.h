@@ -113,7 +113,13 @@ public:
 	/// 与えたダメージ
 	/// </summary>
 	/// <returns>ダメージ</returns>
-	int CausedDamege() { return status_.power_; };
+	int CausedDamege() {
+		
+		//移動中以外はダメージを与えない
+		if (ModelAnim_ != ANIMATION::MOVE)
+			return 0;
+		return status_.power_;
+	};
 
 	/// <summary>
 	/// 経験値を取得

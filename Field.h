@@ -79,5 +79,7 @@ public:
 	/// <returns>“–‚½‚Á‚Ä‚¢‚é‚©‚Ç‚¤‚©</returns>
 	bool RayCastField(XMFLOAT3& _pos, float _rayHeight);
 
+
+	int GetFieldPosListSize() const { return fieldPosList_.size(); }
 };
 

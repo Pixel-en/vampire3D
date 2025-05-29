@@ -11,11 +11,11 @@
 
 using std::string;
 namespace {
-	const float GRAVITY{ 9.8f / 2.0f / 60.0f };
-	const float HIGHDISTANCE{ 40.0f };
-	const float MIDDLEDISTANCE{ 70.0f };
-	const float LOWDISTANCE{ 100.0f };
-
+	const float GRAVITY{ 9.8f / 2.0f / 60.0f };	//重力
+	const float HIGHDISTANCE{ 40.0f };	//Highモデルの距離
+	const float MIDDLEDISTANCE{ 70.0f };	//Middleモデルの距離
+	const float LOWDISTANCE{ 100.0f };	//Lowモデルの距離
+	const int RAYHEIGHT{ 5 }; //レイの高さ
 }
 
 Enemy::Enemy(GameObject* parent)
@@ -40,7 +40,7 @@ void Enemy::Initialize()
 	ModelLOD_ = LOD::HIGH;
 	ModelAnim_ = ANIMATION::MOVE;
 	
-
+	onGround_ = false;
 }
 
 void Enemy::Load(ELEVEL _level, unsigned int _number)
@@ -193,16 +193,15 @@ void Enemy::Move()
 	transform_.position_ += epDistance * status_.speed_ * Time::DeltaTime() + Gravity * gravity_;
 
 	onGround_ = false;
-	if (field->RayCastField(transform_.position_, 3)) {
+	if (field->RayCastField(transform_.position_, RAYHEIGHT)) {
 		onGround_ = true;
 	}
 
 	//地面下に落下したときは死ぬ
 	if (transform_.position_.y <= -2000) {
-		ModelAnim_ = ANIMATION::AMAX; //死ぬアニメーションにする
-		transform_.position_.y = 5;
-		Debug::Log("落下", true);
-		//KillMe();
+		Debug::Log("落下：");
+		Debug::Log(transform_.position_, true);
+		KillMe();
 	}
 }
 

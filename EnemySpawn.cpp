@@ -9,11 +9,12 @@ namespace {
 	const float SPAWNTIME{ 1.0f };
 	const int SPAWNLIMIT{ 1 };
 	const int ENEMYTYPE{ 1 }; //敵の種類数
+	const int SPAWNHEIGHT{ 4 }; //敵のスポーン高さ
 }
 
 
 EnemySpawn::EnemySpawn(GameObject* parent)
-	:GameObject(parent,"EnemySpawn")
+	:GameObject(parent, "EnemySpawn")
 {
 	number_ = 1;
 	timer = SPAWNTIME;
@@ -37,6 +38,11 @@ void EnemySpawn::Update()
 		if (EnemyList_.size() < SPAWNLIMIT)
 		{
 			Field* field = GetRootJob()->FindGameObject<Field>();
+
+			//フィールドの生成がされてないときは出現させない
+			if (field->GetFieldPosListSize() != FIELDNUM)
+				return;
+
 			Enemy* enemy = nullptr;
 			int type = rand() % ENEMYTYPE; //敵の種類をランダムに選ぶ
 			switch (type)
@@ -51,26 +57,26 @@ void EnemySpawn::Update()
 				return;
 
 			enemy->Load(ELEVEL::BLUE, number_);
-
+			int count = 0;
 			//出現場所を決める
 			do
 			{
+				count++;
+				int x, z;
+				x = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
+				z = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
+				int signX = rand() % 2;
+				int signZ = rand() % 2;
 
-			int x, z;
-			x = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
-			z = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
-			int signX = rand() % 2;
-			int signZ = rand() % 2;
+				//符号をつける
+				if (signX == 1)
+					x = x * -1;
+				if (signZ == 1)
+					z = z * -1;
 
-			//符号をつける
-			if (signX == 1)
-				x = x * -1;
-			if (signZ == 1)
-				z = z * -1;
-
-			enemy->SetPosition(x, 3, z);
+				enemy->SetPosition(x, SPAWNHEIGHT, z);
 			} while (enemy->SelfCollision(field));
-
+			Debug::Log(count, true);
 			EnemyList_.push_back(enemy);
 			timer = SPAWNTIME;
 			number_++;
