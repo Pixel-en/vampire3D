@@ -30,6 +30,7 @@ void EnemySpawn::Initialize()
 
 void EnemySpawn::Update()
 {
+	//return;
 	Player* p = GetParent()->FindGameObject<Player>();
 	if (p == nullptr)
 		return;

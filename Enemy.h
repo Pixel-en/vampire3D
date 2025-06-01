@@ -51,11 +51,6 @@ private:
 	};
 	Status status_;
 
-	//モデル
-	HP ModelHP_;	//モデルのHP
-	LOD ModelLOD_;
-	ANIMATION ModelAnim_;
-
 	//タイマー
 	float InvincibleTimer_;	//無敵時間
 
@@ -70,6 +65,12 @@ private:
 	void Move();
 
 protected:
+	//モデル
+	HP ModelHP_;	//モデルのHP
+	LOD ModelLOD_;
+	ANIMATION ModelAnim_;
+	ANIMATION BeModelAnim_;
+
 	//モデルにアニメーションをセットする
 	virtual void SetAnimation() {};
 	//アニメーションのフレームをゲット

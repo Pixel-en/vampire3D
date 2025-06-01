@@ -39,6 +39,7 @@ void Enemy::Initialize()
 	ModelHP_ = HP::FULL;
 	ModelLOD_ = LOD::HIGH;
 	ModelAnim_ = ANIMATION::MOVE;
+	BeModelAnim_ = ANIMATION::AMAX;
 	
 	onGround_ = false;
 }
@@ -72,15 +73,15 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 		for (int j = 0;j < LOD::LMAX;j++) {
 			for (int k = 0;k < ANIMATION::AMAX;i + k++) {
 				hModel_[i][j][k] = -1; //初期化
-				hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
+				//hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
 				//hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\EnemyOrigin\\Enemy-" + lod[j] + "-" + anim[k] + ".fbx");
-				HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
+				//HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
 
 			}
 		}
 	}
 
-	SetAnimation();
+	//SetAnimation();
 
 }
 
@@ -218,6 +219,16 @@ void Enemy::Move()
 
 void Enemy::Draw()
 {
+	string Level[ELEVEL::END] = { "Blue","Yellow","Green","Red" };
+	string hp[HP::HMAX] = { "Full", "Half", "Mini" };
+	string anim[ANIMATION::AMAX] = { "Move", "Hit", "Death" };
+	string lod[LOD::LMAX] = { "High", "Middle", "Low" };
+	hModel_[ModelHP_][ModelLOD_][ModelAnim_] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-" + Level[status_.level_] + "-" + hp[ModelHP_] + "-" + lod[ModelLOD_] + "-" + anim[ModelAnim_] + ".fbx");
+	if (ModelAnim_ != BeModelAnim_) {
+		SetAnimation();
+	}
+	BeModelAnim_ = ModelAnim_;
+
 	Transform tempTrans = transform_;
 	tempTrans.rotate_.y += 180; //モデルが前後反転するため一時的に
 
