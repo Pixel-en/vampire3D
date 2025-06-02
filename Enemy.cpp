@@ -40,7 +40,7 @@ void Enemy::Initialize()
 	ModelLOD_ = LOD::HIGH;
 	ModelAnim_ = ANIMATION::MOVE;
 	BeModelAnim_ = ANIMATION::AMAX;
-	
+
 	onGround_ = false;
 }
 
@@ -73,15 +73,15 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 		for (int j = 0;j < LOD::LMAX;j++) {
 			for (int k = 0;k < ANIMATION::AMAX;i + k++) {
 				hModel_[i][j][k] = -1; //初期化
-				//hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
+				hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\" + objectName_ + "-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
 				//hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\EnemyOrigin\\Enemy-" + lod[j] + "-" + anim[k] + ".fbx");
-				//HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
+				HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
 
 			}
 		}
 	}
 
-	//SetAnimation();
+	SetAnimation();
 
 }
 
@@ -152,6 +152,30 @@ void Enemy::Move()
 	//プレイヤーと敵のベクトルを取る
 	XMVECTOR epDistance = pVec - eVec;
 
+	//LODの設定
+	if (XMVectorGetX(XMVector3Length(epDistance)) <= (LOWDISTANCE * 2.5)) {
+		if (XMVectorGetX(XMVector3Length(epDistance)) <= LOWDISTANCE) {
+			ModelLOD_ = LOD::LOW;
+			if (XMVectorGetX(XMVector3Length(epDistance)) <= MIDDLEDISTANCE) {
+				ModelLOD_ = LOD::MIDDLE;
+				if (XMVectorGetX(XMVector3Length(epDistance)) <= HIGHDISTANCE) {
+					ModelLOD_ = LOD::HIGH;
+				}
+			}
+		}
+		else {
+			onGround_ = false; //プレイヤーから遠いときは地面がないので落下しないようにする
+			ModelLOD_ = LOD::LMAX;
+		}
+	}
+	else {
+		//敵がプレイヤーからあまりに遠いときは殺す
+		Debug::Log("あまりにも離れすぎた");
+		KillMe();
+	}
+	Debug::Log(XMVectorGetX(XMVector3Length(epDistance)), true);
+
+
 	//回転のマトリクスを作る
 	XMMATRIX RotMat = XMMatrixRotationY(transform_.rotate_.y / 180.0f * XM_PI);
 
@@ -176,37 +200,21 @@ void Enemy::Move()
 	else {
 		transform_.rotate_.y += XMConvertToDegrees(angle);
 	}
+
 	//移動前の場所を取っておく
 	prePos_ = transform_.position_;
 	transform_.position_ += epDistance * status_.speed_ * Time::DeltaTime() + Gravity * gravity_;
-	
 
-	//LODの設定
-	if (XMVectorGetX(XMVector3Length(epDistance)) <= LOWDISTANCE * 2) {
-		if (XMVectorGetX(XMVector3Length(epDistance)) <= LOWDISTANCE) {
-			ModelLOD_ = LOD::LOW;
-			if (XMVectorGetX(XMVector3Length(epDistance)) <= MIDDLEDISTANCE) {
-				ModelLOD_ = LOD::MIDDLE;
-				if (XMVectorGetX(XMVector3Length(epDistance)) <= HIGHDISTANCE) {
-					ModelLOD_ = LOD::HIGH;
-				}
-			}
-
-			//重力判定するか
-			onGround_ = false;
-			if (field->RayCastField(transform_.position_, RAYHEIGHT)) {
-				onGround_ = true;
-			}
-		}
-		else {
-			onGround_ = false; //プレイヤーから遠いときは地面がないので落下しないようにする
-			ModelLOD_ = LOD::LMAX;
+	if (ModelLOD_ < LOD::LMAX) {
+		//重力判定するか
+		onGround_ = false;
+		if (field->RayCastField(transform_.position_, RAYHEIGHT)) {
+			onGround_ = true;
 		}
 	}
 	else {
-		//敵がプレイヤーからあまりに遠いときは殺す
-		Debug::Log("あまりにも離れすぎた");
-		KillMe();
+		//敵が描画されてないときは重力をなくす
+		onGround_ = true;
 	}
 
 	//地面下に落下したときは死ぬ
@@ -219,15 +227,6 @@ void Enemy::Move()
 
 void Enemy::Draw()
 {
-	string Level[ELEVEL::END] = { "Blue","Yellow","Green","Red" };
-	string hp[HP::HMAX] = { "Full", "Half", "Mini" };
-	string anim[ANIMATION::AMAX] = { "Move", "Hit", "Death" };
-	string lod[LOD::LMAX] = { "High", "Middle", "Low" };
-	hModel_[ModelHP_][ModelLOD_][ModelAnim_] = Model::Load("Assets\\Model\\Character\\Enemy\\Enemy-" + Level[status_.level_] + "-" + hp[ModelHP_] + "-" + lod[ModelLOD_] + "-" + anim[ModelAnim_] + ".fbx");
-	if (ModelAnim_ != BeModelAnim_) {
-		SetAnimation();
-	}
-	BeModelAnim_ = ModelAnim_;
 
 	Transform tempTrans = transform_;
 	tempTrans.rotate_.y += 180; //モデルが前後反転するため一時的に
@@ -239,12 +238,22 @@ void Enemy::Draw()
 
 void Enemy::Release()
 {
+	for (int i = 0; i < HP::HMAX; i++) {
+		for (int j = 0; j < LOD::LMAX; j++) {
+			for (int k = 0; k < ANIMATION::AMAX; k++) {
+				if (hModel_[i][j][k] != -1) {
+					Model::Release(hModel_[i][j][k]);
+					hModel_[i][j][k] = -1;
+				}
+			}
+		}
+	}
 }
 
-void Enemy::HitDamege(int _damege, float _knock)
+bool Enemy::HitDamege(int _damege, float _knock)
 {
 	if (InvincibleTimer_ > 0.0f)
-		return; //無敵時間中はダメージを受けない
+		return false; //無敵時間中はダメージを受けない
 
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
@@ -276,7 +285,7 @@ void Enemy::HitDamege(int _damege, float _knock)
 
 		Player* player = GetRootJob()->FindGameObject<Player>();
 		if (player == nullptr)
-			return;
+			return true;
 
 		XMFLOAT3 pPos = player->GetPosition();
 		XMFLOAT3 ePos = transform_.position_;
@@ -296,7 +305,7 @@ void Enemy::HitDamege(int _damege, float _knock)
 		transform_.position_ += -knockVec * status_.speed_ * _knock;
 		ModelAnim_ = ANIMATION::HIT; //ヒットアニメーションにする
 	}
-
+	return true;
 }
 
 void Enemy::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list)

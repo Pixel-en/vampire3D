@@ -149,11 +149,13 @@ namespace Model
 		return (int)_datas[handle]->nowFrame;
 	}
 
+	//アニメーションを一時停止する
 	void AnimPause(int handle)
 	{
 		_datas[handle]->IsPlay_ = false;
 	}
 
+	//アニメーションを再生する
 	void AnimPlay(int handle)
 	{
 		_datas[handle]->IsPlay_ = true;

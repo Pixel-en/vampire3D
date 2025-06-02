@@ -7,7 +7,7 @@ namespace {
 	const int SPAWNAREA{ 10 };
 	const int SPAWNAREALIMIT{ 50 };
 	const float SPAWNTIME{ 1.0f };
-	const int SPAWNLIMIT{ 1 };
+	const int SPAWNLIMIT{ 100 };
 	const int ENEMYTYPE{ 1 }; //“G‚ÌŽí—Þ”
 	const int SPAWNHEIGHT{ 4 }; //“G‚ÌƒXƒ|[ƒ“‚‚³
 }
@@ -56,7 +56,6 @@ void EnemySpawn::Update()
 			}
 			if (enemy == nullptr)
 				return;
-
 			enemy->Load(ELEVEL::BLUE, number_);
 			int count = 0;
 			//oŒ»êŠ‚ðŒˆ‚ß‚é
@@ -75,7 +74,7 @@ void EnemySpawn::Update()
 				if (signZ == 1)
 					z = z * -1;
 
-				enemy->SetPosition(x, SPAWNHEIGHT, z);
+				enemy->SetPosition(p->GetPosition().x + x, SPAWNHEIGHT, p->GetPosition().z + z);
 			} while (enemy->SelfCollision(field));
 			Debug::Log(count, true);
 			EnemyList_.push_back(enemy);

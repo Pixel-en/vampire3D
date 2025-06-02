@@ -133,7 +133,8 @@ public:
 	/// </summary>
 	/// <param name="_damege">受けたダメージ</param>
 	/// <param name="_knock">ノックバック係数</param>
-	void HitDamege(int _damege, float _knock);
+	/// <returns> 判定した場合trueを返す</returns>
+	bool HitDamege(int _damege, float _knock);
 
 	/// <summary>
 	/// あたり判定で敵のリストを取得

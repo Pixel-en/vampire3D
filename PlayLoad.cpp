@@ -65,7 +65,12 @@ void PlayLoad::Draw()
 	data.font = TextFont::GetFontName(FontList::Makinas);
 	data.Color = D2D1::ColorF(255, 255, 255);
 	data.fontSize = 25;
-	TextFont::Draw("LOADING...", { 900, 590 }, data);
+	std::string text = "LOADING...";
+	if (BarTrans_.scale_.x >= 1.0f) {
+		text = "LOADING COMPLETE!";
+	}
+
+	TextFont::Draw(text, { 900, 590 }, data);
 }
 
 void PlayLoad::Release()
