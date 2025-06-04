@@ -287,7 +287,7 @@ void HUD::LevelSuperUpdate()
 			levelCursor_ = 3;
 
 
-		HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_ = {330 / (screenWidth / 2.0f),(310 - (80 + levelCursor_ * 170)) / (screenHeight / 2.0f) ,0};
+		HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_ = { 330 / (screenWidth / 2.0f),(330 - (85 + levelCursor_ * (170 + 0))) / (screenHeight / 2.0f) ,0 };
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
@@ -333,7 +333,7 @@ void HUD::LevelDraw()
 		auto itr = RollListNum_.begin();
 		for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
 			//														初期値-画像の縦の長さ/2+i*画像の長さ+バッファ
-			HUDTransforms_[TRANSFORMTYPE::LEVELFRAME].position_ = {330 / (screenWidth / 2.0f),(310 - (80 + i * 170)) / (screenHeight / 2.0f) ,0};
+			HUDTransforms_[TRANSFORMTYPE::LEVELFRAME].position_ = { 330 / (screenWidth / 2.0f),(330 - (85 + i * (170 + 0))) / (screenHeight / 2.0f) ,0 };
 			Image::SetTransform(hLevelFrameImage_, HUDTransforms_[TRANSFORMTYPE::LEVELFRAME]);
 			Image::Draw(hLevelFrameImage_);
 

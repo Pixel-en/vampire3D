@@ -52,6 +52,7 @@ void PlayLoad::Update()
 
 void PlayLoad::Draw()
 {
+
 	Image::SetTransform(hBGImage_, transform_);
 	Image::Draw(hBGImage_);
 	Image::SetTransform(hBackImage_, FrameTrans_);

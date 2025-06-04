@@ -96,15 +96,15 @@ void Enemy::Update()
 
 	switch (ModelAnim_)
 	{
-	case Enemy::MOVE:
+	case ANIMATION::MOVE:
 		Move();
 		break;
-	case Enemy::HIT:
+	case ANIMATION::HIT:
 		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetHitFrame()) {
 			ModelAnim_ = ANIMATION::MOVE; //ヒットアニメーションが終わったら移動アニメーションに戻る
 		}
 		break;
-	case Enemy::DEATH:
+	case ANIMATION::DEATH:
 		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetDeathAnimFrame()) {
 			EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
 			EManager->SpawnEXP(transform_.position_, status_.exp_);

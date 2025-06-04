@@ -15,13 +15,13 @@ void Humanoid::SetAnimation()
 
 				switch (k)
 				{
-				case Enemy::MOVE:
+				case ANIMATION::MOVE:
 					Model::SetAnimFrame(hModel_[i][j][k], 0, MOVEANIMFRAME , 1.0f);
 					break;
-				case Enemy::HIT:
+				case ANIMATION::HIT:
 					Model::SetAnimFrame(hModel_[i][j][k], 0, HITANIMFRAME, 1.0f);
 					break;
-				case Enemy::DEATH:
+				case ANIMATION::DEATH:
 					Model::SetAnimFrame(hModel_[i][j][k], 0, DEATHANIMFRAME, 1.0f);
 					break;
 				default:

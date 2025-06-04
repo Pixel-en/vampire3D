@@ -9,31 +9,31 @@ enum ELEVEL {
 	RED = 3,
 	END
 };
+enum HP {
+	FULL,
+	HALF,
+	MINI,
+	HMAX
+};
+enum ANIMATION
+{
+	MOVE,
+	HIT,
+	DEATH,
+	AMAX
+};
+enum LOD
+{
+	HIGH,
+	MIDDLE,
+	LOW,
+	LMAX
+};
 
 //オブジェクトコピー用
 class Enemy :public GameObject
 {
 protected:
-	enum HP {
-		FULL,
-		HALF,
-		MINI,
-		HMAX
-	};
-	enum ANIMATION
-	{
-		MOVE,
-		HIT,
-		DEATH,
-		AMAX
-	};
-	enum LOD
-	{
-		HIGH,
-		MIDDLE,
-		LOW,
-		LMAX
-	};
 	//モデル
 	int hModel_[HP::HMAX][LOD::LMAX][ANIMATION::AMAX];
 

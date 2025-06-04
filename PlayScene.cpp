@@ -76,6 +76,7 @@ void PlayScene::Update()
 					isLoaded_ = true;
 					SetChildFlags(0b11101);
 					PL->KillMe();
+					Audio::Play(hIntroSound_);
 				}
 			}
 		}
