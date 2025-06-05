@@ -50,11 +50,11 @@ void HUD::UIPosRead()
 
 	for (int i = 1;i < csvTrans.GetHeight();i++) {
 		//初期化
-		HUDTransforms_[i-1] = transform_;
+		HUDTransforms_[i - 1] = transform_;
 		//読み込み
-		HUDTransforms_[i-1].position_ = { csvTrans.GetValue(CSVData::PosX,i),csvTrans.GetValue(CSVData::PosY,i) ,csvTrans.GetValue(CSVData::PosZ,i) };
-		HUDTransforms_[i-1].rotate_ = { csvTrans.GetValue(CSVData::RotX,i),csvTrans.GetValue(CSVData::RotY,i) ,csvTrans.GetValue(CSVData::RotZ,i) };
-		HUDTransforms_[i-1].scale_ = { csvTrans.GetValue(CSVData::ScaX,i),csvTrans.GetValue(CSVData::ScaY,i) ,csvTrans.GetValue(CSVData::ScaZ,i) };
+		HUDTransforms_[i - 1].position_ = { csvTrans.GetValue(CSVData::PosX,i),csvTrans.GetValue(CSVData::PosY,i) ,csvTrans.GetValue(CSVData::PosZ,i) };
+		HUDTransforms_[i - 1].rotate_ = { csvTrans.GetValue(CSVData::RotX,i),csvTrans.GetValue(CSVData::RotY,i) ,csvTrans.GetValue(CSVData::RotZ,i) };
+		HUDTransforms_[i - 1].scale_ = { csvTrans.GetValue(CSVData::ScaX,i),csvTrans.GetValue(CSVData::ScaY,i) ,csvTrans.GetValue(CSVData::ScaZ,i) };
 	}
 }
 
@@ -84,7 +84,7 @@ void HUD::Update()
 {
 	LevelUpdate();
 	RadarUpdate();
-	
+
 	HPUpdate();
 }
 
@@ -178,7 +178,7 @@ void HUD::RadarDraw()
 	for (auto I : REnemyPosList_) {
 		Transform enemyTransform = HUDTransforms_[TRANSFORMTYPE::RADARENEMY];
 		enemyTransform.position_ = I + enemyTransform.position_;
-		Image::SetTransform(hREnemy_,enemyTransform);
+		Image::SetTransform(hREnemy_, enemyTransform);
 		Image::Draw(hREnemy_);
 	}
 
@@ -245,14 +245,14 @@ void HUD::LevelInitialize()
 	hLevelCursorImage_ = Image::Load("Assets\\Image\\UI\\LevelUpCursor.png");
 	HandleCheck(hLevelCursorImage_);
 
-	CsvReader csv,effect;
+	CsvReader csv, effect;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
 		return;
 	if (!effect.Load("Assets\\CSV\\WeaponLevelText.csv"))
 		return;
 
 	for (int i = 1; i < csv.GetHeight(); i++) {
-		WeaponList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i)});
+		WeaponList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i) });
 		//pop_backができるので逆から入れてみる
 		for (int j = WeaponList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
 			WeaponList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));
@@ -270,16 +270,16 @@ void HUD::LevelSuperUpdate()
 {
 	if (Pause_) {
 
-		if ((Input::IsKeyDown(DIK_UP) || Input::GetPadStickL().y>=0.5f)&&!StickTriggerY_)
+		if ((Input::IsKeyDown(DIK_UP) || Input::GetPadStickL().y >= 0.5f) && !StickTriggerY_)
 		{
 			levelCursor_--;
 			StickTriggerY_ = true;
 		}
-		else if ((Input::IsKeyDown(DIK_DOWN) || Input::GetPadStickL().y <= -0.5f) && !StickTriggerY_){
+		else if ((Input::IsKeyDown(DIK_DOWN) || Input::GetPadStickL().y <= -0.5f) && !StickTriggerY_) {
 			levelCursor_++;
 			StickTriggerY_ = true;
 		}
-		if(Input::GetPadStickL().y >= -0.5f && Input::GetPadStickL().y <= 0.5f)
+		if (Input::GetPadStickL().y >= -0.5f && Input::GetPadStickL().y <= 0.5f)
 			StickTriggerY_ = false;
 
 		levelCursor_ = levelCursor_ % LEVEL::WEAPONCHOICEVAL;
@@ -287,7 +287,7 @@ void HUD::LevelSuperUpdate()
 			levelCursor_ = 3;
 
 
-		HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_ = { 330 / (screenWidth / 2.0f),(330 - (85 + levelCursor_ * (170 + 0))) / (screenHeight / 2.0f) ,0 };
+		HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_ = { 330 / (screenWidth / 2.0f),(340 - (85 + levelCursor_ * (170 + 5))) / (screenHeight / 2.0f) ,0 };
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
@@ -307,7 +307,7 @@ void HUD::LevelUpdate()
 
 	float ratio = current / next;
 
-	HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEBAR].scale_ = {ratio,1,1};
+	HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEBAR].scale_ = { ratio,1,1 };
 }
 
 void HUD::LevelDraw()
@@ -321,7 +321,7 @@ void HUD::LevelDraw()
 	if (Pause_) {
 		Image::SetTransform(hLevelBack_, HUDTransforms_[TRANSFORMTYPE::LEVELBACK]);
 		Image::Draw(hLevelBack_);
-		
+
 		//Image::SetTransform(hLevelCursor_, LCursorTransform_);
 		//Image::Draw(hLevelCursor_);
 		Image::SetTransform(hLevelCursorImage_, HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR]);
@@ -333,7 +333,7 @@ void HUD::LevelDraw()
 		auto itr = RollListNum_.begin();
 		for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
 			//														初期値-画像の縦の長さ/2+i*画像の長さ+バッファ
-			HUDTransforms_[TRANSFORMTYPE::LEVELFRAME].position_ = { 330 / (screenWidth / 2.0f),(330 - (85 + i * (170 + 0))) / (screenHeight / 2.0f) ,0 };
+			HUDTransforms_[TRANSFORMTYPE::LEVELFRAME].position_ = { 330 / (screenWidth / 2.0f),(340 - (85 + i * (170 + 5))) / (screenHeight / 2.0f) ,0 };
 			Image::SetTransform(hLevelFrameImage_, HUDTransforms_[TRANSFORMTYPE::LEVELFRAME]);
 			Image::Draw(hLevelFrameImage_);
 
@@ -345,7 +345,7 @@ void HUD::LevelDraw()
 			data.fontSize = 30;
 
 			//武器の名前
-			TextFont::Draw(WeaponList_[(*std::next(itr, i))].name_.c_str(), { 720,70.0f + (i * 170) }, data);
+			TextFont::Draw(WeaponList_[(*std::next(itr, i))].name_.c_str(), { 720,80.0f + (i * 170+5) }, data);
 
 			//武器のレベル
 			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
@@ -356,10 +356,10 @@ void HUD::LevelDraw()
 				}
 			}
 
-			TextFont::Draw(WeaponList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 720,120.0f + (i * 170) }, {1250,140.0f+(i*170)}, data);
+			TextFont::Draw(WeaponList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 720,105.0f + (i * 170) }, { 1250,115.0f + (i * 170) }, data);
 
 			TextFont::Draw(level.c_str(), { 1100,70.0f + (i * 170) }, data);
-			
+
 		}
 	}
 }
@@ -383,7 +383,7 @@ void HUD::ObtainWeapon(int _num)
 			knife->LevelUp(WeaponList_[_num].instruction_.back());
 		}
 	}
-		break;
+		  break;
 	case 1: {
 		PoisonThrow* poison = GetParent()->FindGameObject<PoisonThrow>();
 		if (poison == nullptr) {
@@ -394,7 +394,7 @@ void HUD::ObtainWeapon(int _num)
 			poison->LevelUp(WeaponList_[_num].instruction_.front());
 		}
 	}
-		break;
+		  break;
 	case 2:
 	{
 		SpikeOrb* spike = GetParent()->FindGameObject<SpikeOrb>();
@@ -406,8 +406,8 @@ void HUD::ObtainWeapon(int _num)
 			spike->LevelUp(WeaponList_[_num].instruction_.front());
 		}
 	}
-		break;
-	case 3:	
+	break;
+	case 3:
 	{
 		Missile* missile = GetParent()->FindGameObject<Missile>();
 		if (missile == nullptr) {
@@ -418,7 +418,7 @@ void HUD::ObtainWeapon(int _num)
 			missile->LevelUp(WeaponList_[_num].instruction_.front());
 		}
 	}
-		break;
+	break;
 	case 4:
 	{
 		Laser* laser = GetParent()->FindGameObject<Laser>();
@@ -430,7 +430,7 @@ void HUD::ObtainWeapon(int _num)
 			laser->LevelUp(WeaponList_[_num].instruction_.front());
 		}
 	}
-		break;
+	break;
 	case 5:
 	{
 		Bomb* bomb = GetParent()->FindGameObject<Bomb>();
@@ -442,7 +442,7 @@ void HUD::ObtainWeapon(int _num)
 			bomb->LevelUp(WeaponList_[_num].instruction_.front());
 		}
 	}
-		break;
+	break;
 	case 6:
 		break;
 	default:
@@ -457,7 +457,7 @@ void HUD::TimerDraw()
 {
 	FontData data{};
 	data.fontSize = 30;
-	data.Color=D2D1::ColorF(255, 255, 255);
+	data.Color = D2D1::ColorF(255, 255, 255);
 	data.font = TextFont::GetFontName(FontList::Gkktt);
 
 	int Stime = fmodf(PlayTime_, 60.0f);
@@ -490,7 +490,7 @@ void HUD::HPUpdate()
 	NullCheck(player);
 	//HPの大きさを変える
 	float ratio = player->GetStatus().hp_ / (float)player->GetStatus().maxHp_;
-	HUDTransforms_[TRANSFORMTYPE::HPBACK].scale_ = {1- ratio,1,1 };
+	HUDTransforms_[TRANSFORMTYPE::HPBACK].scale_ = { 1 - ratio,1,1 };
 }
 
 void HUD::HPDraw()
@@ -510,7 +510,7 @@ void HUD::HPDraw()
 		Image::SetTransform(hHPGauge_, HUDTransforms_[TRANSFORMTYPE::HPGAUGE]);
 		Image::Draw(hHPGauge_);
 	}
-	
+
 	Image::SetTransform(hHPBack_, HUDTransforms_[TRANSFORMTYPE::HPBACK]);
 	Image::Draw(hHPBack_);
 	Image::SetTransform(hHPFrame_, HUDTransforms_[TRANSFORMTYPE::HPFRAME]);
@@ -521,5 +521,5 @@ void HUD::HPDraw()
 	data.Color = D2D1::ColorF(0, 0, 0);
 	data.fontSize = 20;
 	//HPの大きさを変える
-	TextFont::Draw(std::to_string(player->GetStatus().hp_)+ "/" + std::to_string(player->GetStatus().maxHp_), {130,23}, data);
+	TextFont::Draw(std::to_string(player->GetStatus().hp_) + "/" + std::to_string(player->GetStatus().maxHp_), { 130,23 }, data);
 }
