@@ -23,6 +23,9 @@ namespace {
 	namespace LEVEL {
 		const float LEVELGAUGEBARXPOS{ -1.0f };
 		const int WEAPONCHOICEVAL{ 4 };
+
+
+		const std::string WEAPONNAME[WEAPONTYPE::END] = { "Knife","PoisonThrow","SpikeOrb","Missile","Laser","Bomb" };
 	}
 }
 
@@ -245,6 +248,12 @@ void HUD::LevelInitialize()
 	hLevelCursorImage_ = Image::Load("Assets\\Image\\UI\\LevelUpCursor.png");
 	HandleCheck(hLevelCursorImage_);
 
+
+	for (int i = 0;i < WEAPONTYPE::END;i++) {
+		hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" +LEVEL::WEAPONNAME[i] + "_Icon.png");
+		HandleCheck(hLevelIconImage_[i]);
+	}
+
 	CsvReader csv, effect;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
 		return;
@@ -345,7 +354,7 @@ void HUD::LevelDraw()
 			data.fontSize = 30;
 
 			//武器の名前
-			TextFont::Draw(WeaponList_[(*std::next(itr, i))].name_.c_str(), { 780,40.0f + (i * (170+5)) }, data);
+			TextFont::Draw(WeaponList_[(*std::next(itr, i))].name_.c_str(), { 780,40.0f + (i * (170 + 5)) }, data);
 
 			//武器のレベル
 			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
@@ -356,9 +365,19 @@ void HUD::LevelDraw()
 				}
 			}
 
+			//アイコンを表示
+			for (int j = 0;j < WEAPONTYPE::END;j++) {
+				if (LEVEL::WEAPONNAME[j] == WeaponList_[(*std::next(itr, i))].name_) {
+					//----------------------------------------------------------------------------------------------
+					HUDTransforms_[TRANSFORMTYPE::LEVELICON].position_;
+					Image::SetTransform(hLevelIconImage_[j], HUDTransforms_[TRANSFORMTYPE::LEVELICON]);
+					Image::Draw(hLevelIconImage_[j]);
+				}
+			}
+
 			TextFont::Draw(WeaponList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 780,105.0f + (i * 170) }, { 1250,115.0f + (i * 170) }, data);
 
-			TextFont::Draw(level.c_str(), { 1100,40.0f + (i * (170+5)) }, data);
+			TextFont::Draw(level.c_str(), { 1100,40.0f + (i * (170 + 5)) }, data);
 
 		}
 	}
@@ -373,7 +392,7 @@ void HUD::ObtainWeapon(int _num)
 
 	switch (WeaponList_[_num].num_)
 	{
-	case 0: {
+	case WEAPONTYPE::KNIFE: {
 		Knife* knife = GetParent()->FindGameObject<Knife>();
 		if (knife == nullptr) {
 			knife = Instantiate<Knife>(GetParent());
@@ -383,8 +402,8 @@ void HUD::ObtainWeapon(int _num)
 			knife->LevelUp(WeaponList_[_num].instruction_.back());
 		}
 	}
-		  break;
-	case 1: {
+						  break;
+	case WEAPONTYPE::POISONTHROW: {
 		PoisonThrow* poison = GetParent()->FindGameObject<PoisonThrow>();
 		if (poison == nullptr) {
 			poison = Instantiate<PoisonThrow>(GetParent());
@@ -394,8 +413,8 @@ void HUD::ObtainWeapon(int _num)
 			poison->LevelUp(WeaponList_[_num].instruction_.front());
 		}
 	}
-		  break;
-	case 2:
+								break;
+	case WEAPONTYPE::SPIKEORB:
 	{
 		SpikeOrb* spike = GetParent()->FindGameObject<SpikeOrb>();
 		if (spike == nullptr) {
@@ -407,7 +426,7 @@ void HUD::ObtainWeapon(int _num)
 		}
 	}
 	break;
-	case 3:
+	case WEAPONTYPE::MISSILE:
 	{
 		Missile* missile = GetParent()->FindGameObject<Missile>();
 		if (missile == nullptr) {
@@ -419,7 +438,7 @@ void HUD::ObtainWeapon(int _num)
 		}
 	}
 	break;
-	case 4:
+	case WEAPONTYPE::LASER:
 	{
 		Laser* laser = GetParent()->FindGameObject<Laser>();
 		if (laser == nullptr) {
@@ -431,7 +450,7 @@ void HUD::ObtainWeapon(int _num)
 		}
 	}
 	break;
-	case 5:
+	case WEAPONTYPE::BOMB:
 	{
 		Bomb* bomb = GetParent()->FindGameObject<Bomb>();
 		if (bomb == nullptr) {

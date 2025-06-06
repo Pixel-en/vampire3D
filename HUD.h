@@ -5,8 +5,24 @@
 #include <string>
 #include <set>
 
+namespace{
+	const int LEVELMAX{ 10 };
+	enum WEAPONTYPE {
+		KNIFE,
+		POISONTHROW,
+		SPIKEORB,
+		MISSILE,
+		LASER,
+		BOMB,
+		END
+	};
+}
+
 class HUD :public GameObject
 {
+
+
+private:
 	enum TRANSFORMTYPE
 	{
 		//レーダー
@@ -19,6 +35,7 @@ class HUD :public GameObject
 		LEVELGAUGEBAR,
 		LEVELCURSOR,
 		LEVELFRAME,
+		LEVELICON,
 		//HP
 		HPBACK,
 		HPGAUGE,
@@ -49,6 +66,7 @@ class HUD :public GameObject
 	int hLevelCursor_;
 	int hLevelFrameImage_;
 	int hLevelCursorImage_;
+	int hLevelIconImage_[WEAPONTYPE::END];
 
 	bool Pause_;						//ポーズ中かどうか
 
@@ -58,7 +76,7 @@ class HUD :public GameObject
 		int num_;								//武器の番号
 		int MaxLevel_;							//最大レベル
 		std::vector<std::string> instruction_;	//レベルアップ内容
-		std::string EffectText_[10];				//効果説明
+		std::string EffectText_[LEVELMAX];				//効果説明
 	};
 
 	std::vector<WeaponLevel> WeaponList_;	//出現していないorレベルが最大ではない武器のリスト
