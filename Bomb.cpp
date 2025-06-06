@@ -122,10 +122,10 @@ Bomb::cBomb::~cBomb()
 
 void Bomb::cBomb::Initialize()
 {
-	hModel_ = Model::Load("Assets\\Model\\Weapon\\Box.fbx");
+	hModel_ = Model::Load("Assets\\Model\\Weapon\\Bomb.fbx");
 	HandleCheck(hModel_);
 
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1, 0), status_.size_);
 	AddCollider(collision);
 }
 

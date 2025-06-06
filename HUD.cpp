@@ -345,7 +345,7 @@ void HUD::LevelDraw()
 			data.fontSize = 30;
 
 			//ïêäÌÇÃñºëO
-			TextFont::Draw(WeaponList_[(*std::next(itr, i))].name_.c_str(), { 720,80.0f + (i * 170+5) }, data);
+			TextFont::Draw(WeaponList_[(*std::next(itr, i))].name_.c_str(), { 780,40.0f + (i * (170+5)) }, data);
 
 			//ïêäÌÇÃÉåÉxÉã
 			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
@@ -356,9 +356,9 @@ void HUD::LevelDraw()
 				}
 			}
 
-			TextFont::Draw(WeaponList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 720,105.0f + (i * 170) }, { 1250,115.0f + (i * 170) }, data);
+			TextFont::Draw(WeaponList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 780,105.0f + (i * 170) }, { 1250,115.0f + (i * 170) }, data);
 
-			TextFont::Draw(level.c_str(), { 1100,70.0f + (i * 170) }, data);
+			TextFont::Draw(level.c_str(), { 1100,40.0f + (i * (170+5)) }, data);
 
 		}
 	}
