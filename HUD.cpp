@@ -26,6 +26,7 @@ namespace {
 
 
 		const std::string WEAPONNAME[WEAPONTYPE::END] = { "Knife","PoisonThrow","SpikeOrb","Missile","Laser","Bomb" };
+		const float FRAMEIMAGEBUFFER{ 175 };
 	}
 }
 
@@ -194,11 +195,11 @@ void HUD::LevelUP()
 	Pause_ = true;
 
 	//リストの整理
-	for (auto itr = WeaponList_.begin(); itr != WeaponList_.end();) {
+	for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
 		WeaponObject* obj = (WeaponObject*)GetParent()->FindChildObject((*itr).name_);
 		if (obj != nullptr) {
 			if (obj->GetLv() >= (*itr).MaxLevel_) {
-				itr = WeaponList_.erase(itr);
+				itr = EquipmentList_.erase(itr);
 				continue;
 			}
 		}
@@ -211,13 +212,13 @@ void HUD::LevelUP()
 void HUD::WeaponRoll()
 {
 
-	if (WeaponList_.size() >= LEVEL::WEAPONCHOICEVAL) {
+	if (EquipmentList_.size() >= LEVEL::WEAPONCHOICEVAL) {
 		while (true)
 		{
 			RollListNum_.clear();
 
 			for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
-				RollListNum_.insert(rand() % WeaponList_.size());
+				RollListNum_.insert(rand() % EquipmentList_.size());
 			}
 			if (RollListNum_.size() == LEVEL::WEAPONCHOICEVAL)
 				break;
@@ -261,13 +262,13 @@ void HUD::LevelInitialize()
 		return;
 
 	for (int i = 1; i < csv.GetHeight(); i++) {
-		WeaponList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i) });
+		EquipmentList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i) });
 		//pop_backができるので逆から入れてみる
-		for (int j = WeaponList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
-			WeaponList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));
+		for (int j = EquipmentList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
+			EquipmentList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));
 		}
 		for (int j = 2; j < effect.GetWidth(); j++) {
-			WeaponList_[i - 1].EffectText_[j - 2] = effect.GetString(j, i);
+			EquipmentList_[i - 1].EffectText_[j - 2] = effect.GetString(j, i);
 		}
 	}
 
@@ -295,8 +296,10 @@ void HUD::LevelSuperUpdate()
 		if (levelCursor_ < 0)
 			levelCursor_ = 3;
 
+		Transform localTrans;
+		localTrans.position_= { HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.x,HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.y - (levelCursor_ * LEVEL::FRAMEIMAGEBUFFER) / (screenHeight / 2.0f),0 };
+		Image::SetTransform(hLevelCursorImage_, localTrans);
 
-		HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_ = { 330 / (screenWidth / 2.0f),(340 - (85 + levelCursor_ * (170 + 5))) / (screenHeight / 2.0f) ,0 };
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
@@ -331,9 +334,7 @@ void HUD::LevelDraw()
 		Image::SetTransform(hLevelBack_, HUDTransforms_[TRANSFORMTYPE::LEVELBACK]);
 		Image::Draw(hLevelBack_);
 
-		//Image::SetTransform(hLevelCursor_, LCursorTransform_);
-		//Image::Draw(hLevelCursor_);
-		Image::SetTransform(hLevelCursorImage_, HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR]);
+		//先にTransformのセットはやってある
 		Image::Draw(hLevelCursorImage_);
 
 		Player* player = GetParent()->FindGameObject<Player>();
@@ -342,8 +343,9 @@ void HUD::LevelDraw()
 		auto itr = RollListNum_.begin();
 		for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
 			//														初期値-画像の縦の長さ/2+i*画像の長さ+バッファ
-			HUDTransforms_[TRANSFORMTYPE::LEVELFRAME].position_ = { 330 / (screenWidth / 2.0f),(340 - (85 + i * (170 + 5))) / (screenHeight / 2.0f) ,0 };
-			Image::SetTransform(hLevelFrameImage_, HUDTransforms_[TRANSFORMTYPE::LEVELFRAME]);
+			Transform FrameTrans;
+			FrameTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::LEVELFRAME].position_.x,HUDTransforms_[TRANSFORMTYPE::LEVELFRAME].position_.y - (i * LEVEL::FRAMEIMAGEBUFFER) / (screenHeight / 2.0f),0 };
+			Image::SetTransform(hLevelFrameImage_, FrameTrans);
 			Image::Draw(hLevelFrameImage_);
 
 			std::string level = "new";
@@ -354,11 +356,11 @@ void HUD::LevelDraw()
 			data.fontSize = 30;
 
 			//武器の名前
-			TextFont::Draw(WeaponList_[(*std::next(itr, i))].name_.c_str(), { 780,40.0f + (i * (170 + 5)) }, data);
+			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].name_.c_str(), { 780,40.0f + (i * (170 + 5)) }, data);
 
 			//武器のレベル
 			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
-				if (WeaponList_[(*std::next(itr, i))].name_ == player->MyWeaponList_[j]->GetObjectName()) {
+				if (EquipmentList_[(*std::next(itr, i))].name_ == player->MyWeaponList_[j]->GetObjectName()) {
 					level = "Level:" + std::to_string(player->MyWeaponList_[j]->GetLv() + 1);
 					Lv = player->MyWeaponList_[j]->GetLv();
 					break;
@@ -367,15 +369,16 @@ void HUD::LevelDraw()
 
 			//アイコンを表示
 			for (int j = 0;j < WEAPONTYPE::END;j++) {
-				if (LEVEL::WEAPONNAME[j] == WeaponList_[(*std::next(itr, i))].name_) {
+				if (LEVEL::WEAPONNAME[j] == EquipmentList_[(*std::next(itr, i))].name_) {
 					//----------------------------------------------------------------------------------------------
-					HUDTransforms_[TRANSFORMTYPE::LEVELICON].position_;
-					Image::SetTransform(hLevelIconImage_[j], HUDTransforms_[TRANSFORMTYPE::LEVELICON]);
+					Transform IconTrans;
+					IconTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::LEVELICON].position_.x,HUDTransforms_[TRANSFORMTYPE::LEVELICON].position_.y - (i * LEVEL::FRAMEIMAGEBUFFER) / (screenHeight / 2.0f),0 };
+					Image::SetTransform(hLevelIconImage_[j], IconTrans);
 					Image::Draw(hLevelIconImage_[j]);
 				}
 			}
 
-			TextFont::Draw(WeaponList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 780,105.0f + (i * 170) }, { 1250,115.0f + (i * 170) }, data);
+			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 780,105.0f + (i * 170) }, { 1250,115.0f + (i * 170) }, data);
 
 			TextFont::Draw(level.c_str(), { 1100,40.0f + (i * (170 + 5)) }, data);
 
@@ -390,7 +393,7 @@ void HUD::ObtainWeapon(int _num)
 		return;
 
 
-	switch (WeaponList_[_num].num_)
+	switch (EquipmentList_[_num].num_)
 	{
 	case WEAPONTYPE::KNIFE: {
 		Knife* knife = GetParent()->FindGameObject<Knife>();
@@ -399,7 +402,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(knife);
 		}
 		else {
-			knife->LevelUp(WeaponList_[_num].instruction_.back());
+			knife->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
 						  break;
@@ -410,7 +413,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(poison);
 		}
 		else {
-			poison->LevelUp(WeaponList_[_num].instruction_.front());
+			poison->LevelUp(EquipmentList_[_num].instruction_.front());
 		}
 	}
 								break;
@@ -422,7 +425,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(spike);
 		}
 		else {
-			spike->LevelUp(WeaponList_[_num].instruction_.front());
+			spike->LevelUp(EquipmentList_[_num].instruction_.front());
 		}
 	}
 	break;
@@ -434,7 +437,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(missile);
 		}
 		else {
-			missile->LevelUp(WeaponList_[_num].instruction_.front());
+			missile->LevelUp(EquipmentList_[_num].instruction_.front());
 		}
 	}
 	break;
@@ -446,7 +449,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(laser);
 		}
 		else {
-			laser->LevelUp(WeaponList_[_num].instruction_.front());
+			laser->LevelUp(EquipmentList_[_num].instruction_.front());
 		}
 	}
 	break;
@@ -458,7 +461,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(bomb);
 		}
 		else {
-			bomb->LevelUp(WeaponList_[_num].instruction_.front());
+			bomb->LevelUp(EquipmentList_[_num].instruction_.front());
 		}
 	}
 	break;
@@ -468,9 +471,8 @@ void HUD::ObtainWeapon(int _num)
 		break;
 	}
 
-	WeaponList_[_num].instruction_.pop_back();
+	EquipmentList_[_num].instruction_.pop_back();
 }
-
 
 void HUD::TimerDraw()
 {

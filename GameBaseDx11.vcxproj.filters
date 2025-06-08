@@ -27,11 +27,17 @@
     <Filter Include="PlayScene">
       <UniqueIdentifier>{ee7a4cc1-0898-4814-a435-c90b814922bf}</UniqueIdentifier>
     </Filter>
-    <Filter Include="PlayScene\Weapon">
-      <UniqueIdentifier>{a330cf5e-a0f9-436a-9a6d-37192dde7af0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PlayScene\Enemy">
       <UniqueIdentifier>{f640c4a4-d9b8-4963-8ef4-aa69036cf628}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayScene\Equipment">
+      <UniqueIdentifier>{68a39ee4-3f87-4e22-9546-d456c4eea088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayScene\Equipment\Weapon">
+      <UniqueIdentifier>{a330cf5e-a0f9-436a-9a6d-37192dde7af0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayScene\Equipment\Armor">
+      <UniqueIdentifier>{f284fc0d-603e-4f4f-b3ae-04e08420e8e0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -117,9 +123,6 @@
     <ClCompile Include="PlayScene.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
-    <ClCompile Include="EnemySpawn.cpp">
-      <Filter>PlayScene</Filter>
-    </ClCompile>
     <ClCompile Include="EXP.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
@@ -130,26 +133,26 @@
       <Filter>PlayScene</Filter>
     </ClCompile>
     <ClCompile Include="WeaponObject.cpp">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="Knife.cpp">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="PoisonThrow.cpp">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="SpikeOrb.cpp">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="Bomb.cpp">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="Laser.cpp">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="Missile.cpp">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DirectWriteCustomFont.cpp">
       <Filter>01Engine\DirectX</Filter>
@@ -167,6 +170,15 @@
     </ClCompile>
     <ClCompile Include="PlayLoad.cpp">
       <Filter>PlayScene</Filter>
+    </ClCompile>
+    <ClCompile Include="EnemySpawn.cpp">
+      <Filter>PlayScene\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="ArmorObject.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="Armor.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -256,9 +268,6 @@
     <ClInclude Include="PlayScene.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
-    <ClInclude Include="EnemySpawn.h">
-      <Filter>PlayScene</Filter>
-    </ClInclude>
     <ClInclude Include="HUD.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
@@ -269,26 +278,26 @@
       <Filter>PlayScene</Filter>
     </ClInclude>
     <ClInclude Include="WeaponObject.h">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Knife.h">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="PoisonThrow.h">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="SpikeOrb.h">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Bomb.h">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Laser.h">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Missile.h">
-      <Filter>PlayScene\Weapon</Filter>
+      <Filter>PlayScene\Equipment\Weapon</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DirectWriteCustomFont.h">
       <Filter>01Engine\DirectX</Filter>
@@ -306,6 +315,15 @@
     </ClInclude>
     <ClInclude Include="PlayLoad.h">
       <Filter>PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="EnemySpawn.h">
+      <Filter>PlayScene\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="ArmorObject.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="Armor.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -70,16 +70,16 @@ private:
 
 	bool Pause_;						//ポーズ中かどうか
 
-	struct WeaponLevel
+	struct EquipmentLevel
 	{
-		std::string name_;						//武器の名前
-		int num_;								//武器の番号
+		std::string name_;						//装備の名前
+		int num_;								//装備の番号
 		int MaxLevel_;							//最大レベル
 		std::vector<std::string> instruction_;	//レベルアップ内容
 		std::string EffectText_[LEVELMAX];				//効果説明
 	};
 
-	std::vector<WeaponLevel> WeaponList_;	//出現していないorレベルが最大ではない武器のリスト
+	std::vector<EquipmentLevel> EquipmentList_;	//出現していないorレベルが最大ではない武器のリスト
 	std::set<int> RollListNum_;				//ロールされた武器
 	int levelCursor_;
 	bool StickTriggerY_;					//前フレームでスティックを倒しているか
