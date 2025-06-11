@@ -20,6 +20,6 @@ public:
 	//ŠJ•ú
 	void Release() override;
 
-	void LevelUp() override;
+	void LevelUp(std::string str) override;
 };
 

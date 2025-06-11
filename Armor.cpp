@@ -11,6 +11,7 @@ Armor::~Armor()
 
 void Armor::Initialize()
 {
+	Leave();
 }
 
 void Armor::Update()
@@ -21,6 +22,6 @@ void Armor::Release()
 {
 }
 
-void Armor::LevelUp()
+void Armor::LevelUp(std::string str)
 {
 }

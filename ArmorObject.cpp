@@ -8,6 +8,7 @@ ArmorObject::ArmorObject(GameObject* parent)
 ArmorObject::ArmorObject(GameObject* parent, const std::string& name)
 	:GameObject(parent, name)
 {
+	numLevel_ = 0;;
 }
 
 ArmorObject::~ArmorObject()

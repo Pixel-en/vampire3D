@@ -3,6 +3,8 @@
 
 class ArmorObject :public GameObject
 {
+	int numLevel_;
+
 public:
 	ArmorObject(GameObject* parent);
 
@@ -23,6 +25,10 @@ public:
 	virtual void Release() override;
 
 	//レベルアップ時
-	virtual void LevelUp() {};
+	//効果内容や数値はそれぞれ異なるので都度実装する
+	virtual void LevelUp(std::string str) = 0;
+
+	//現在のレベルを取得
+	int GetNumLevel() const { return numLevel_; }
 };
 

@@ -195,6 +195,7 @@ void HUD::LevelUP()
 	Pause_ = true;
 
 	//リストの整理
+	//レベルが最大のものがあればリストから除外
 	for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
 		WeaponObject* obj = (WeaponObject*)GetParent()->FindChildObject((*itr).name_);
 		if (obj != nullptr) {
@@ -211,12 +212,12 @@ void HUD::LevelUP()
 
 void HUD::WeaponRoll()
 {
-
+	//選ぶ
 	if (EquipmentList_.size() >= LEVEL::WEAPONCHOICEVAL) {
 		while (true)
 		{
 			RollListNum_.clear();
-
+			//ランダムに選び重複していないならループから抜ける
 			for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
 				RollListNum_.insert(rand() % EquipmentList_.size());
 			}
@@ -255,20 +256,35 @@ void HUD::LevelInitialize()
 		HandleCheck(hLevelIconImage_[i]);
 	}
 
-	CsvReader csv, effect;
+	CsvReader csv, effect,armors;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
 		return;
 	if (!effect.Load("Assets\\CSV\\WeaponLevelText.csv"))
 		return;
+	if (!armors.Load("Assets\\CSV\\ArmorList.csv"))
+		return;
 
+	//装備リストに入れる
 	for (int i = 1; i < csv.GetHeight(); i++) {
+		//装備の名前、装備の番号、装備の最大レベルを取得する
 		EquipmentList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i) });
+		//レベルアップ内容などを取得する
 		//pop_backができるので逆から入れてみる
 		for (int j = EquipmentList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
 			EquipmentList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));
 		}
 		for (int j = 2; j < effect.GetWidth(); j++) {
 			EquipmentList_[i - 1].EffectText_[j - 2] = effect.GetString(j, i);
+		}
+	}
+
+	for (int i = 1;i < armors.GetHeight();i++) {
+		//装備の名前、装備の番号、装備の最大レベルを取得する
+		EquipmentList_.push_back({ armors.GetString(0, i),(int)armors.GetValue(1, i), (int)armors.GetValue(2, i) });
+		//レベルアップ内容などを取得する
+		//pop_backができるので逆から入れてみる
+		for (int j = EquipmentList_[i - 1].MaxLevel_ - 1; j >= 0; j--) {
+			EquipmentList_[i - 1].instruction_.push_back(armors.GetString(3 + j, i));
 		}
 	}
 

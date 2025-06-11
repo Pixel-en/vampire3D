@@ -79,7 +79,6 @@ public:
 
 	int GetLv() { return status_.Lv_; }
 	void SetStatus(Status _st) { status_ = _st; }
-	Status GetStatus() { return status_; }
 
 	bool isMove() { return varia_.allowsMove_; }
 	float GetResetTimer() { return varia_.ReStartTimer_; }
