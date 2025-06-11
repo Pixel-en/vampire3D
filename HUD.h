@@ -14,7 +14,10 @@ namespace{
 		MISSILE,
 		LASER,
 		BOMB,
-		END
+		END,
+
+		ARMOR=101,
+		AEND
 	};
 }
 

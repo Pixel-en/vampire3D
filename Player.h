@@ -53,6 +53,7 @@ public:
 	bool WeaponStateWrite(std::string name,WeaponObject::Status& _state);
 
 	Status GetStatus() { return status_; }
+	void SetStatusResist(int _resist) { status_.resist_ = _resist; }
 
 private:
 

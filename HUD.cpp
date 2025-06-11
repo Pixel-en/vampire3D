@@ -13,6 +13,7 @@
 #include "Missile.h"
 #include "Laser.h"
 #include "Bomb.h"
+#include "Armor.h"
 
 namespace {
 	namespace RADAR {
@@ -52,7 +53,7 @@ void HUD::UIPosRead()
 	if (!csvTrans.Load("Assets\\CSV\\UI.csv"))
 		return;
 
-	for (int i = 1;i < csvTrans.GetHeight();i++) {
+	for (int i = 1; i < csvTrans.GetHeight(); i++) {
 		//初期化
 		HUDTransforms_[i - 1] = transform_;
 		//読み込み
@@ -251,12 +252,12 @@ void HUD::LevelInitialize()
 	HandleCheck(hLevelCursorImage_);
 
 
-	for (int i = 0;i < WEAPONTYPE::END;i++) {
-		hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" +LEVEL::WEAPONNAME[i] + "_Icon.png");
+	for (int i = 0; i < WEAPONTYPE::END; i++) {
+		hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" + LEVEL::WEAPONNAME[i] + "_Icon.png");
 		HandleCheck(hLevelIconImage_[i]);
 	}
 
-	CsvReader csv, effect,armors;
+	CsvReader csv, effect, armors;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
 		return;
 	if (!effect.Load("Assets\\CSV\\WeaponLevelText.csv"))
@@ -278,7 +279,7 @@ void HUD::LevelInitialize()
 		}
 	}
 
-	for (int i = 1;i < armors.GetHeight();i++) {
+	for (int i = 1; i < armors.GetHeight(); i++) {
 		//装備の名前、装備の番号、装備の最大レベルを取得する
 		EquipmentList_.push_back({ armors.GetString(0, i),(int)armors.GetValue(1, i), (int)armors.GetValue(2, i) });
 		//レベルアップ内容などを取得する
@@ -313,7 +314,7 @@ void HUD::LevelSuperUpdate()
 			levelCursor_ = 3;
 
 		Transform localTrans;
-		localTrans.position_= { HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.x,HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.y - (levelCursor_ * LEVEL::FRAMEIMAGEBUFFER) / (screenHeight / 2.0f),0 };
+		localTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.x,HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.y - (levelCursor_ * LEVEL::FRAMEIMAGEBUFFER) / (screenHeight / 2.0f),0 };
 		Image::SetTransform(hLevelCursorImage_, localTrans);
 
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
@@ -384,7 +385,7 @@ void HUD::LevelDraw()
 			}
 
 			//アイコンを表示
-			for (int j = 0;j < WEAPONTYPE::END;j++) {
+			for (int j = 0; j < WEAPONTYPE::END; j++) {
 				if (LEVEL::WEAPONNAME[j] == EquipmentList_[(*std::next(itr, i))].name_) {
 					//----------------------------------------------------------------------------------------------
 					Transform IconTrans;
@@ -421,7 +422,7 @@ void HUD::ObtainWeapon(int _num)
 			knife->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
-						  break;
+	break;
 	case WEAPONTYPE::POISONTHROW: {
 		PoisonThrow* poison = GetParent()->FindGameObject<PoisonThrow>();
 		if (poison == nullptr) {
@@ -432,7 +433,7 @@ void HUD::ObtainWeapon(int _num)
 			poison->LevelUp(EquipmentList_[_num].instruction_.front());
 		}
 	}
-								break;
+	break;
 	case WEAPONTYPE::SPIKEORB:
 	{
 		SpikeOrb* spike = GetParent()->FindGameObject<SpikeOrb>();
@@ -483,6 +484,17 @@ void HUD::ObtainWeapon(int _num)
 	break;
 	case 6:
 		break;
+	case WEAPONTYPE::ARMOR: {
+		Armor* armor = GetParent()->FindGameObject<Armor>();
+		if (armor == nullptr) {
+			armor = Instantiate<Armor>(GetParent());
+			//ここあとで書いて
+			//player->MyWeaponList_.push_back(armor);
+		}
+
+		armor->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+	break;
 	default:
 		break;
 	}
