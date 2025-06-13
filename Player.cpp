@@ -152,6 +152,8 @@ void Player::PlayerStatusLoad()
 	status_.area_ = csv.GetValue(8, 2);
 	status_.resist_ = csv.GetValue(9, 2);
 	status_.maxHp_ = status_.hp_;
+
+	Basestatus_ = status_;
 }
 
 bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
@@ -302,10 +304,10 @@ void Player::OnCollision(GameObject* pTarget)
 			if (dynamic_cast<Enemy*>(pTarget)->GetEnemyNumber() == List[i]->GetEnemyNumber()) {
 				//ダメージを取得
 				int damege = List[i]->CausedDamege();
-				if (damege <= 0)
+				if (damege - status_.resist_ <= 0)
 					return; //ダメージが0以下なら何もしない
 
-				status_.hp_ -= damege;
+				status_.hp_ -= (damege-status_.resist_);
 				Input::SetPadVibration(0.5f * 65535, 0.5f * 65535);
 				if (status_.hp_ <= 0) {
 					SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
@@ -318,7 +320,6 @@ void Player::OnCollision(GameObject* pTarget)
 			}
 		}
 	}
-
 }
 
 void Player::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list)

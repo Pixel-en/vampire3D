@@ -16,7 +16,11 @@ namespace{
 		BOMB,
 		END,
 
+		//防具は101から
 		ARMOR=101,
+		CRITICALEYE,
+		WIDEAMULET,
+		KNOWLEDGEBOOK,
 		AEND
 	};
 }
@@ -76,6 +80,7 @@ private:
 	struct EquipmentLevel
 	{
 		std::string name_;						//装備の名前
+		std::string displayName_;				//装備の表示名
 		int num_;								//装備の番号
 		int MaxLevel_;							//最大レベル
 		std::vector<std::string> instruction_;	//レベルアップ内容

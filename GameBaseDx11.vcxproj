@@ -130,6 +130,7 @@
     <ClCompile Include="Armor.cpp" />
     <ClCompile Include="ArmorObject.cpp" />
     <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="CriticalEye.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySpawn.cpp" />
     <ClCompile Include="Engine\Audio.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="HUD.cpp" />
     <ClCompile Include="Humanoid.cpp" />
     <ClCompile Include="Knife.cpp" />
+    <ClCompile Include="KnowledgeBook.cpp" />
     <ClCompile Include="Laser.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -176,11 +178,13 @@
     <ClCompile Include="TestScene.cpp" />
     <ClCompile Include="TitleScene.cpp" />
     <ClCompile Include="WeaponObject.cpp" />
+    <ClCompile Include="WideAmulet.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Armor.h" />
     <ClInclude Include="ArmorObject.h" />
     <ClInclude Include="Bomb.h" />
+    <ClInclude Include="CriticalEye.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawn.h" />
     <ClInclude Include="Engine\Audio.h" />
@@ -218,6 +222,7 @@
     <ClInclude Include="HUD.h" />
     <ClInclude Include="Humanoid.h" />
     <ClInclude Include="Knife.h" />
+    <ClInclude Include="KnowledgeBook.h" />
     <ClInclude Include="Laser.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="Player.h" />
@@ -229,6 +234,7 @@
     <ClInclude Include="TestScene.h" />
     <ClInclude Include="TitleScene.h" />
     <ClInclude Include="WeaponObject.h" />
+    <ClInclude Include="WideAmulet.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\BillBoard.hlsl">

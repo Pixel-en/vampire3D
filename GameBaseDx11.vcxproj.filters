@@ -180,6 +180,15 @@
     <ClCompile Include="Armor.cpp">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
+    <ClCompile Include="CriticalEye.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="WideAmulet.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="KnowledgeBook.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -323,6 +332,15 @@
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
     <ClInclude Include="Armor.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="CriticalEye.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="WideAmulet.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="KnowledgeBook.h">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
   </ItemGroup>

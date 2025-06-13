@@ -20,7 +20,7 @@ private:
 		float haste_;			//攻撃頻度(割合)
 
 		//できないもの
-		float criticalBoost_;			//クリティカル倍率(割合)
+		float criticalBoost_;			//クリティカル攻撃倍率(割合)
 		float area_;					//攻撃エリア(割合)
 		int resist_;					//防御(実数値)
 		unsigned int level_;			//現在のレベル(実数値)
@@ -35,6 +35,8 @@ private:
 	XMVECTOR MoveVec_;
 
 	Status status_;
+	//元のステータス
+	Status Basestatus_;
 
 	void WeaponCSVLoad();
 	void PlayerStatusLoad();
@@ -53,6 +55,7 @@ public:
 	bool WeaponStateWrite(std::string name,WeaponObject::Status& _state);
 
 	Status GetStatus() { return status_; }
+	Status GetBaseStatus() { return Basestatus_; }
 	void SetStatusResist(int _resist) { status_.resist_ = _resist; }
 
 private:

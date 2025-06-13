@@ -12,7 +12,6 @@ Armor::~Armor()
 
 void Armor::Initialize()
 {
-	Leave();
 }
 
 void Armor::Update()
@@ -32,5 +31,5 @@ void Armor::LevelUp(std::string str)
 	//ƒvƒŒƒCƒ„[‚Ì–hŒä—Í‚É‰ÁŽZ‚·‚é
 	int value = std::stoi(str);
 
-	player->SetStatusResist(player->GetStatus().resist_ + value);
+	player->SetStatusResist(player->GetBaseStatus().resist_+value);
 }

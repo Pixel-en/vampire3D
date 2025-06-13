@@ -62,6 +62,17 @@ void PlayScene::Initialize()
 	LoadCount_ = 0;
 }
 
+void PlayScene::SuperUpdate()
+{
+	if (isLoaded_) {
+		//イントロが終わったらループに入る
+		if (!Audio::isPlaying(hIntroSound_) && !Audio::isPlaying(hLoopSound_)) {
+			Audio::Play(hLoopSound_);
+			Audio::Stop(hIntroSound_);
+		}
+	}
+}
+
 void PlayScene::Update()
 {
 	if (!isLoaded_) {
@@ -82,11 +93,6 @@ void PlayScene::Update()
 		}
 	}
 	else {
-		//イントロが終わったらループに入る
-		if (!Audio::isPlaying(hIntroSound_) && !Audio::isPlaying(hLoopSound_)) {
-			Audio::Play(hLoopSound_);
-			Audio::Stop(hIntroSound_);
-		}
 
 		int num = GetChildList()->size();
 		SwapChildList("HUD", num);

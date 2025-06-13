@@ -14,6 +14,9 @@
 #include "Laser.h"
 #include "Bomb.h"
 #include "Armor.h"
+#include "CriticalEye.h"
+#include "WideAmulet.h"
+#include "KnowledgeBook.h"
 
 namespace {
 	namespace RADAR {
@@ -262,17 +265,17 @@ void HUD::LevelInitialize()
 		return;
 	if (!effect.Load("Assets\\CSV\\WeaponLevelText.csv"))
 		return;
-	if (!armors.Load("Assets\\CSV\\ArmorList.csv"))
+	if (!armors.Load("Assets\\CSV\\ArmorsList.csv"))
 		return;
 
 	//装備リストに入れる
 	for (int i = 1; i < csv.GetHeight(); i++) {
 		//装備の名前、装備の番号、装備の最大レベルを取得する
-		EquipmentList_.push_back({ csv.GetString(0, i),(int)csv.GetValue(1, i), (int)csv.GetValue(2, i) });
+		EquipmentList_.push_back({ csv.GetString(0, i),csv.GetString(1,i),(int)csv.GetValue(2, i), (int)csv.GetValue(3, i) });
 		//レベルアップ内容などを取得する
-		//pop_backができるので逆から入れてみる
+		//pop_backができるので逆から入れてみる		レベル2スタートなので-1，配列とCSVは１ずれるので-1
 		for (int j = EquipmentList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
-			EquipmentList_[i - 1].instruction_.push_back(csv.GetString(3 + j, i));
+			EquipmentList_[i - 1].instruction_.push_back(csv.GetString(4 + j, i));
 		}
 		for (int j = 2; j < effect.GetWidth(); j++) {
 			EquipmentList_[i - 1].EffectText_[j - 2] = effect.GetString(j, i);
@@ -281,11 +284,11 @@ void HUD::LevelInitialize()
 
 	for (int i = 1; i < armors.GetHeight(); i++) {
 		//装備の名前、装備の番号、装備の最大レベルを取得する
-		EquipmentList_.push_back({ armors.GetString(0, i),(int)armors.GetValue(1, i), (int)armors.GetValue(2, i) });
+		EquipmentList_.push_back({ armors.GetString(0, i),armors.GetString(1,i),(int)armors.GetValue(2, i), (int)armors.GetValue(3, i) });
 		//レベルアップ内容などを取得する
 		//pop_backができるので逆から入れてみる
-		for (int j = EquipmentList_[i - 1].MaxLevel_ - 1; j >= 0; j--) {
-			EquipmentList_[i - 1].instruction_.push_back(armors.GetString(3 + j, i));
+		for (int j = EquipmentList_[WEAPONTYPE::END + i - 1].MaxLevel_ - 1; j >= 0; j--) {
+			EquipmentList_[WEAPONTYPE::END + i - 1].instruction_.push_back(armors.GetString(4 + j, i));
 		}
 	}
 
@@ -373,7 +376,7 @@ void HUD::LevelDraw()
 			data.fontSize = 30;
 
 			//武器の名前
-			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].name_.c_str(), { 780,40.0f + (i * (170 + 5)) }, data);
+			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].displayName_.c_str(), { 780,40.0f + (i * (170 + 5)) }, data);
 
 			//武器のレベル
 			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
@@ -422,7 +425,7 @@ void HUD::ObtainWeapon(int _num)
 			knife->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
-	break;
+						  break;
 	case WEAPONTYPE::POISONTHROW: {
 		PoisonThrow* poison = GetParent()->FindGameObject<PoisonThrow>();
 		if (poison == nullptr) {
@@ -430,10 +433,10 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(poison);
 		}
 		else {
-			poison->LevelUp(EquipmentList_[_num].instruction_.front());
+			poison->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
-	break;
+								break;
 	case WEAPONTYPE::SPIKEORB:
 	{
 		SpikeOrb* spike = GetParent()->FindGameObject<SpikeOrb>();
@@ -442,7 +445,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(spike);
 		}
 		else {
-			spike->LevelUp(EquipmentList_[_num].instruction_.front());
+			spike->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
 	break;
@@ -454,7 +457,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(missile);
 		}
 		else {
-			missile->LevelUp(EquipmentList_[_num].instruction_.front());
+			missile->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
 	break;
@@ -466,7 +469,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(laser);
 		}
 		else {
-			laser->LevelUp(EquipmentList_[_num].instruction_.front());
+			laser->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
 	break;
@@ -478,7 +481,7 @@ void HUD::ObtainWeapon(int _num)
 			player->MyWeaponList_.push_back(bomb);
 		}
 		else {
-			bomb->LevelUp(EquipmentList_[_num].instruction_.front());
+			bomb->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
 	break;
@@ -493,6 +496,40 @@ void HUD::ObtainWeapon(int _num)
 		}
 
 		armor->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+	break;
+	case WEAPONTYPE::CRITICALEYE: {
+		CriticalEye* critical = GetParent()->FindGameObject<CriticalEye>();
+		if (critical == nullptr) {
+			critical = Instantiate<CriticalEye>(GetParent());
+			//player->MyWeaponList_.push_back(critical);
+		}
+		else {
+			critical->LevelUp(EquipmentList_[_num].instruction_.back());
+		}
+	}
+	break;
+	case WEAPONTYPE::WIDEAMULET: {
+		WideAmulet* wide = GetParent()->FindGameObject<WideAmulet>();
+		if (wide == nullptr) {
+			wide = Instantiate<WideAmulet>(GetParent());
+			//player->MyWeaponList_.push_back(wide);
+		}
+		else {
+			wide->LevelUp(EquipmentList_[_num].instruction_.back());
+		}
+	}
+	break;
+	case WEAPONTYPE::KNOWLEDGEBOOK:
+	{
+		KnowledgeBook* knowledge = GetParent()->FindGameObject<KnowledgeBook>();
+		if (knowledge == nullptr) {
+			knowledge = Instantiate<KnowledgeBook>(GetParent());
+			//player->MyWeaponList_.push_back(knowledge);
+		}
+		else {
+			knowledge->LevelUp(EquipmentList_[_num].instruction_.back());
+		}
 	}
 	break;
 	default:
