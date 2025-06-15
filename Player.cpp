@@ -386,4 +386,5 @@ void Player::AcquisitionEXP(int _exp)
 		}
 		PauseON_ = true;
 	}
+
 }

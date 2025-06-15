@@ -260,11 +260,14 @@ bool Enemy::HitDamege(int _damege, float _knock)
 	float dBoost = 1.0;
 	if (player != nullptr) {
 		dBoost = player->GetStatus().strength_;
-		if (rand() % 100 < player->GetStatus().critical_) {
+		int cri = rand() % 100;
+		if (cri < player->GetStatus().critical_) {
 			dBoost *= player->GetStatus().criticalBoost_;
 		}
+		Debug::Log("cri:" + std::to_string(cri));
 	}
-
+	Debug::Log(" ,É_ÉÅÅ[ÉWÇÕ");
+	Debug::Log(_damege * dBoost, true);
 	status_.hp_ -= _damege * dBoost;
 	InvincibleTimer_ = status_.invincibletime_;
 

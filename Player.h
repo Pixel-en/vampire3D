@@ -57,6 +57,8 @@ public:
 	Status GetStatus() { return status_; }
 	Status GetBaseStatus() { return Basestatus_; }
 	void SetStatusResist(int _resist) { status_.resist_ = _resist; }
+	void SetStatusCriticalBoost(float _criticalBoost) { status_.criticalBoost_ = _criticalBoost; }
+	void SetStatusArea(float _area) { status_.area_ = _area; }
 
 private:
 

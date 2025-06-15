@@ -504,9 +504,8 @@ void HUD::ObtainWeapon(int _num)
 			critical = Instantiate<CriticalEye>(GetParent());
 			//player->MyWeaponList_.push_back(critical);
 		}
-		else {
-			critical->LevelUp(EquipmentList_[_num].instruction_.back());
-		}
+
+		critical->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
 	break;
 	case WEAPONTYPE::WIDEAMULET: {
@@ -515,9 +514,7 @@ void HUD::ObtainWeapon(int _num)
 			wide = Instantiate<WideAmulet>(GetParent());
 			//player->MyWeaponList_.push_back(wide);
 		}
-		else {
-			wide->LevelUp(EquipmentList_[_num].instruction_.back());
-		}
+		wide->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
 	break;
 	case WEAPONTYPE::KNOWLEDGEBOOK:
@@ -527,9 +524,7 @@ void HUD::ObtainWeapon(int _num)
 			knowledge = Instantiate<KnowledgeBook>(GetParent());
 			//player->MyWeaponList_.push_back(knowledge);
 		}
-		else {
-			knowledge->LevelUp(EquipmentList_[_num].instruction_.back());
-		}
+		knowledge->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
 	break;
 	default:
