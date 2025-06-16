@@ -412,6 +412,7 @@ void HUD::ObtainWeapon(int _num)
 	if (player == nullptr)
 		return;
 
+	bool needpop = true;
 
 	switch (EquipmentList_[_num].num_)
 	{
@@ -420,6 +421,7 @@ void HUD::ObtainWeapon(int _num)
 		if (knife == nullptr) {
 			knife = Instantiate<Knife>(GetParent());
 			player->MyWeaponList_.push_back(knife);
+			needpop = false;
 		}
 		else {
 			knife->LevelUp(EquipmentList_[_num].instruction_.back());
@@ -431,6 +433,7 @@ void HUD::ObtainWeapon(int _num)
 		if (poison == nullptr) {
 			poison = Instantiate<PoisonThrow>(GetParent());
 			player->MyWeaponList_.push_back(poison);
+			needpop = false;
 		}
 		else {
 			poison->LevelUp(EquipmentList_[_num].instruction_.back());
@@ -443,6 +446,7 @@ void HUD::ObtainWeapon(int _num)
 		if (spike == nullptr) {
 			spike = Instantiate<SpikeOrb>(GetParent());
 			player->MyWeaponList_.push_back(spike);
+			needpop = false;
 		}
 		else {
 			spike->LevelUp(EquipmentList_[_num].instruction_.back());
@@ -455,6 +459,7 @@ void HUD::ObtainWeapon(int _num)
 		if (missile == nullptr) {
 			missile = Instantiate<Missile>(GetParent());
 			player->MyWeaponList_.push_back(missile);
+			needpop = false;
 		}
 		else {
 			missile->LevelUp(EquipmentList_[_num].instruction_.back());
@@ -467,6 +472,7 @@ void HUD::ObtainWeapon(int _num)
 		if (laser == nullptr) {
 			laser = Instantiate<Laser>(GetParent());
 			player->MyWeaponList_.push_back(laser);
+			needpop = false;
 		}
 		else {
 			laser->LevelUp(EquipmentList_[_num].instruction_.back());
@@ -479,14 +485,17 @@ void HUD::ObtainWeapon(int _num)
 		if (bomb == nullptr) {
 			bomb = Instantiate<Bomb>(GetParent());
 			player->MyWeaponList_.push_back(bomb);
+			needpop = false;
 		}
 		else {
 			bomb->LevelUp(EquipmentList_[_num].instruction_.back());
 		}
 	}
 	break;
+
 	case 6:
 		break;
+
 	case WEAPONTYPE::ARMOR: {
 		Armor* armor = GetParent()->FindGameObject<Armor>();
 		if (armor == nullptr) {
@@ -531,7 +540,8 @@ void HUD::ObtainWeapon(int _num)
 		break;
 	}
 
-	EquipmentList_[_num].instruction_.pop_back();
+	if (needpop)
+		EquipmentList_[_num].instruction_.pop_back();
 }
 
 void HUD::TimerDraw()

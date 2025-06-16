@@ -82,6 +82,13 @@ void WeaponObject::CollisionSizeSet(float _size)
 	}
 }
 
+void WeaponObject::ListCollisionSet()
+{
+	for (auto itr = List_.begin(); itr != List_.end(); itr++) {
+		(*itr)->CollisionSizeSet();
+	}
+}
+
 WeaponObject::WeaponObject(GameObject* parent)
 	:GameObject(parent, ""), hModel_(-1)
 {

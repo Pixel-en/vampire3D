@@ -35,6 +35,6 @@ void WideAmulet::LevelUp(std::string str)
 
 	for (auto itr = player->MyWeaponList_.begin(); itr != player->MyWeaponList_.end(); itr++)
 	{
-		(*itr)->CollisionSizeSet();
+		(*itr)->ListCollisionSet();
 	}
 }

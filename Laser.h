@@ -41,8 +41,6 @@ class Laser :public WeaponObject
 		void SetCollider();
 	};
 
-	std::vector<Laser::cLaser*> List_;
-
 	void AddBullet() override;
 
 	//ƒŒ[ƒU[‚Ì•ûŒü‚ğŒˆ‚ß‚é

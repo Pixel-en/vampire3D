@@ -49,6 +49,8 @@ protected:
 
 	WeaponVariables varia_;	//’eŒÂX‚Ì•Ï”
 
+	std::vector<WeaponObject*> List_;	//•Ší‚ÌƒŠƒXƒg
+
 	//“®‚«•û‚ğ‘‚­
 	virtual void Move() {};
 
@@ -85,6 +87,8 @@ public:
 	void SetResetTimer(float _timer) { varia_.ReStartTimer_ = _timer; }
 	float GetAttackTimer() { return varia_.AttackTime_; }
 	void SetNextStatus(Status _st) { nextStatus_ = _st; };
+
+	virtual void ListCollisionSet();
 
 public:
 	WeaponObject(GameObject* parent);

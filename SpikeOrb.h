@@ -38,7 +38,6 @@ class SpikeOrb :public WeaponObject
 		void SetAngle(int _degrees) { angle_ = _degrees; };
 	};
 
-	std::vector<SpikeOrb::cSpikeOrb*> List_;
 
 	void AddBullet() override;
 

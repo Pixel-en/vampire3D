@@ -32,8 +32,6 @@ class Knife :public WeaponObject
 		void Release() override;
 	};
 
-	std::vector<Knife::cKnife*> List_;
-
 	void AddBullet() override;
 public:
 	Knife(GameObject* parent);

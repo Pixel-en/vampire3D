@@ -36,8 +36,6 @@ class Bomb :public WeaponObject
 
 		virtual void OnCollision(GameObject* pTarget) override;
 	};
-
-	std::list<Bomb::cBomb*> List_;
 	int spawncount_;
 
 	void AddBullet() override;

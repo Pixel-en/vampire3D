@@ -11,7 +11,7 @@ namespace {
 	const int SPAWNAREA{ 10 };
 	const int SPAWNAREALIMIT{ 50 };	//スポーンエリアの制限
 	const float SPAWNTIME{ 1.0f };
-	const int SPAWNLIMIT{ 1 }; //スポーンする敵の数制限
+	const int SPAWNLIMIT{ 10 }; //スポーンする敵の数制限
 	const int ENEMYTYPE{ 1 }; //敵の種類数
 	const int SPAWNHEIGHT{ 4 }; //敵のスポーン高さ
 }

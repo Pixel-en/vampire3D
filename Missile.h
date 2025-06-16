@@ -40,8 +40,6 @@ class Missile :public WeaponObject
 		void Release() override;
 	};
 
-	std::vector<Missile::cMissile*> List_;
-
 	void AddBullet() override;
 
 public:

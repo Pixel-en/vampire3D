@@ -1,8 +1,6 @@
 #pragma once
 #include "WeaponObject.h"
 
-class cPoisonThrow;
-
 class PoisonThrow :public WeaponObject
 {
 	class cPoisonThrow : public WeaponObject
@@ -35,8 +33,6 @@ class PoisonThrow :public WeaponObject
 		//ŠJ•ú
 		void Release() override;
 	};
-
-	std::vector<cPoisonThrow*> List_;
 
 	void AddBullet() override;
 

@@ -29,7 +29,7 @@ void Laser::LaserDir()
 {
 	int rot = 360 / List_.size();
 	for (int i = 0; i < List_.size(); i++) {
-		List_[i]->SetAngle(rot * i);
+		dynamic_cast<cLaser*>(List_[i])->SetAngle(rot * i);
 	}
 }
 
