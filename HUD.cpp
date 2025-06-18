@@ -229,6 +229,7 @@ void HUD::WeaponRoll()
 				break;
 		}
 	}
+	//ないときはステータスアップ系を追加する
 
 }
 
@@ -542,6 +543,8 @@ void HUD::ObtainWeapon(int _num)
 
 	if (needpop)
 		EquipmentList_[_num].instruction_.pop_back();
+
+	player->StatusUpdate();
 }
 
 void HUD::TimerDraw()

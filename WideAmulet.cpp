@@ -31,7 +31,9 @@ void WideAmulet::LevelUp(std::string str)
 	//プレイヤーのクリティカル倍率の上昇
 	float value = std::stof(str);
 
-	player->SetStatusArea(player->GetBaseStatus().area_ * value);
+	player->SetBoostStatusArea(value);
+
+	player->StatusUpdate();
 
 	for (auto itr = player->MyWeaponList_.begin(); itr != player->MyWeaponList_.end(); itr++)
 	{

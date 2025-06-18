@@ -31,5 +31,5 @@ void Armor::LevelUp(std::string str)
 	//ƒvƒŒƒCƒ„[‚Ì–hŒä—Í‚É‰ÁŽZ‚·‚é
 	int value = std::stoi(str);
 
-	player->SetStatusResist(player->GetBaseStatus().resist_+value);
+	player->SetBoostStatusResist(value);
 }

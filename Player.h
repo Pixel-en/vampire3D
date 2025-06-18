@@ -11,18 +11,19 @@ private:
 	struct Status
 	{
 		//ゲーム中にパワーアップが取得できるもの
-		int hp_;				//体力(実数値)
-		int maxHp_;			//最大体力(実数値)
-		float speed_;			//移動速度(実数値)
-		float strength_;		//攻撃力(割合)
-		int critical_;		//クリティカル率(割合)
-		float collectionRange_;	//回収範囲(割合)
-		float haste_;			//攻撃頻度(割合)
+		int hp_;						//体力(実数値)
+		int maxHp_;						//最大体力(実数値)
+		float speed_;					//移動速度(実数値)
+		float strength_;				//攻撃力(割合)
+		int critical_;					//クリティカル率(割合)
+		float collectionRange_;			//回収範囲(割合)
+		float haste_;					//攻撃頻度(割合)
 
 		//できないもの
 		float criticalBoost_;			//クリティカル攻撃倍率(割合)
 		float area_;					//攻撃エリア(割合)
 		int resist_;					//防御(実数値)
+		float ExpBoost_;				//経験値ブースト(割合)
 		unsigned int level_;			//現在のレベル(実数値)
 		unsigned int currentExp_;		//今の経験値量(実数値)
 		unsigned int nextLvExp_;		//次のレベルまでの必要経験値量(実数値)
@@ -37,6 +38,8 @@ private:
 	Status status_;
 	//元のステータス
 	Status Basestatus_;
+
+	Status Booststatus_;
 
 	void WeaponCSVLoad();
 	void PlayerStatusLoad();
@@ -56,9 +59,13 @@ public:
 
 	Status GetStatus() { return status_; }
 	Status GetBaseStatus() { return Basestatus_; }
-	void SetStatusResist(int _resist) { status_.resist_ = _resist; }
-	void SetStatusCriticalBoost(float _criticalBoost) { status_.criticalBoost_ = _criticalBoost; }
-	void SetStatusArea(float _area) { status_.area_ = _area; }
+	Status GetBoostStatus() { return Booststatus_; }
+	void SetBoostStatusResist(int _resist) { Booststatus_.resist_ = _resist; }
+	void SetBoostStatusCriticalBoost(float _criticalBoost) { Booststatus_.criticalBoost_ = _criticalBoost; }
+	void SetBoostStatusArea(float _area) { Booststatus_.area_ = _area; }
+	void SetBoostStatusExpBoost(float _expBoost) { Booststatus_.ExpBoost_ = _expBoost; }
+
+	void StatusUpdate();
 
 private:
 

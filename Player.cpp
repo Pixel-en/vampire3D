@@ -142,18 +142,31 @@ void Player::PlayerStatusLoad()
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\PlayerStatus.csv");
 
-	status_.hp_ = csv.GetValue(1, 2);
-	status_.speed_ = csv.GetValue(2, 2);
-	status_.strength_ = csv.GetValue(3, 2);
-	status_.critical_ = csv.GetValue(4, 2);
-	status_.collectionRange_ = csv.GetValue(5, 2);
-	status_.haste_ = csv.GetValue(6, 2);
-	status_.criticalBoost_ = csv.GetValue(7, 2);
-	status_.area_ = csv.GetValue(8, 2);
-	status_.resist_ = csv.GetValue(9, 2);
-	status_.maxHp_ = status_.hp_;
+	Basestatus_.hp_ = csv.GetValue(1, 2);
+	Basestatus_.speed_ = csv.GetValue(2, 2);
+	Basestatus_.strength_ = csv.GetValue(3, 2);
+	Basestatus_.critical_ = csv.GetValue(4, 2);
+	Basestatus_.collectionRange_ = csv.GetValue(5, 2);
+	Basestatus_.haste_ = csv.GetValue(6, 2);
+	Basestatus_.criticalBoost_ = csv.GetValue(7, 2);
+	Basestatus_.area_ = csv.GetValue(8, 2);
+	Basestatus_.resist_ = csv.GetValue(9, 2);
+	Basestatus_.ExpBoost_ = csv.GetValue(10, 2);
+	Basestatus_.maxHp_ = Basestatus_.hp_;
 
-	Basestatus_ = status_;
+	Booststatus_.hp_ = 1;		//hpは使わないかも
+	Booststatus_.speed_ = 1;
+	Booststatus_.strength_ = 1;
+	Booststatus_.critical_ = 1;
+	Booststatus_.collectionRange_ = 1;
+	Booststatus_.haste_ = 1;
+	Booststatus_.criticalBoost_ = 1;
+	Booststatus_.area_ = 1;
+	Booststatus_.resist_ = 1;
+	Booststatus_.ExpBoost_ = 1;
+	Booststatus_.maxHp_ = 1;
+
+	StatusUpdate();
 }
 
 bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
@@ -164,6 +177,22 @@ bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
 		return true;
 	}
 	return false;
+}
+
+void Player::StatusUpdate()
+{
+	//ステータスの更新
+	status_.hp_ = Basestatus_.hp_ * Booststatus_.hp_;
+	status_.speed_ = Basestatus_.speed_ * Booststatus_.speed_;
+	status_.strength_ = Basestatus_.strength_ * Booststatus_.strength_;
+	status_.critical_ = Basestatus_.critical_ * Booststatus_.critical_;
+	status_.collectionRange_ = Basestatus_.collectionRange_ * Booststatus_.collectionRange_;
+	status_.haste_ = Basestatus_.haste_ * Booststatus_.haste_;
+	status_.criticalBoost_ = Basestatus_.criticalBoost_ * Booststatus_.criticalBoost_;
+	status_.area_ = Basestatus_.area_ * Booststatus_.area_;
+	status_.resist_ = Basestatus_.resist_ * Booststatus_.resist_;
+	status_.ExpBoost_ = Basestatus_.ExpBoost_ * Booststatus_.ExpBoost_;
+	status_.maxHp_ = Basestatus_.maxHp_ * Booststatus_.maxHp_;
 }
 
 void Player::Move()
@@ -307,7 +336,7 @@ void Player::OnCollision(GameObject* pTarget)
 				if (damege - status_.resist_ <= 0)
 					return; //ダメージが0以下なら何もしない
 
-				status_.hp_ -= (damege-status_.resist_);
+				status_.hp_ -= (damege - status_.resist_);
 				Input::SetPadVibration(0.5f * 65535, 0.5f * 65535);
 				if (status_.hp_ <= 0) {
 					SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
@@ -361,7 +390,7 @@ void Player::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterato
 
 void Player::AcquisitionEXP(int _exp)
 {
-	status_.currentExp_ += _exp;
+	status_.currentExp_ += (_exp * status_.ExpBoost_);
 
 	if (status_.currentExp_ >= status_.nextLvExp_) {
 		//ポーズ状態にする

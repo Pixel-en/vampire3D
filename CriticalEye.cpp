@@ -31,5 +31,5 @@ void CriticalEye::LevelUp(std::string str)
 	//プレイヤーのクリティカル倍率の上昇
 	float value = std::stof(str);
 
-	player->SetStatusCriticalBoost(player->GetBaseStatus().criticalBoost_*value);
+	player->SetBoostStatusCriticalBoost(value);
 }

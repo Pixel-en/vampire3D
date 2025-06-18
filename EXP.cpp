@@ -49,7 +49,7 @@ void EXP::Initialize()
 	LoadModel();
 
 
-	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0.5f, 0), 0.5f);
+	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1.0f, 0), 1.0f);
 	AddCollider(collision);
 }
 
