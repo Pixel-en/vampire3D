@@ -21,6 +21,7 @@ namespace{
 		CRITICALEYE,
 		WIDEAMULET,
 		KNOWLEDGEBOOK,
+		HEARTCREAM,
 		AEND
 	};
 }

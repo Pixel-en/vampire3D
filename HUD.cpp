@@ -17,6 +17,7 @@
 #include "CriticalEye.h"
 #include "WideAmulet.h"
 #include "KnowledgeBook.h"
+#include "HeartCream.h"
 
 namespace {
 	namespace RADAR {
@@ -537,6 +538,14 @@ void HUD::ObtainWeapon(int _num)
 		knowledge->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
 	break;
+	case WEAPONTYPE::HEARTCREAM: {
+		HeartCream* heart = GetParent()->FindGameObject<HeartCream>();
+		if (heart == nullptr) {
+			heart = Instantiate<HeartCream>(GetParent());
+			//player->MyWeaponList_.push_back(heart);
+		}
+		heart->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
 	default:
 		break;
 	}

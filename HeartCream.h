@@ -1,12 +1,17 @@
 #pragma once
 #include "ArmorObject.h"
 
-class Armor :public ArmorObject
+class HeartCream :public ArmorObject
 {
-public:
-	Armor(GameObject* parent);
+	float timer_;	//タイマー
+	float maxTime_;	//最大時間
+	float heal_;	//回復率
+	float HpRate_;	//体力割合
 
-	~Armor();
+public:
+	HeartCream(GameObject* parent);
+
+	~HeartCream();
 
 	//初期化
 	void Initialize() override;

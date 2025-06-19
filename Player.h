@@ -55,7 +55,7 @@ public:
 	//武器のステータスを書き込む
 	//引数：name　武器の名前
 	//引数:_state　書き込むステータス
-	bool WeaponStateWrite(std::string name,WeaponObject::Status& _state);
+	bool WeaponStateWrite(std::string name, WeaponObject::Status& _state);
 
 	Status GetStatus() { return status_; }
 	Status GetBaseStatus() { return Basestatus_; }
@@ -64,6 +64,21 @@ public:
 	void SetBoostStatusCriticalBoost(float _criticalBoost) { Booststatus_.criticalBoost_ = _criticalBoost; }
 	void SetBoostStatusArea(float _area) { Booststatus_.area_ = _area; }
 	void SetBoostStatusExpBoost(float _expBoost) { Booststatus_.ExpBoost_ = _expBoost; }
+	/// <summary>
+	/// trueなら乗算、falseなら除算をブーストに行う
+	/// </summary>
+	void MultDivBoostStatusSpeed(float _speed, bool _isMult) {
+		if (_isMult)Booststatus_.speed_ *= _speed;
+		else Booststatus_.speed_ /= _speed;
+	}
+	/// <summary>
+	/// trueなら乗算、falseなら除算をブーストに行う
+	/// </summary>
+	void MultDivBoostStatusStrength(float _strength, bool _isMult) {
+		if (_isMult) Booststatus_.strength_ *= _strength;
+		else Booststatus_.strength_ /= _strength;
+	}
+	void HealingHp(int _hp);
 
 	void StatusUpdate();
 

@@ -189,6 +189,12 @@
     <ClCompile Include="KnowledgeBook.cpp">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
+    <ClCompile Include="HeartCream.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="WonderCookie.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -341,6 +347,12 @@
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
     <ClInclude Include="KnowledgeBook.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="HeartCream.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="WonderCookie.h">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
   </ItemGroup>

@@ -179,6 +179,15 @@ bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
 	return false;
 }
 
+void Player::HealingHp(int _hp)
+{
+	if (status_.hp_ >= status_.maxHp_)
+		return; //体力が最大なら何もしない
+	status_.hp_ += _hp;
+	if (status_.hp_ > status_.maxHp_)
+		status_.hp_ = status_.maxHp_; //体力が最大値を超えないようにする
+}
+
 void Player::StatusUpdate()
 {
 	//ステータスの更新
