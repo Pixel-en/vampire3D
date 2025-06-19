@@ -1,13 +1,12 @@
 #pragma once
 #include "ArmorObject.h"
 
-class WonderCookie :public ArmorObject
+class EnergyDrink :public ArmorObject
 {
-
 public:
-	WonderCookie(GameObject* parent);
+	EnergyDrink(GameObject* parent);
 
-	~WonderCookie();
+	~EnergyDrink();
 
 	//‰Šú‰»
 	void Initialize() override;

@@ -18,6 +18,8 @@
 #include "WideAmulet.h"
 #include "KnowledgeBook.h"
 #include "HeartCream.h"
+#include "WonderCookie.h"
+#include "MuscleSuit.h"
 
 namespace {
 	namespace RADAR {
@@ -546,6 +548,25 @@ void HUD::ObtainWeapon(int _num)
 		}
 		heart->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
+							   break;
+	case WEAPONTYPE::WONDERCOOKIE: {
+		WonderCookie* wonder = GetParent()->FindGameObject<WonderCookie>();
+		if (wonder == nullptr) {
+			wonder = Instantiate<WonderCookie>(GetParent());
+			//player->MyWeaponList_.push_back(wonder);
+		}
+		wonder->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+								 break;
+	case WEAPONTYPE::MUSCLESUIT: {
+		MuscleSuit* muscle = GetParent()->FindGameObject<MuscleSuit>();
+		if (muscle == nullptr) {
+			muscle = Instantiate<MuscleSuit>(GetParent());
+			//player->MyWeaponList_.push_back(muscle);
+		}
+		muscle->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+							   break;
 	default:
 		break;
 	}

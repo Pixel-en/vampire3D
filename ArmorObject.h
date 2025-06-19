@@ -5,6 +5,11 @@ class ArmorObject :public GameObject
 {
 	int numLevel_;
 
+protected:
+	//前回のバフ、デバフの値
+	float BeBuff_;
+	float BeDBuff_;
+
 public:
 	ArmorObject(GameObject* parent);
 

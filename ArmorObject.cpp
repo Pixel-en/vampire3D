@@ -3,12 +3,16 @@
 ArmorObject::ArmorObject(GameObject* parent)
 	:GameObject(parent, "ArmorObject")
 {
+	BeBuff_ = 1.0f;
+	BeDBuff_ = 1.0f;
 }
 
 ArmorObject::ArmorObject(GameObject* parent, const std::string& name)
 	:GameObject(parent, name)
 {
 	numLevel_ = 0;
+	BeBuff_ = 1.0f;
+	BeDBuff_ = 1.0f;
 	Invisible();
 	Leave();
 }

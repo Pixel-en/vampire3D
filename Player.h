@@ -78,6 +78,15 @@ public:
 		if (_isMult) Booststatus_.strength_ *= _strength;
 		else Booststatus_.strength_ /= _strength;
 	}
+	
+	/// <summary>
+	/// trueなら乗算、falseなら除算をブーストに行う
+	/// </summary>
+	void MultDivBoostStatusCritical(float _critical, bool _isMult) {
+		if (_isMult) Booststatus_.critical_ *= _critical;
+		else Booststatus_.critical_ /= _critical;
+	}
+
 	void HealingHp(int _hp);
 
 	void StatusUpdate();

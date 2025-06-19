@@ -15,6 +15,7 @@ HeartCream::~HeartCream()
 
 void HeartCream::Initialize()
 {
+	Enter();
 }
 
 void HeartCream::Update()

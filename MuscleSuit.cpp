@@ -1,30 +1,29 @@
-#include "WonderCookie.h"
+#include "MuscleSuit.h"
 #include "Player.h"
 #include <sstream>
 
-WonderCookie::WonderCookie(GameObject* parent)
-	:ArmorObject(parent, "WonderCookie")
-{
-
-}
-
-WonderCookie::~WonderCookie()
+MuscleSuit::MuscleSuit(GameObject* parent)
+	: ArmorObject(parent,"MuscleSuit")
 {
 }
 
-void WonderCookie::Initialize()
+MuscleSuit::~MuscleSuit()
 {
 }
 
-void WonderCookie::Update()
+void MuscleSuit::Initialize()
 {
 }
 
-void WonderCookie::Release()
+void MuscleSuit::Update()
 {
 }
 
-void WonderCookie::LevelUp(std::string str)
+void MuscleSuit::Release()
+{
+}
+
+void MuscleSuit::LevelUp(std::string str)
 {
 	Player* player = GetRootJob()->FindGameObject<Player>();
 	if (player == nullptr)
@@ -34,32 +33,30 @@ void WonderCookie::LevelUp(std::string str)
 	std::string temp;
 	int count = 0;
 	enum {
-		SPEED,
-		ATTACK
+		ATTACK,
+		CRITICAL,
 	};
 
-	while (std::getline(ss,temp,'/'))
+	while (std::getline(ss, temp, '/'))
 	{
 		//’l‚ðŽæ“¾
 		float val = std::stof(temp);
 
 		switch (count)
 		{
-		case SPEED:
+		case ATTACK:
 			//‘O‰ñ‚Ì’Ç‰Á•ª‚Ì‹t”‚ð‚©‚¯‚é‚±‚Æ‚Å‘O‰ñ‚Ì•ª‚ðÁ‚·
 			float boost = val / BeBuff_;
-			player->MultDivBoostStatusSpeed(boost,true);
+			player->MultDivBoostStatusStrength(boost, true);
 			BeBuff_ = val;
 			break;
-		case ATTACK:
+		case CRITICAL:
 			float boost = val / BeBuff_;
-			player->MultDivBoostStatusStrength(val, true);
+			player->MultDivBoostStatusCritical(val, true);
 			BeDBuff_ = val;
 			break;
 		default:
 			break;
 		}
 	}
-
-
 }
