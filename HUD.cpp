@@ -20,6 +20,7 @@
 #include "HeartCream.h"
 #include "WonderCookie.h"
 #include "MuscleSuit.h"
+#include "EnergyDrink.h"
 
 namespace {
 	namespace RADAR {
@@ -510,7 +511,7 @@ void HUD::ObtainWeapon(int _num)
 
 		armor->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
-	break;
+						  break;
 	case WEAPONTYPE::CRITICALEYE: {
 		CriticalEye* critical = GetParent()->FindGameObject<CriticalEye>();
 		if (critical == nullptr) {
@@ -520,7 +521,7 @@ void HUD::ObtainWeapon(int _num)
 
 		critical->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
-	break;
+								break;
 	case WEAPONTYPE::WIDEAMULET: {
 		WideAmulet* wide = GetParent()->FindGameObject<WideAmulet>();
 		if (wide == nullptr) {
@@ -529,7 +530,7 @@ void HUD::ObtainWeapon(int _num)
 		}
 		wide->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
-	break;
+							   break;
 	case WEAPONTYPE::KNOWLEDGEBOOK:
 	{
 		KnowledgeBook* knowledge = GetParent()->FindGameObject<KnowledgeBook>();
@@ -539,7 +540,7 @@ void HUD::ObtainWeapon(int _num)
 		}
 		knowledge->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
-	break;
+							break;
 	case WEAPONTYPE::HEARTCREAM: {
 		HeartCream* heart = GetParent()->FindGameObject<HeartCream>();
 		if (heart == nullptr) {
@@ -567,6 +568,15 @@ void HUD::ObtainWeapon(int _num)
 		muscle->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
 							   break;
+	case WEAPONTYPE::ENERGYDRINK: {
+		EnergyDrink* energy = GetParent()->FindGameObject<EnergyDrink>();
+		if (energy == nullptr) {
+			energy = Instantiate<EnergyDrink>(GetParent());
+			//player->MyWeaponList_.push_back(energy);
+		}
+		energy->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+								break;
 	default:
 		break;
 	}

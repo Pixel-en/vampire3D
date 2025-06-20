@@ -171,7 +171,9 @@
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="KnowledgeBook.cpp" />
     <ClCompile Include="Laser.cpp" />
+    <ClCompile Include="MagicHand.cpp" />
     <ClCompile Include="Missile.cpp" />
+    <ClCompile Include="Monocle.cpp" />
     <ClCompile Include="MuscleSuit.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayLoad.cpp" />
@@ -230,7 +232,9 @@
     <ClInclude Include="Knife.h" />
     <ClInclude Include="KnowledgeBook.h" />
     <ClInclude Include="Laser.h" />
+    <ClInclude Include="MagicHand.h" />
     <ClInclude Include="Missile.h" />
+    <ClInclude Include="Monocle.h" />
     <ClInclude Include="MuscleSuit.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayLoad.h" />

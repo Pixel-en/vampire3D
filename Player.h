@@ -87,6 +87,15 @@ public:
 		else Booststatus_.critical_ /= _critical;
 	}
 
+	void MultDivBoostStatusHaste(float _haste, bool _isMult) {
+		if (_isMult) Booststatus_.haste_ *= _haste;
+		else Booststatus_.haste_ /= _haste;
+	}
+	void MultDivBoostStatusCollectionRange(float _collectionRange, bool _isMult) {
+		if (_isMult) Booststatus_.collectionRange_ *= _collectionRange;
+		else Booststatus_.collectionRange_ /= _collectionRange;
+	}
+
 	void HealingHp(int _hp);
 
 	void StatusUpdate();

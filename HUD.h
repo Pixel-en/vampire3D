@@ -24,6 +24,7 @@ namespace{
 		HEARTCREAM,
 		WONDERCOOKIE,
 		MUSCLESUIT,
+		ENERGYDRINK,
 		AEND
 	};
 }

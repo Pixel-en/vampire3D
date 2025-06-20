@@ -1,16 +1,14 @@
 #pragma once
 #include "ArmorObject.h"
 
-class EnergyDrink :public ArmorObject
+class Monocle :public ArmorObject
 {
-	float timer_;
-	float MaxTime_;
-	float DBuff_;
-
+	float BeBuff2_;
+	float Buff_;
 public:
-	EnergyDrink(GameObject* parent);
+	Monocle(GameObject* parent);
 
-	~EnergyDrink();
+	~Monocle();
 
 	//èâä˙âª
 	void Initialize() override;
