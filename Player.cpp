@@ -201,7 +201,12 @@ void Player::StatusUpdate()
 	status_.area_ = Basestatus_.area_ * Booststatus_.area_;
 	status_.resist_ = Basestatus_.resist_ * Booststatus_.resist_;
 	status_.ExpBoost_ = Basestatus_.ExpBoost_ * Booststatus_.ExpBoost_;
-	status_.maxHp_ = Basestatus_.maxHp_ * Booststatus_.maxHp_;
+	status_.maxHp_ = Basestatus_.maxHp_ + Booststatus_.maxHp_;
+}
+
+bool Player::isMove()
+{
+	return moveNow_;
 }
 
 void Player::Move()
@@ -227,14 +232,25 @@ void Player::Move()
 	//---------------‘€ì--------------------
 	//ˆÚ“®
 	if (onGround_) {
-		if (Input::IsKey(DIK_W) || Input::GetPadStickL().y >= 0.5f)
+		//‰Šú‰»
+		moveNow_ = false;
+
+		if (Input::IsKey(DIK_W) || Input::GetPadStickL().y >= 0.5f) {
 			moveDirVec = XMVectorSetZ(moveDirVec, 1.0);
-		if (Input::IsKey(DIK_S) || Input::GetPadStickL().y <= -0.5f)
+			moveNow_ = true; //ˆÚ“®’†
+		}
+		if (Input::IsKey(DIK_S) || Input::GetPadStickL().y <= -0.5f) {
 			moveDirVec = XMVectorSetZ(moveDirVec, -1.0);
-		if (Input::IsKey(DIK_A) || Input::GetPadStickL().x <= -0.5f)
+			moveNow_ = true; //ˆÚ“®’†
+		}
+		if (Input::IsKey(DIK_A) || Input::GetPadStickL().x <= -0.5f) {
 			moveDirVec = XMVectorSetX(moveDirVec, -1.0);
-		if (Input::IsKey(DIK_D) || Input::GetPadStickL().x >= 0.5f)
+			moveNow_ = true; //ˆÚ“®’†
+		}
+		if (Input::IsKey(DIK_D) || Input::GetPadStickL().x >= 0.5f) {
 			moveDirVec = XMVectorSetX(moveDirVec, 1.0);
+			moveNow_ = true; //ˆÚ“®’†
+		}
 	}
 
 	//ƒJƒƒ‰c

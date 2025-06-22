@@ -131,6 +131,7 @@
     <ClCompile Include="ArmorObject.cpp" />
     <ClCompile Include="Bomb.cpp" />
     <ClCompile Include="CriticalEye.cpp" />
+    <ClCompile Include="Cushion.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySpawn.cpp" />
     <ClCompile Include="EnergyDrink.cpp" />
@@ -171,6 +172,7 @@
     <ClCompile Include="Knife.cpp" />
     <ClCompile Include="KnowledgeBook.cpp" />
     <ClCompile Include="Laser.cpp" />
+    <ClCompile Include="LifeFragment.cpp" />
     <ClCompile Include="MagicHand.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Monocle.cpp" />
@@ -191,6 +193,7 @@
     <ClInclude Include="ArmorObject.h" />
     <ClInclude Include="Bomb.h" />
     <ClInclude Include="CriticalEye.h" />
+    <ClInclude Include="Cushion.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawn.h" />
     <ClInclude Include="EnergyDrink.h" />
@@ -232,6 +235,7 @@
     <ClInclude Include="Knife.h" />
     <ClInclude Include="KnowledgeBook.h" />
     <ClInclude Include="Laser.h" />
+    <ClInclude Include="LifeFragment.h" />
     <ClInclude Include="MagicHand.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="Monocle.h" />

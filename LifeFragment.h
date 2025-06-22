@@ -1,16 +1,17 @@
 #pragma once
 #include "ArmorObject.h"
 
-class Monocle :public ArmorObject
+class LifeFragment :public ArmorObject
 {
-	float BeBuff2_;
-	float Buff_;
+	float BeHP_;
+	float BuffSpeed_;
+	float rate_;
+	float BuffFlag_;
 
-	bool isMul_;
 public:
-	Monocle(GameObject* parent);
+	LifeFragment(GameObject* parent);
 
-	~Monocle();
+	~LifeFragment();
 
 	//èâä˙âª
 	void Initialize() override;

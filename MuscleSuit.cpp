@@ -58,5 +58,6 @@ void MuscleSuit::LevelUp(std::string str)
 		default:
 			break;
 		}
+		count++;
 	}
 }

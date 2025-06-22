@@ -45,6 +45,7 @@ private:
 	void PlayerStatusLoad();
 
 	std::map<std::string, WeaponObject::Status> WeaponState_;
+
 public:
 	std::vector<WeaponObject*> MyWeaponList_;
 
@@ -96,9 +97,17 @@ public:
 		else Booststatus_.collectionRange_ /= _collectionRange;
 	}
 
+	void AddStatusMaxHp(int _maxHp) {
+		Booststatus_.maxHp_ += _maxHp;
+	}
+
 	void HealingHp(int _hp);
 
+	//ステータスの更新
+	//最大HPだけ足し算
 	void StatusUpdate();
+
+	bool isMove();
 
 private:
 
@@ -116,6 +125,7 @@ private:
 
 	//キャラクターの移動
 	void Move();
+	bool moveNow_;
 
 public:
 	Player(GameObject* parent);

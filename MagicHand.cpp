@@ -30,4 +30,5 @@ void MagicHand::LevelUp(std::string str)
 
 	float val = std::stof(str) / BeBuff_;
 	player->MultDivBoostStatusCollectionRange(val, true);
+	BeBuff_ = val;
 }

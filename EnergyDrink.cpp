@@ -82,7 +82,7 @@ void EnergyDrink::LevelUp(std::string str)
 			float boost = val / BeBuff_;
 			player->MultDivBoostStatusStrength(val, true);
 			player->MultDivBoostStatusHaste(val, true);
-			BeDBuff_ = val;
+			BeBuff_ = val;
 			break;
 		default:
 			break;

@@ -21,6 +21,10 @@
 #include "WonderCookie.h"
 #include "MuscleSuit.h"
 #include "EnergyDrink.h"
+#include "MagicHand.h"
+#include "Monocle.h"
+#include "Cushion.h"
+#include "LifeFragment.h"
 
 namespace {
 	namespace RADAR {
@@ -577,6 +581,42 @@ void HUD::ObtainWeapon(int _num)
 		energy->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
 								break;
+	case WEAPONTYPE::MAGICHAND: {
+		MagicHand* magic = GetParent()->FindGameObject<MagicHand>();
+		if (magic == nullptr) {
+			magic = Instantiate<MagicHand>(GetParent());
+			//player->MyWeaponList_.push_back(magic);
+		}
+		magic->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+							  break;
+	case WEAPONTYPE::MONOCLE: {
+		Monocle* mono = GetParent()->FindGameObject<Monocle>();
+		if (mono == nullptr) {
+			mono = Instantiate<Monocle>(GetParent());
+			//player->MyWeaponList_.push_back(mono);
+		}
+		mono->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+							break;
+	case WEAPONTYPE::CUSHION: {
+		Cushion* cushion = GetParent()->FindGameObject<Cushion>();
+		if (cushion == nullptr) {
+			cushion = Instantiate<Cushion>(GetParent());
+			//player->MyWeaponList_.push_back(cushion);
+		}
+		cushion->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+							break;
+	case WEAPONTYPE::LIFEFRAGMENT: {
+		LifeFragment* life = GetParent()->FindGameObject<LifeFragment>();
+		if (life == nullptr) {
+			life = Instantiate<LifeFragment>(GetParent());
+			//player->MyWeaponList_.push_back(life);
+		}
+		life->LevelUp(EquipmentList_[_num].instruction_.back());
+	}
+								 break;
 	default:
 		break;
 	}

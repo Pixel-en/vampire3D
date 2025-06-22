@@ -195,6 +195,24 @@
     <ClCompile Include="WonderCookie.cpp">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
+    <ClCompile Include="MagicHand.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="Monocle.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="MuscleSuit.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="EnergyDrink.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="Cushion.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="LifeFragment.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -353,6 +371,24 @@
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
     <ClInclude Include="WonderCookie.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="MuscleSuit.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="MagicHand.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="Monocle.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="EnergyDrink.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="Cushion.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="LifeFragment.h">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
   </ItemGroup>
