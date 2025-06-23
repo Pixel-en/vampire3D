@@ -14,7 +14,7 @@
 #include "Laser.h"
 #include "Bomb.h"
 #include "Armor.h"
-#include "CriticalEye.h"
+#include "FreeMind.h"
 #include "WideAmulet.h"
 #include "KnowledgeBook.h"
 #include "HeartCream.h"
@@ -517,9 +517,9 @@ void HUD::ObtainWeapon(int _num)
 	}
 						  break;
 	case WEAPONTYPE::CRITICALEYE: {
-		CriticalEye* critical = GetParent()->FindGameObject<CriticalEye>();
+		FreeMind* critical = GetParent()->FindGameObject<FreeMind>();
 		if (critical == nullptr) {
-			critical = Instantiate<CriticalEye>(GetParent());
+			critical = Instantiate<FreeMind>(GetParent());
 			//player->MyWeaponList_.push_back(critical);
 		}
 

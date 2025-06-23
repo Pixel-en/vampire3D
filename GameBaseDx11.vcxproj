@@ -130,7 +130,7 @@
     <ClCompile Include="Armor.cpp" />
     <ClCompile Include="ArmorObject.cpp" />
     <ClCompile Include="Bomb.cpp" />
-    <ClCompile Include="CriticalEye.cpp" />
+    <ClCompile Include="FreeMind.cpp" />
     <ClCompile Include="Cushion.cpp" />
     <ClCompile Include="Enemy.cpp" />
     <ClCompile Include="EnemySpawn.cpp" />
@@ -192,7 +192,7 @@
     <ClInclude Include="Armor.h" />
     <ClInclude Include="ArmorObject.h" />
     <ClInclude Include="Bomb.h" />
-    <ClInclude Include="CriticalEye.h" />
+    <ClInclude Include="FreeMind.h" />
     <ClInclude Include="Cushion.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="EnemySpawn.h" />

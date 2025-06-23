@@ -1,12 +1,12 @@
 #pragma once
 #include "ArmorObject.h"
 
-class CriticalEye :public ArmorObject
+class FreeMind :public ArmorObject
 {
 public:
-	CriticalEye(GameObject* parent);
+	FreeMind(GameObject* parent);
 
-	~CriticalEye();
+	~FreeMind();
 
 	//‰Šú‰»
 	void Initialize() override;
