@@ -59,12 +59,12 @@ void Monocle::LevelUp(std::string str)
 	{
 		//’l‚ðŽæ“¾
 		float val = std::stof(temp);
-
+		float boost;
 		switch (count)
 		{
 		case CRITICAL:
 			//‘O‰ñ‚Ì’Ç‰Á•ª‚Ì‹t”‚ð‚©‚¯‚é‚±‚Æ‚Å‘O‰ñ‚Ì•ª‚ðÁ‚·
-			float boost = val / BeBuff_;
+			boost = val / BeBuff_;
 			player->MultDivBoostStatusSpeed(boost, true);
 			BeBuff_ = val;
 			break;

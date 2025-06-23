@@ -67,6 +67,7 @@ void EnergyDrink::LevelUp(std::string str)
 	{
 		//値を取得
 		float val = std::stof(temp);
+		float boost;
 		switch (count)
 		{
 		case TIME:
@@ -79,7 +80,7 @@ void EnergyDrink::LevelUp(std::string str)
 		case ATTACK:
 			
 			//攻撃と頻度のブーストを行う
-			float boost = val / BeBuff_;
+			boost = val / BeBuff_;
 			player->MultDivBoostStatusStrength(val, true);
 			player->MultDivBoostStatusHaste(val, true);
 			BeBuff_ = val;

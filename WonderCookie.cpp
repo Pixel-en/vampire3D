@@ -42,17 +42,18 @@ void WonderCookie::LevelUp(std::string str)
 	{
 		//’l‚ðŽæ“¾
 		float val = std::stof(temp);
+		float boost;
 
 		switch (count)
 		{
 		case SPEED:
 			//‘O‰ñ‚Ì’Ç‰Á•ª‚Ì‹t”‚ð‚©‚¯‚é‚±‚Æ‚Å‘O‰ñ‚Ì•ª‚ðÁ‚·
-			float boost = val / BeBuff_;
+			boost = val / BeBuff_;
 			player->MultDivBoostStatusSpeed(boost,true);
 			BeBuff_ = val;
 			break;
 		case ATTACK:
-			float boost = val / BeDBuff_;
+			boost = val / BeDBuff_;
 			player->MultDivBoostStatusStrength(val, true);
 			BeDBuff_ = val;
 			break;

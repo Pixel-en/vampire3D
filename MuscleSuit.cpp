@@ -41,17 +41,17 @@ void MuscleSuit::LevelUp(std::string str)
 	{
 		//’l‚ðŽæ“¾
 		float val = std::stof(temp);
-
+		float boost;
 		switch (count)
 		{
 		case ATTACK:
 			//‘O‰ñ‚Ì’Ç‰Á•ª‚Ì‹t”‚ð‚©‚¯‚é‚±‚Æ‚Å‘O‰ñ‚Ì•ª‚ðÁ‚·
-			float boost = val / BeBuff_;
+			boost = val / BeBuff_;
 			player->MultDivBoostStatusStrength(boost, true);
 			BeBuff_ = val;
 			break;
 		case CRITICAL:
-			float boost = val / BeBuff_;
+			boost = val / BeBuff_;
 			player->MultDivBoostStatusCritical(val, true);
 			BeDBuff_ = val;
 			break;
