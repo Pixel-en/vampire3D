@@ -25,6 +25,8 @@ void MuscleSuit::Release()
 
 void MuscleSuit::LevelUp(std::string str)
 {
+	numLevel_++;
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 	if (player == nullptr)
 		return;

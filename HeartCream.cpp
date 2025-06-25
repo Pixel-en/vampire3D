@@ -44,6 +44,8 @@ void HeartCream::Release()
 
 void HeartCream::LevelUp(std::string str)
 {
+	numLevel_++;
+
 	std::stringstream ss{ str };
 	std::string temp;
 	int count = 0;

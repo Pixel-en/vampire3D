@@ -3,9 +3,10 @@
 
 class ArmorObject :public GameObject
 {
-	int numLevel_;
 
 protected:
+	int numLevel_;
+
 	//前回のバフ、デバフの値
 	float BeBuff_;
 	float BeDBuff_;

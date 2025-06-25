@@ -47,6 +47,8 @@ void LifeFragment::Release()
 
 void LifeFragment::LevelUp(std::string str)
 {
+	numLevel_++;
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 	if (player == nullptr)
 		return;

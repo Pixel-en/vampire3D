@@ -24,6 +24,8 @@ void KnowledgeBook::Release()
 
 void KnowledgeBook::LevelUp(std::string str)
 {
+	numLevel_++;
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 	//ƒvƒŒƒCƒ„[‚È‚©‚Á‚½‚ç‚Ç‚¤‚µ‚æ‚¤‚Ë
 	if (player == nullptr)

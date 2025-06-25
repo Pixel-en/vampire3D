@@ -18,7 +18,7 @@ namespace{
 
 		//防具は101から
 		ARMOR=101,
-		CRITICALEYE,
+		FREEMIND,
 		WIDEAMULET,
 		KNOWLEDGEBOOK,
 		HEARTCREAM,
@@ -81,7 +81,7 @@ private:
 	int hLevelCursor_;
 	int hLevelFrameImage_;
 	int hLevelCursorImage_;
-	int hLevelIconImage_[WEAPONTYPE::END];
+	int hLevelIconImage_[WEAPONTYPE::END+(WEAPONTYPE::AEND-WEAPONTYPE::ARMOR)];	//武器のアイコン
 
 	bool Pause_;						//ポーズ中かどうか
 

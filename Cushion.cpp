@@ -120,6 +120,8 @@ void Cushion::Release()
 void Cushion::LevelUp(std::string str)
 {
 
+	numLevel_++;
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 	if (player == nullptr)
 		return;

@@ -49,6 +49,8 @@ void EnergyDrink::Release()
 
 void EnergyDrink::LevelUp(std::string str)
 {
+	numLevel_++;
+
 	std::stringstream ss{ str };
 	std::string temp;
 	int count = 0;

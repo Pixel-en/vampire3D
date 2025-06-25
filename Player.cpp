@@ -98,6 +98,10 @@ void Player::Update()
 		if (InvincibleTimer_ <= INVINCIBLETIME / 2.0f)
 			Input::SetPadVibration(0, 0);
 	}
+
+	if (Input::IsKeyDown(DIK_Y)) {
+		AcquisitionEXP(10);
+	}
 }
 
 void Player::WeaponCSVLoad()
@@ -164,7 +168,7 @@ void Player::PlayerStatusLoad()
 	Booststatus_.area_ = 1;
 	Booststatus_.resist_ = 1;
 	Booststatus_.ExpBoost_ = 1;
-	Booststatus_.maxHp_ = 1;
+	Booststatus_.maxHp_ = 0;
 
 	StatusUpdate();
 }
@@ -186,6 +190,11 @@ void Player::HealingHp(int _hp)
 	status_.hp_ += _hp;
 	if (status_.hp_ > status_.maxHp_)
 		status_.hp_ = status_.maxHp_; //‘Ì—Í‚ªÅ‘å’l‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é
+
+	if (status_.hp_ < 1) {
+		status_.hp_ = 1; //‘Ì—Í‚ª1–¢–‚É‚È‚ç‚È‚¢‚æ‚¤‚É‚·‚é
+	}
+
 }
 
 void Player::StatusUpdate()

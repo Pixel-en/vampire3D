@@ -36,8 +36,13 @@ namespace {
 		const float LEVELGAUGEBARXPOS{ -1.0f };
 		const int WEAPONCHOICEVAL{ 4 };
 
-
-		const std::string WEAPONNAME[WEAPONTYPE::END] = { "Knife","PoisonThrow","SpikeOrb","Missile","Laser","Bomb" };
+		//装備の名前リスト
+		const std::string EQUIPMENTSNAMELIST[WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR] = {
+			"Knife","PoisonThrow","SpikeOrb","Missile","Laser","Bomb",
+			"Armor","FreeMind","WideAmulet","KnowledgeBook","HeartCream",
+			"WonderCookie","MuscleSuit","EnergyDrink","MagicHand","Monocle",
+			"Cushion","LifeFragment"
+		};
 		const float FRAMEIMAGEBUFFER{ 175 };
 	}
 }
@@ -209,11 +214,22 @@ void HUD::LevelUP()
 	//リストの整理
 	//レベルが最大のものがあればリストから除外
 	for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
-		WeaponObject* obj = (WeaponObject*)GetParent()->FindChildObject((*itr).name_);
-		if (obj != nullptr) {
-			if (obj->GetLv() >= (*itr).MaxLevel_) {
-				itr = EquipmentList_.erase(itr);
-				continue;
+		if ((*itr).num_ <= WEAPONTYPE::END) {
+			WeaponObject* obj = (WeaponObject*)GetParent()->FindChildObject((*itr).name_);
+			if (obj != nullptr) {
+				if (obj->GetLv() >= (*itr).MaxLevel_) {
+					itr = EquipmentList_.erase(itr);
+					continue;
+				}
+			}
+		}
+		else {
+			ArmorObject* armor = (ArmorObject*)GetParent()->FindChildObject((*itr).name_);
+			if (armor != nullptr) {
+				if (armor->GetNumLevel() >= (*itr).MaxLevel_) {
+					itr = EquipmentList_.erase(itr);
+					continue;
+				}
 			}
 		}
 		itr++;
@@ -264,11 +280,6 @@ void HUD::LevelInitialize()
 	HandleCheck(hLevelCursorImage_);
 
 
-	for (int i = 0; i < WEAPONTYPE::END; i++) {
-		hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" + LEVEL::WEAPONNAME[i] + "_Icon.png");
-		HandleCheck(hLevelIconImage_[i]);
-	}
-
 	CsvReader csv, effect, armors;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
 		return;
@@ -299,6 +310,12 @@ void HUD::LevelInitialize()
 		for (int j = EquipmentList_[WEAPONTYPE::END + i - 1].MaxLevel_ - 1; j >= 0; j--) {
 			EquipmentList_[WEAPONTYPE::END + i - 1].instruction_.push_back(armors.GetString(4 + j, i));
 		}
+	}
+
+	//アイコン画像のロード
+	for (int i = 0; i < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR; i++) {
+		hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" + EquipmentList_[i].name_ + "_Icon.png");
+		HandleCheck(hLevelIconImage_[i]);
 	}
 
 
@@ -387,7 +404,9 @@ void HUD::LevelDraw()
 			//武器の名前
 			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].displayName_.c_str(), { 780,40.0f + (i * (170 + 5)) }, data);
 
+
 			//武器のレベル
+			//武器のリストになかったら装備のリストに
 			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
 				if (EquipmentList_[(*std::next(itr, i))].name_ == player->MyWeaponList_[j]->GetObjectName()) {
 					level = "Level:" + std::to_string(player->MyWeaponList_[j]->GetLv() + 1);
@@ -396,9 +415,20 @@ void HUD::LevelDraw()
 				}
 			}
 
+			for (int j = 0; j < player->MyArmorList_.size(); j++) {
+				if (EquipmentList_[(*std::next(itr, i))].name_ == player->MyArmorList_[j]->GetObjectName()) {
+					level = "Level:" + std::to_string(player->MyArmorList_[j]->GetNumLevel() + 1);
+					Lv = player->MyArmorList_[j]->GetNumLevel();
+					break;
+				}
+			}
+			std::string temp = EquipmentList_[(*std::next(itr, i))].name_;
+
 			//アイコンを表示
-			for (int j = 0; j < WEAPONTYPE::END; j++) {
-				if (LEVEL::WEAPONNAME[j] == EquipmentList_[(*std::next(itr, i))].name_) {
+			for (int j = 0; j < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR; j++) {
+				//出現できる武器のリストは短くなっていてそのままだと、画像のハンドルのインデックスとは合わなくなっているので
+				//装備の名前と装備リストの名前を比較して同じならその番号が使える
+				if (LEVEL::EQUIPMENTSNAMELIST[j] == EquipmentList_[(*std::next(itr, i))].name_) {
 					//----------------------------------------------------------------------------------------------
 					Transform IconTrans;
 					IconTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::LEVELICON].position_.x,HUDTransforms_[TRANSFORMTYPE::LEVELICON].position_.y - (i * LEVEL::FRAMEIMAGEBUFFER) / (screenHeight / 2.0f),0 };
@@ -510,17 +540,17 @@ void HUD::ObtainWeapon(int _num)
 		if (armor == nullptr) {
 			armor = Instantiate<Armor>(GetParent());
 			//ここあとで書いて
-			//player->MyWeaponList_.push_back(armor);
+			player->MyArmorList_.push_back(armor);
 		}
 
 		armor->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
 						  break;
-	case WEAPONTYPE::CRITICALEYE: {
+	case WEAPONTYPE::FREEMIND: {
 		FreeMind* critical = GetParent()->FindGameObject<FreeMind>();
 		if (critical == nullptr) {
 			critical = Instantiate<FreeMind>(GetParent());
-			//player->MyWeaponList_.push_back(critical);
+			player->MyArmorList_.push_back(critical);
 		}
 
 		critical->LevelUp(EquipmentList_[_num].instruction_.back());
@@ -530,7 +560,7 @@ void HUD::ObtainWeapon(int _num)
 		WideAmulet* wide = GetParent()->FindGameObject<WideAmulet>();
 		if (wide == nullptr) {
 			wide = Instantiate<WideAmulet>(GetParent());
-			//player->MyWeaponList_.push_back(wide);
+			player->MyArmorList_.push_back(wide);
 		}
 		wide->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
@@ -540,16 +570,16 @@ void HUD::ObtainWeapon(int _num)
 		KnowledgeBook* knowledge = GetParent()->FindGameObject<KnowledgeBook>();
 		if (knowledge == nullptr) {
 			knowledge = Instantiate<KnowledgeBook>(GetParent());
-			//player->MyWeaponList_.push_back(knowledge);
+			player->MyArmorList_.push_back(knowledge);
 		}
 		knowledge->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
-							break;
+	break;
 	case WEAPONTYPE::HEARTCREAM: {
 		HeartCream* heart = GetParent()->FindGameObject<HeartCream>();
 		if (heart == nullptr) {
 			heart = Instantiate<HeartCream>(GetParent());
-			//player->MyWeaponList_.push_back(heart);
+			player->MyArmorList_.push_back(heart);
 		}
 		heart->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
@@ -558,7 +588,7 @@ void HUD::ObtainWeapon(int _num)
 		WonderCookie* wonder = GetParent()->FindGameObject<WonderCookie>();
 		if (wonder == nullptr) {
 			wonder = Instantiate<WonderCookie>(GetParent());
-			//player->MyWeaponList_.push_back(wonder);
+			player->MyArmorList_.push_back(wonder);
 		}
 		wonder->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
@@ -567,7 +597,7 @@ void HUD::ObtainWeapon(int _num)
 		MuscleSuit* muscle = GetParent()->FindGameObject<MuscleSuit>();
 		if (muscle == nullptr) {
 			muscle = Instantiate<MuscleSuit>(GetParent());
-			//player->MyWeaponList_.push_back(muscle);
+			player->MyArmorList_.push_back(muscle);
 		}
 		muscle->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
@@ -576,7 +606,7 @@ void HUD::ObtainWeapon(int _num)
 		EnergyDrink* energy = GetParent()->FindGameObject<EnergyDrink>();
 		if (energy == nullptr) {
 			energy = Instantiate<EnergyDrink>(GetParent());
-			//player->MyWeaponList_.push_back(energy);
+			player->MyArmorList_.push_back(energy);
 		}
 		energy->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
@@ -585,7 +615,7 @@ void HUD::ObtainWeapon(int _num)
 		MagicHand* magic = GetParent()->FindGameObject<MagicHand>();
 		if (magic == nullptr) {
 			magic = Instantiate<MagicHand>(GetParent());
-			//player->MyWeaponList_.push_back(magic);
+			player->MyArmorList_.push_back(magic);
 		}
 		magic->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
@@ -594,7 +624,7 @@ void HUD::ObtainWeapon(int _num)
 		Monocle* mono = GetParent()->FindGameObject<Monocle>();
 		if (mono == nullptr) {
 			mono = Instantiate<Monocle>(GetParent());
-			//player->MyWeaponList_.push_back(mono);
+			player->MyArmorList_.push_back(mono);
 		}
 		mono->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
@@ -603,7 +633,7 @@ void HUD::ObtainWeapon(int _num)
 		Cushion* cushion = GetParent()->FindGameObject<Cushion>();
 		if (cushion == nullptr) {
 			cushion = Instantiate<Cushion>(GetParent());
-			//player->MyWeaponList_.push_back(cushion);
+			player->MyArmorList_.push_back(cushion);
 		}
 		cushion->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
@@ -612,7 +642,7 @@ void HUD::ObtainWeapon(int _num)
 		LifeFragment* life = GetParent()->FindGameObject<LifeFragment>();
 		if (life == nullptr) {
 			life = Instantiate<LifeFragment>(GetParent());
-			//player->MyWeaponList_.push_back(life);
+			player->MyArmorList_.push_back(life);
 		}
 		life->LevelUp(EquipmentList_[_num].instruction_.back());
 	}

@@ -1,6 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 #include "WeaponObject.h"
+#include "ArmorObject.h"
 #include <vector>
 #include <map>
 
@@ -48,6 +49,7 @@ private:
 
 public:
 	std::vector<WeaponObject*> MyWeaponList_;
+	std::vector<ArmorObject*> MyArmorList_;
 
 	//ナイフ用
 	XMFLOAT3 LookPos_;

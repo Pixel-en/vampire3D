@@ -24,6 +24,8 @@ void MagicHand::Release()
 
 void MagicHand::LevelUp(std::string str)
 {
+	numLevel_++;
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 	if (player == nullptr)
 		return;
