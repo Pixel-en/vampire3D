@@ -280,12 +280,14 @@ void HUD::LevelInitialize()
 	HandleCheck(hLevelCursorImage_);
 
 
-	CsvReader csv, effect, armors;
+	CsvReader csv, effect, armors,Atext;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
 		return;
 	if (!effect.Load("Assets\\CSV\\WeaponLevelText.csv"))
 		return;
 	if (!armors.Load("Assets\\CSV\\ArmorsList.csv"))
+		return;
+	if (!Atext.Load("Assets\\CSV\\ArmorsLevelText.csv"))
 		return;
 
 	//‘•”õƒŠƒXƒg‚É“ü‚ê‚é
@@ -309,6 +311,9 @@ void HUD::LevelInitialize()
 		//pop_back‚ª‚Å‚«‚é‚Ì‚Å‹t‚©‚ç“ü‚ê‚Ä‚Ý‚é
 		for (int j = EquipmentList_[WEAPONTYPE::END + i - 1].MaxLevel_ - 1; j >= 0; j--) {
 			EquipmentList_[WEAPONTYPE::END + i - 1].instruction_.push_back(armors.GetString(4 + j, i));
+		}
+		for (int j = 2; j < Atext.GetWidth(); j++) {
+			EquipmentList_[WEAPONTYPE::END + i - 1].EffectText_[j - 2] = Atext.GetString(j, i);
 		}
 	}
 
@@ -399,7 +404,7 @@ void HUD::LevelDraw()
 			FontData data;
 			data.font = TextFont::GetFontName(FontList::Makinas);
 			data.Color = D2D1::ColorF(255, 255, 255);
-			data.fontSize = 30;
+			data.fontSize = 27;
 
 			//•Ší‚Ì–¼‘O
 			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].displayName_.c_str(), { 780,40.0f + (i * (170 + 5)) }, data);

@@ -205,12 +205,12 @@ void Player::StatusUpdate()
 	status_.strength_ = Basestatus_.strength_ * Booststatus_.strength_;
 	status_.critical_ = Basestatus_.critical_ * Booststatus_.critical_;
 	status_.collectionRange_ = Basestatus_.collectionRange_ * Booststatus_.collectionRange_;
-	status_.haste_ = Basestatus_.haste_ * Booststatus_.haste_;
+	status_.haste_ = Basestatus_.haste_ + Booststatus_.haste_;		//‰ÁŽZ
 	status_.criticalBoost_ = Basestatus_.criticalBoost_ * Booststatus_.criticalBoost_;
 	status_.area_ = Basestatus_.area_ * Booststatus_.area_;
 	status_.resist_ = Basestatus_.resist_ * Booststatus_.resist_;
 	status_.ExpBoost_ = Basestatus_.ExpBoost_ * Booststatus_.ExpBoost_;
-	status_.maxHp_ = Basestatus_.maxHp_ + Booststatus_.maxHp_;
+	status_.maxHp_ = Basestatus_.maxHp_ + Booststatus_.maxHp_;		//‰ÁŽZ
 }
 
 bool Player::isMove()
