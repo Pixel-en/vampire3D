@@ -320,6 +320,14 @@ void HUD::LevelInitialize()
 	hLevelCursorImage_ = Image::Load("Assets\\Image\\UI\\LevelUpCursor.png");
 	HandleCheck(hLevelCursorImage_);
 
+	enum CSVDATA {
+		NAME,
+		DISPLAYNAME,
+		NUM,
+		MAXLEVEL,
+		INSTRUCTION1,
+		EFFECT1,
+	};
 
 	CsvReader csv, effect, armors, Atext;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
@@ -334,7 +342,7 @@ void HUD::LevelInitialize()
 	//装備リストに入れる
 	for (int i = 1; i < csv.GetHeight(); i++) {
 		//装備の名前、装備の番号、装備の最大レベルを取得する
-		EquipmentList_.push_back({ csv.GetString(0, i),csv.GetString(1,i),(int)csv.GetValue(2, i), (int)csv.GetValue(3, i) });
+		EquipmentList_.push_back({ csv.GetString(NAME, i),csv.GetString(DISPLAYNAME,i),(int)csv.GetValue(NUM, i), (int)csv.GetValue(MAXLEVEL, i) });
 		//レベルアップ内容などを取得する
 		//pop_backができるので逆から入れてみる		レベル2スタートなので-1，配列とCSVは１ずれるので-1
 		for (int j = EquipmentList_[i - 1].MaxLevel_ - 1 - 1; j >= 0; j--) {
@@ -347,7 +355,7 @@ void HUD::LevelInitialize()
 
 	for (int i = 1; i < armors.GetHeight(); i++) {
 		//装備の名前、装備の番号、装備の最大レベルを取得する
-		EquipmentList_.push_back({ armors.GetString(0, i),armors.GetString(1,i),(int)armors.GetValue(2, i), (int)armors.GetValue(3, i) });
+		EquipmentList_.push_back({ armors.GetString(NAME, i),armors.GetString(DISPLAYNAME,i),(int)armors.GetValue(NUM, i), (int)armors.GetValue(MAXLEVEL, i) });
 		//レベルアップ内容などを取得する
 		//pop_backができるので逆から入れてみる
 		for (int j = EquipmentList_[WEAPONTYPE::END + i - 1].MaxLevel_ - 1; j >= 0; j--) {
@@ -359,11 +367,27 @@ void HUD::LevelInitialize()
 	}
 
 	//ここでインスタンスを読んでいるわけではないのであると仮定して作る
+	CsvReader SUp;
+	if (!SUp.Load("Assets\\CSV\\StatusList.csv"))
+		return;
 
+	//ステータスアップの装備を追加
+	for (int i = 1; i < SUp.GetHeight(); i++) {
+		StatusUpList_.push_back({ SUp.GetString(NAME, i),SUp.GetString(DISPLAYNAME,i),(int)SUp.GetValue(NUM, i), (int)SUp.GetValue(MAXLEVEL, i) });
+		StatusUpList_[i - 1].instruction_.push_back(SUp.GetString(INSTRUCTION1, i));	//レベルアップ内容は一つだけ
+		StatusUpList_[i - 1].EffectText_[0] = SUp.GetString(EFFECT1, i);	//効果説明は一つだけ
+	}
 
 	//アイコン画像のロード
-	for (int i = 0; i < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR; i++) {
-		hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" + EquipmentList_[i].name_ + "_Icon.png");
+	for (int i = 0; i < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + StatusUpList_.size(); i++) {
+		//装備のリストの数だけアイコンをロード
+		if (i < EquipmentList_.size()) {
+			hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" + EquipmentList_[i].name_ + "_Icon.png");
+		}
+		//ステータスアップの数だけアイコンをロード
+		else {
+			hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" + StatusUpList_[i - EquipmentList_.size()].name_ + "_Icon.png");
+		}
 		HandleCheck(hLevelIconImage_[i]);
 	}
 
@@ -471,7 +495,15 @@ void HUD::LevelDraw()
 					break;
 				}
 			}
-			std::string temp = EquipmentList_[(*std::next(itr, i))].name_;
+
+			//それでもだめならステータスのリストに
+			for (int j = 0; j < StatusUpList_.size(); j++) {
+				if (EquipmentList_[(*std::next(itr, i))].name_ == StatusUpList_[j].name_) {
+					level = "";
+					Lv = 0;	//ステータスアップはレベルがないので0
+					break;
+				}
+			}
 
 			//アイコンを表示
 			for (int j = 0; j < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR; j++) {
@@ -486,8 +518,10 @@ void HUD::LevelDraw()
 				}
 			}
 
+			//説明
 			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 780,105.0f + (i * 170) }, { 1250,115.0f + (i * 170) }, data);
 
+			//レベル
 			TextFont::Draw(level.c_str(), { 1100,40.0f + (i * (170 + 5)) }, data);
 
 		}

@@ -96,6 +96,7 @@ private:
 	};
 
 	std::vector<EquipmentLevel> EquipmentList_;	//出現していないorレベルが最大ではない武器のリスト
+	std::vector<EquipmentLevel> StatusUpList_;	//ステータスアップのリスト
 	std::set<int> RollListNum_;				//ロールされた武器
 	int levelCursor_;
 	bool StickTriggerY_;					//前フレームでスティックを倒しているか
