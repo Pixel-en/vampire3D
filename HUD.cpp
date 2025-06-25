@@ -44,6 +44,7 @@ namespace {
 			"Cushion","LifeFragment"
 		};
 		const float FRAMEIMAGEBUFFER{ 175 };
+		const int EQUIPMENTSMAX{ 1 };
 	}
 }
 
@@ -211,6 +212,37 @@ void HUD::LevelUP()
 
 	Pause_ = true;
 
+	Player* player = GetParent()->FindGameObject<Player>();
+	
+	//装備数が最大になったら
+	if (player->MyWeaponList_.size() >= LEVEL::EQUIPMENTSMAX) {
+		for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
+			//武器
+			if ((*itr).num_ <= WEAPONTYPE::END) {
+				WeaponObject* obj = (WeaponObject*)GetParent()->FindChildObject((*itr).name_);
+				if (obj == nullptr) {
+					itr = EquipmentList_.erase(itr);
+					continue;
+				}
+			}
+				itr++;
+		}
+	}
+
+	if (player->MyArmorList_.size() >= LEVEL::EQUIPMENTSMAX) {
+		for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
+			//防具
+			if ((*itr).num_ > WEAPONTYPE::END && (*itr).num_ < WEAPONTYPE::AEND) {
+				ArmorObject* armor = (ArmorObject*)GetParent()->FindChildObject((*itr).name_);
+				if (armor == nullptr) {
+					itr = EquipmentList_.erase(itr);
+					continue;
+				}
+			}
+				itr++;
+		}
+	}
+
 	//リストの整理
 	//レベルが最大のものがあればリストから除外
 	for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
@@ -254,6 +286,15 @@ void HUD::WeaponRoll()
 		}
 	}
 	//ないときはステータスアップ系を追加する
+	else {
+		RollListNum_.clear();
+		for (int i = 0; i < EquipmentList_.size(); i++) {
+			RollListNum_.insert(i);
+		}
+		for (int i = EquipmentList_.size(); i < LEVEL::WEAPONCHOICEVAL; i++) {
+			//RollListNum_.insert(i);
+		}
+	}
 
 }
 
@@ -280,7 +321,7 @@ void HUD::LevelInitialize()
 	HandleCheck(hLevelCursorImage_);
 
 
-	CsvReader csv, effect, armors,Atext;
+	CsvReader csv, effect, armors, Atext;
 	if (!csv.Load("Assets\\CSV\\WeaponList.csv"))
 		return;
 	if (!effect.Load("Assets\\CSV\\WeaponLevelText.csv"))
@@ -316,6 +357,9 @@ void HUD::LevelInitialize()
 			EquipmentList_[WEAPONTYPE::END + i - 1].EffectText_[j - 2] = Atext.GetString(j, i);
 		}
 	}
+
+	//ここでインスタンスを読んでいるわけではないのであると仮定して作る
+
 
 	//アイコン画像のロード
 	for (int i = 0; i < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR; i++) {
@@ -560,7 +604,7 @@ void HUD::ObtainWeapon(int _num)
 
 		critical->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
-								break;
+							 break;
 	case WEAPONTYPE::WIDEAMULET: {
 		WideAmulet* wide = GetParent()->FindGameObject<WideAmulet>();
 		if (wide == nullptr) {

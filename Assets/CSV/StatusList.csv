@@ -1,0 +1,7 @@
+ステータス,表示名,番号,最大レベル,レベル1,説明
+MAXHP,最大HP,201,5,,最大HPが％アップ
+SPEED,SPD,202,5,,SPDが％アップ
+STRENGTH,STR,203,5,,STRが％アップ
+CRITICAL,CRT,204,5,,CTRが％アップ
+COLLECTIONRANGE,回収範囲,205,5,,回収範囲が％アップ
+HASTE,ヘイスト,206,5,,ヘイストが％アップ
