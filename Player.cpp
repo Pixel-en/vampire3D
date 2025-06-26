@@ -175,6 +175,8 @@ void Player::PlayerStatusLoad()
 	Booststatus_.ExpBoost_ = 1;
 	Booststatus_.maxHp_ = 0;
 
+	status_.hp_ = Basestatus_.hp_ * Booststatus_.hp_;
+
 	StatusUpdate();
 }
 
@@ -205,7 +207,7 @@ void Player::HealingHp(int _hp)
 void Player::StatusUpdate()
 {
 	//ステータスの更新
-	status_.hp_ = Basestatus_.hp_ * Booststatus_.hp_;
+	//status_.hp_ = Basestatus_.hp_ * Booststatus_.hp_;
 	status_.speed_ = Basestatus_.speed_ * Booststatus_.speed_;
 	status_.strength_ = Basestatus_.strength_ * Booststatus_.strength_;
 	status_.critical_ = Basestatus_.critical_ * Booststatus_.critical_;

@@ -69,6 +69,7 @@ void LifeFragment::LevelUp(std::string str)
 		{
 		case HP:
 			player->AddStatusMaxHp(val - BeHP_);
+			player->StatusUpdate();	//一度ステータスの更新をすることで最大体力を増やす
 			player->HealingHp(val - BeHP_); //HPも回復する
 			BeHP_ = val;
 			break;

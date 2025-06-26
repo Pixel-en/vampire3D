@@ -272,7 +272,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\CSV\WeaponInitStatus.csv" />
+    <None Include="Assets\CSV\UI.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

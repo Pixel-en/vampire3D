@@ -180,9 +180,6 @@
     <ClCompile Include="Armor.cpp">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
-    <ClCompile Include="CriticalEye.cpp">
-      <Filter>PlayScene\Equipment\Armor</Filter>
-    </ClCompile>
     <ClCompile Include="WideAmulet.cpp">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
@@ -211,6 +208,9 @@
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
     <ClCompile Include="LifeFragment.cpp">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClCompile>
+    <ClCompile Include="FreeMind.cpp">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
   </ItemGroup>
@@ -358,9 +358,6 @@
     <ClInclude Include="Armor.h">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
-    <ClInclude Include="CriticalEye.h">
-      <Filter>PlayScene\Equipment\Armor</Filter>
-    </ClInclude>
     <ClInclude Include="WideAmulet.h">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
@@ -391,6 +388,9 @@
     <ClInclude Include="LifeFragment.h">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
+    <ClInclude Include="FreeMind.h">
+      <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\Shader\Simple2D.hlsl">
@@ -407,6 +407,6 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\CSV\WeaponInitStatus.csv" />
+    <None Include="Assets\CSV\UI.csv" />
   </ItemGroup>
 </Project>

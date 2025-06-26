@@ -3,6 +3,7 @@
 #include "Engine/Input.h"
 #include "Engine/CsvReader.h"
 #include "Engine/TextFont.h"
+#include <array>
 
 #include "Player.h"
 #include "EnemySpawn.h"
@@ -36,8 +37,10 @@ namespace {
 		const float LEVELGAUGEBARXPOS{ -1.0f };
 		const int WEAPONCHOICEVAL{ 4 };
 
+		const int EQUIPMENTLISTNUM = WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + WEAPONTYPE::SEND - WEAPONTYPE::MAXHP;
+
 		//装備の名前リスト
-		const std::string EQUIPMENTSNAMELIST[WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + WEAPONTYPE::SEND - WEAPONTYPE::MAXHP] = {
+		const std::array<std::string,  EQUIPMENTLISTNUM>EQUIPMENTSNAMELIST = {
 			"Knife","PoisonThrow","SpikeOrb","Missile","Laser","Bomb",
 			"Armor","FreeMind","WideAmulet","KnowledgeBook","HeartCream",
 			"WonderCookie","MuscleSuit","EnergyDrink","MagicHand","Monocle",
@@ -46,8 +49,11 @@ namespace {
 		const float FRAMEIMAGEBUFFER{ 175 };
 		const int EQUIPMENTSMAX{ 6 };
 	}
+	namespace EQUIPMENTS {
+		const float ICONBUFFERWIDTH{ 0.065f };
+		const float ICONBUFFERHEIGHT{ 0.12f };
+	}
 }
-
 
 void HUD::UIPosRead()
 {
@@ -94,6 +100,7 @@ void HUD::Initialize()
 	RadarInitialize();
 	LevelInitialize();
 	HPInitialize();
+	EquipmentInitialize();
 	UIPosRead();
 }
 
@@ -116,6 +123,7 @@ void HUD::Draw()
 	RadarDraw();
 	LevelDraw();
 	HPDraw();
+	EquipmentDraw();
 }
 
 void HUD::Release()
@@ -372,7 +380,7 @@ void HUD::LevelInitialize()
 	}
 
 	//アイコン画像のロード
-	for (int i = 0; i < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + WEAPONTYPE::SEND - WEAPONTYPE::MAXHP; i++) {
+	for (int i = 0; i < LEVEL::EQUIPMENTLISTNUM; i++) {
 		//装備のリストの数だけアイコンをロード
 		if (i < EquipmentList_.size()) {
 			hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" + EquipmentList_[i].name_ + "_Icon.png");
@@ -436,11 +444,7 @@ void HUD::LevelUpdate()
 
 void HUD::LevelDraw()
 {
-	Image::SetTransform(hLevelGaugeFrame_, HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEFRAME]);
-	Image::Draw(hLevelGaugeFrame_);
 
-	Image::SetTransform(hLevelGaugeBar_, HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEBAR]);
-	Image::Draw(hLevelGaugeBar_);
 
 	if (Pause_) {
 		Image::SetTransform(hLevelBack_, HUDTransforms_[TRANSFORMTYPE::LEVELBACK]);
@@ -499,7 +503,7 @@ void HUD::LevelDraw()
 			}
 
 			//アイコンを表示
-			for (int j = 0; j < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + WEAPONTYPE::SEND - WEAPONTYPE::MAXHP; j++) {
+			for (int j = 0; j < LEVEL::EQUIPMENTSNAMELIST.size(); j++) {
 				//出現できる武器のリストは短くなっていてそのままだと、画像のハンドルのインデックスとは合わなくなっているので
 				//装備の名前と装備リストの名前を比較して同じならその番号が使える
 				if (LEVEL::EQUIPMENTSNAMELIST[j] == EquipmentList_[(*std::next(itr, i))].name_) {
@@ -519,6 +523,13 @@ void HUD::LevelDraw()
 
 		}
 	}
+
+	//レベルゲージを表示
+	Image::SetTransform(hLevelGaugeFrame_, HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEFRAME]);
+	Image::Draw(hLevelGaugeFrame_);
+
+	Image::SetTransform(hLevelGaugeBar_, HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEBAR]);
+	Image::Draw(hLevelGaugeBar_);
 }
 
 void HUD::ObtainWeapon(int _num)
@@ -727,7 +738,9 @@ void HUD::ObtainWeapon(int _num)
 		//HPを増やす
 		float temp = std::stof(EquipmentList_[_num].instruction_.back());
 		player->AddStatusMaxHp(player->GetStatus().maxHp_ * temp);
-		player->HealingHp(player->GetStatus().maxHp_ * temp);	//HPも回復する
+		float uphp = player->GetStatus().maxHp_ * temp;
+		player->StatusUpdate();	//一度ステータスの更新をすることで最大体力を増やす
+		player->HealingHp(uphp);	//HPも回復する
 		needpop = false;	//ポップしない
 	}
 						  break;
@@ -845,4 +858,52 @@ void HUD::HPDraw()
 	data.fontSize = 20;
 	//HPの大きさを変える
 	TextFont::Draw(std::to_string(player->GetStatus().hp_) + "/" + std::to_string(player->GetStatus().maxHp_), { 130,23 }, data);
+}
+
+
+void HUD::EquipmentInitialize()
+{
+	hEquiIcon_ = Image::Load("Assets\\Image\\UI\\Hammer.png");
+	HandleCheck(hEquiIcon_);
+	hEquiBack_ = Image::Load("Assets\\Image\\UI\\EquipmentBack.png");
+	HandleCheck(hEquiBack_);
+}
+
+void HUD::EquipmentDraw()
+{
+
+	Image::SetTransform(hEquiIcon_, HUDTransforms_[TRANSFORMTYPE::EQUIPICON]);
+	Image::Draw(hEquiIcon_);
+	Image::SetTransform(hEquiBack_, HUDTransforms_[TRANSFORMTYPE::EQUIPBACK]);
+	Image::Draw(hEquiBack_);
+
+	//アイコンを表示
+	Player* player = GetRootJob()->FindGameObject<Player>();
+
+	//武器の取得したやつ表示
+	for (int i = 0;i < player->MyWeaponList_.size();i++) {
+		//同じように名前が一緒なら
+		for (int j = 0;j < LEVEL::EQUIPMENTSNAMELIST.size();j++) {
+			if (player->MyWeaponList_[i]->GetObjectName() == LEVEL::EQUIPMENTSNAMELIST[j]) {
+				Transform IconTrans = HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS];
+				IconTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS].position_.x + (i * EQUIPMENTS::ICONBUFFERWIDTH),HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS].position_.y,0 };
+				Image::SetTransform(hLevelIconImage_[j], IconTrans);
+				Image::Draw(hLevelIconImage_[j]);
+			}
+		}
+	}
+
+	//防具の取得したやつ表示
+	for (int i = 0;i < player->MyArmorList_.size();i++) {
+		//同じように名前が一緒なら
+		for (int j = 0;j < LEVEL::EQUIPMENTSNAMELIST.size();j++) {
+			if (player->MyArmorList_[i]->GetObjectName() == LEVEL::EQUIPMENTSNAMELIST[j]) {
+				Transform IconTrans = HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS];
+				IconTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS].position_.x + (i * EQUIPMENTS::ICONBUFFERWIDTH),HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS].position_.y - EQUIPMENTS::ICONBUFFERHEIGHT,0 };
+				Image::SetTransform(hLevelIconImage_[j], IconTrans);
+				Image::Draw(hLevelIconImage_[j]);
+			}
+		}
+	}
+
 }

@@ -64,6 +64,11 @@ private:
 		HPGAUGE,
 		HPFRAME,
 		HPICON,
+		//‘•”õ
+		EQUIPICON,
+		EQUIPBACK,
+		EQUIPMENTS,
+
 
 		MAX
 	};
@@ -131,6 +136,13 @@ private:
 	void HPInitialize();
 	void HPUpdate();
 	void HPDraw();
+
+	/*--------‘•”õ---------*/
+
+	int hEquiIcon_;
+	int hEquiBack_;
+	void EquipmentInitialize();
+	void EquipmentDraw();
 
 
 	void UIPosRead();

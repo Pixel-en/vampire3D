@@ -24,6 +24,8 @@ void FreeMind::Release()
 
 void FreeMind::LevelUp(std::string str)
 {
+	numLevel_++;
+
 	Player* player = GetRootJob()->FindGameObject<Player>();
 	if (player == nullptr)
 		return;
