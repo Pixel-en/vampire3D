@@ -6,12 +6,19 @@
 //敵を出現させる
 class EnemySpawn :public GameObject
 {
+	Enemy::Status BoostStatus_;
+
+
+	int EnemyNum_;	//敵の数
+
 	//敵の識別番号
 	unsigned int number_;
 	//敵のスポーンタイマー
 	float timer;
 	//敵のリスト
 	std::vector<Enemy*> EnemyList_;
+
+	void SetEnemyData(Enemy* enemy);
 
 public:
 	EnemySpawn(GameObject* parent);
@@ -35,5 +42,10 @@ public:
 	/// </summary>
 	/// <returns>敵のリストを返す</returns>
 	std::vector<Enemy*> GetEnemyList();
+
+	//敵の数を増やす
+	void AddEnemyNum();
+	void AddEnemyNum(int num);
+
 };
 

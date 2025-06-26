@@ -443,7 +443,10 @@ void Player::AcquisitionEXP(int _exp)
 
 		HUD* hud = GetRootJob()->FindGameObject<HUD>();
 		NullCheck(hud);
+		//レベルアップする
 		hud->LevelUP();
+		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
+		ep->AddEnemyNum();	//敵の数を増やす
 
 		//次のレベルに必要な経験値を計算
 		if (status_.level_ <= 20)

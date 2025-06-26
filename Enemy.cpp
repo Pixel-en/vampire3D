@@ -54,14 +54,14 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 	//CSVからステータスの読み込み
 	CsvReader csv;
 	csv.Load("Assets\\CSV\\EnemyStatus.csv");
-	for (int i = 1;i < csv.GetHeight();i++) {
+	for (int i = 1; i < csv.GetHeight(); i++) {
 		if (csv.GetString(0, i) == objectName_ && csv.GetString(1, i) == Level[_level]) {
-			status_.power_ = csv.GetValue(2, i);
-			status_.speed_ = csv.GetValue(3, i);
-			status_.hp_ = csv.GetValue(4, i);
-			status_.maxhp_ = status_.hp_;
-			status_.exp_ = csv.GetValue(5, i);
-			status_.invincibletime_ = csv.GetValue(6, i);
+			BaseStatus_.power_ = csv.GetValue(2, i);
+			BaseStatus_.speed_ = csv.GetValue(3, i);
+			BaseStatus_.hp_ = csv.GetValue(4, i);
+			BaseStatus_.maxhp_ = status_.hp_;
+			BaseStatus_.exp_ = csv.GetValue(5, i);
+			BaseStatus_.invincibletime_ = csv.GetValue(6, i);
 		}
 	}
 
@@ -69,9 +69,9 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 	string hp[HP::HMAX] = { "Full", "Half", "Mini" };
 	string anim[ANIMATION::AMAX] = { "Move", "Hit", "Death" };
 	string lod[LOD::LMAX] = { "High", "Middle", "Low" };
-	for (int i = 0;i < HP::HMAX;i++) {
-		for (int j = 0;j < LOD::LMAX;j++) {
-			for (int k = 0;k < ANIMATION::AMAX;i + k++) {
+	for (int i = 0; i < HP::HMAX; i++) {
+		for (int j = 0; j < LOD::LMAX; j++) {
+			for (int k = 0; k < ANIMATION::AMAX; i + k++) {
 				hModel_[i][j][k] = -1; //初期化
 				hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\" + objectName_ + "-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
 				//hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\EnemyOrigin\\Enemy-" + lod[j] + "-" + anim[k] + ".fbx");
@@ -82,6 +82,18 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 	}
 
 	SetAnimation();
+
+	StatusUpdate();
+
+}
+
+void Enemy::StatusUpdate()
+{
+	//ステータスの更新
+	status_.power_ = BaseStatus_.power_ * BoostStatus_.power_;
+	status_.speed_ = BaseStatus_.speed_ * BoostStatus_.speed_;
+	status_.maxhp_ = BaseStatus_.maxhp_ * BoostStatus_.maxhp_;
+	status_.exp_   = BaseStatus_.exp_   * BoostStatus_.exp_;
 
 }
 
@@ -173,7 +185,6 @@ void Enemy::Move()
 		Debug::Log("あまりにも離れすぎた");
 		KillMe();
 	}
-	Debug::Log(XMVectorGetX(XMVector3Length(epDistance)), true);
 
 
 	//回転のマトリクスを作る
@@ -323,9 +334,8 @@ void Enemy::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator
 		XMVECTOR VecZ = XMVector3Normalize(XMVectorSet(0, 0, player->GetPosition().z - transform_.position_.z, 0));
 
 		transform_.position_ += VecX * status_.speed_ * Time::DeltaTime();
-
 		bool hit = false;
-
+		//壁とｘ軸の当たり判定
 		for (auto TargetItr = list.begin(); TargetItr != list.end(); ++TargetItr) {
 			if ((*MyItr)->IsHit(*TargetItr)) {
 				transform_.position_ = prePos_;
@@ -336,6 +346,7 @@ void Enemy::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator
 			prePos_ = transform_.position_;
 
 		hit = false;
+		//壁とｚ軸の当たり判定
 		transform_.position_ += VecZ * status_.speed_ * Time::DeltaTime();
 		for (auto TargetItr = list.begin(); TargetItr != list.end(); ++TargetItr) {
 			if ((*MyItr)->IsHit(*TargetItr)) {

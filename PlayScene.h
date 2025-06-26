@@ -33,4 +33,6 @@ public:
 
 	//ŠJ•ú
 	void Release() override;
+
+	float GetPlayTimer() { return PlayTimer_; }
 };

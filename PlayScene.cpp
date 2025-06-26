@@ -12,7 +12,7 @@
 #include "PlayLoad.h"
 
 namespace {
-	const float PLAYTIME{ 300.0f };
+	const float PLAYTIME{ 600.0f };
 	const int OBJECTNUM{ 5 }; //ロードするオブジェクトの数
 }
 
@@ -106,7 +106,6 @@ void PlayScene::Update()
 			scene->ChangeScene(SCENE_ID_GAMECLEAR);
 		}
 	}
-	//Debug::Log(PlayTimer_, true);
 }
 
 void PlayScene::Draw()

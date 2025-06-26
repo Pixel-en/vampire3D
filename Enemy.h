@@ -38,18 +38,25 @@ protected:
 	int hModel_[HP::HMAX][LOD::LMAX][ANIMATION::AMAX];
 
 private:
+
+public:
 	struct Status
 	{
-		int power_;	//攻撃力
+		float power_;	//攻撃力
 		float speed_;	//スピード
 		int hp_;		//体力
-		int maxhp_;	//最大体力
-		int exp_;		//経験値
+		float maxhp_;	//最大体力
+		float exp_;		//経験値
 		ELEVEL level_;	//敵のレベル
 		unsigned int number_;	//識別番号
 		float invincibletime_;	//無敵時間
 	};
+
+private:
+
 	Status status_;
+	Status BaseStatus_;
+	Status BoostStatus_;
 
 	//タイマー
 	float InvincibleTimer_;	//無敵時間
@@ -73,9 +80,28 @@ protected:
 
 	//モデルにアニメーションをセットする
 	virtual void SetAnimation() {};
+
+	virtual void StatusUpdate();
+
 	//アニメーションのフレームをゲット
 	virtual int GetDeathAnimFrame() const = 0;
 	virtual int GetHitFrame() const = 0;
+
+public:
+
+	//ステータスのブースト
+	void MulBoostStatePower(float _power) { BoostStatus_.power_ *= _power; };
+	void MulBoostStateSpeed(float _speed) { BoostStatus_.speed_ *= _speed; };
+	void MulBoostStateMaxHp(float _maxhp) { BoostStatus_.maxhp_ *= _maxhp; };
+	void MulBoostStateExp(float _exp) { BoostStatus_.exp_ *= _exp; };
+
+	void MulBoostState(float _power, float _speed, float _maxhp, float _exp)
+	{
+		MulBoostStatePower(_power);
+		MulBoostStateSpeed(_speed);
+		MulBoostStateMaxHp(_maxhp);
+		MulBoostStateExp(_exp);
+	};
 
 public:
 	Enemy(GameObject* parent);
@@ -113,7 +139,7 @@ public:
 	/// <summary>
 	/// 与えたダメージ
 	/// </summary>
-	/// <returns>ダメージ</returns>
+	/// <returns>実数で返されても困るので整数ダメージ</returns>
 	int CausedDamege() {
 		
 		//移動中以外はダメージを与えない
@@ -125,7 +151,7 @@ public:
 	/// <summary>
 	/// 経験値を取得
 	/// </summary>
-	/// <returns>経験値</returns>
+	/// <returns>実数で返されても困るので整数経験値</returns>
 	int GetEnemyEXP() { return status_.exp_; };
 
 	/// <summary>
