@@ -29,7 +29,15 @@ namespace{
 		MONOCLE,
 		CUSHION,
 		LIFEFRAGMENT,
-		AEND
+		AEND,
+
+		MAXHP=201,
+		SPD,
+		STR,
+		CRT,
+		COLLECT,
+		HASTE,
+		SEND
 	};
 }
 
@@ -81,7 +89,7 @@ private:
 	int hLevelCursor_;
 	int hLevelFrameImage_;
 	int hLevelCursorImage_;
-	int hLevelIconImage_[WEAPONTYPE::END+(WEAPONTYPE::AEND-WEAPONTYPE::ARMOR)];	//武器のアイコン
+	int hLevelIconImage_[WEAPONTYPE::END + (WEAPONTYPE::AEND - WEAPONTYPE::ARMOR) + (WEAPONTYPE::SEND - WEAPONTYPE::MAXHP)];	//武器のアイコン
 
 	bool Pause_;						//ポーズ中かどうか
 

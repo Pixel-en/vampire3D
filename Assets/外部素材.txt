@@ -4,3 +4,6 @@ Image
  heart.png
  LoadCircle.png
  Armor_Icon.png	AI
+ MuscleSuit_Icon.png AI
+ Speed_Icon.png AI
+ Strength_Icon.png

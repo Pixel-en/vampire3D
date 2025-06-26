@@ -99,9 +99,14 @@ void Player::Update()
 			Input::SetPadVibration(0, 0);
 	}
 
+#ifdef _DEBUG
 	if (Input::IsKeyDown(DIK_Y)) {
 		AcquisitionEXP(10);
 	}
+	if (Input::IsKeyDown(DIK_T)) {
+		AcquisitionEXP(1000);
+	}
+#endif
 }
 
 void Player::WeaponCSVLoad()

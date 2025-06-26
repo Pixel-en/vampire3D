@@ -69,6 +69,7 @@ void LifeFragment::LevelUp(std::string str)
 		{
 		case HP:
 			player->AddStatusMaxHp(val - BeHP_);
+			player->HealingHp(val - BeHP_); //HP‚à‰ñ•œ‚·‚é
 			BeHP_ = val;
 			break;
 		case RATE:

@@ -37,14 +37,14 @@ namespace {
 		const int WEAPONCHOICEVAL{ 4 };
 
 		//装備の名前リスト
-		const std::string EQUIPMENTSNAMELIST[WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR] = {
+		const std::string EQUIPMENTSNAMELIST[WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + WEAPONTYPE::SEND - WEAPONTYPE::MAXHP] = {
 			"Knife","PoisonThrow","SpikeOrb","Missile","Laser","Bomb",
 			"Armor","FreeMind","WideAmulet","KnowledgeBook","HeartCream",
 			"WonderCookie","MuscleSuit","EnergyDrink","MagicHand","Monocle",
-			"Cushion","LifeFragment"
+			"Cushion","LifeFragment","MaxHp","Speed","Strength","Critical","Collect","Haste"
 		};
 		const float FRAMEIMAGEBUFFER{ 175 };
-		const int EQUIPMENTSMAX{ 1 };
+		const int EQUIPMENTSMAX{ 6 };
 	}
 }
 
@@ -213,7 +213,7 @@ void HUD::LevelUP()
 	Pause_ = true;
 
 	Player* player = GetParent()->FindGameObject<Player>();
-	
+
 	//装備数が最大になったら
 	if (player->MyWeaponList_.size() >= LEVEL::EQUIPMENTSMAX) {
 		for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
@@ -225,7 +225,7 @@ void HUD::LevelUP()
 					continue;
 				}
 			}
-				itr++;
+			itr++;
 		}
 	}
 
@@ -239,7 +239,7 @@ void HUD::LevelUP()
 					continue;
 				}
 			}
-				itr++;
+			itr++;
 		}
 	}
 
@@ -272,28 +272,21 @@ void HUD::LevelUP()
 
 void HUD::WeaponRoll()
 {
-	//選ぶ
-	if (EquipmentList_.size() >= LEVEL::WEAPONCHOICEVAL) {
-		while (true)
-		{
-			RollListNum_.clear();
-			//ランダムに選び重複していないならループから抜ける
-			for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
-				RollListNum_.insert(rand() % EquipmentList_.size());
-			}
-			if (RollListNum_.size() == LEVEL::WEAPONCHOICEVAL)
-				break;
-		}
+	//足りなくなったらステータスアップを追加する
+	if (EquipmentList_.size() < LEVEL::WEAPONCHOICEVAL) {
+		EquipmentList_.insert(EquipmentList_.end(), StatusUpList_.begin(), StatusUpList_.end());
 	}
-	//ないときはステータスアップ系を追加する
-	else {
+
+	//選ぶ
+	while (true)
+	{
 		RollListNum_.clear();
-		for (int i = 0; i < EquipmentList_.size(); i++) {
-			RollListNum_.insert(i);
+		//ランダムに選び重複していないならループから抜ける
+		for (int i = 0; i < LEVEL::WEAPONCHOICEVAL; i++) {
+			RollListNum_.insert(rand() % EquipmentList_.size());
 		}
-		for (int i = EquipmentList_.size(); i < LEVEL::WEAPONCHOICEVAL; i++) {
-			//RollListNum_.insert(i);
-		}
+		if (RollListNum_.size() == LEVEL::WEAPONCHOICEVAL)
+			break;
 	}
 
 }
@@ -379,7 +372,7 @@ void HUD::LevelInitialize()
 	}
 
 	//アイコン画像のロード
-	for (int i = 0; i < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + StatusUpList_.size(); i++) {
+	for (int i = 0; i < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + WEAPONTYPE::SEND - WEAPONTYPE::MAXHP; i++) {
 		//装備のリストの数だけアイコンをロード
 		if (i < EquipmentList_.size()) {
 			hLevelIconImage_[i] = Image::Load("Assets\\Image\\Icon\\" + EquipmentList_[i].name_ + "_Icon.png");
@@ -506,7 +499,7 @@ void HUD::LevelDraw()
 			}
 
 			//アイコンを表示
-			for (int j = 0; j < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR; j++) {
+			for (int j = 0; j < WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + WEAPONTYPE::SEND - WEAPONTYPE::MAXHP; j++) {
 				//出現できる武器のリストは短くなっていてそのままだと、画像のハンドルのインデックスとは合わなくなっているので
 				//装備の名前と装備リストの名前を比較して同じならその番号が使える
 				if (LEVEL::EQUIPMENTSNAMELIST[j] == EquipmentList_[(*std::next(itr, i))].name_) {
@@ -730,6 +723,49 @@ void HUD::ObtainWeapon(int _num)
 		life->LevelUp(EquipmentList_[_num].instruction_.back());
 	}
 								 break;
+	case WEAPONTYPE::MAXHP: {
+		//HPを増やす
+		float temp = std::stof(EquipmentList_[_num].instruction_.back());
+		player->AddStatusMaxHp(player->GetStatus().maxHp_ * temp);
+		player->HealingHp(player->GetStatus().maxHp_ * temp);	//HPも回復する
+		needpop = false;	//ポップしない
+	}
+						  break;
+	case WEAPONTYPE::SPD: {
+		//スピードを上げる
+		float temp = std::stof(EquipmentList_[_num].instruction_.back());
+		player->MultDivBoostStatusSpeed(temp, true);
+		needpop = false;	//ポップしない
+	}
+						break;
+	case WEAPONTYPE::STR: {
+		//攻撃力を上げる
+		float temp = std::stof(EquipmentList_[_num].instruction_.back());
+		player->MultDivBoostStatusStrength(temp, true);
+		needpop = false;	//ポップしない
+	}
+						break;
+	case WEAPONTYPE::CRT: {
+		//クリティカルを上げる
+		float temp = std::stof(EquipmentList_[_num].instruction_.back());
+		player->MultDivBoostStatusCritical(temp, true);
+		needpop = false;	//ポップしない
+	}
+						break;
+	case WEAPONTYPE::COLLECT: {
+		//コレクトを上げる
+		float temp = std::stof(EquipmentList_[_num].instruction_.back());
+		player->MultDivBoostStatusCollectionRange(temp, true);
+		needpop = false;	//ポップしない
+	}
+							break;
+	case WEAPONTYPE::HASTE: {
+		//ヘイストを上げる
+		float temp = std::stof(EquipmentList_[_num].instruction_.back());
+		player->MultDivBoostStatusHaste(temp, true);
+		needpop = false;	//ポップしない
+	}
+						  break;
 	default:
 		break;
 	}
