@@ -90,18 +90,13 @@ protected:
 public:
 
 	//ステータスのブースト
-	void MulBoostStatePower(float _power) { BoostStatus_.power_ *= _power; };
-	void MulBoostStateSpeed(float _speed) { BoostStatus_.speed_ *= _speed; };
-	void MulBoostStateMaxHp(float _maxhp) { BoostStatus_.maxhp_ *= _maxhp; };
-	void MulBoostStateExp(float _exp) { BoostStatus_.exp_ *= _exp; };
+	void SetBoostStatePower(float _power) { BoostStatus_.power_ = _power; };
+	void SetBoostStateSpeed(float _speed) { BoostStatus_.speed_ = _speed; };
+	void SetBoostStateMaxHp(float _maxhp) { BoostStatus_.maxhp_ = _maxhp; };
+	void SetBoostStateExp(float _exp) { BoostStatus_.exp_ = _exp; };
 
-	void MulBoostState(float _power, float _speed, float _maxhp, float _exp)
-	{
-		MulBoostStatePower(_power);
-		MulBoostStateSpeed(_speed);
-		MulBoostStateMaxHp(_maxhp);
-		MulBoostStateExp(_exp);
-	};
+	void MulBoostState(float _power, float _speed, float _maxhp, float _exp);
+
 
 public:
 	Enemy(GameObject* parent);

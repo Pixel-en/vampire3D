@@ -7,9 +7,12 @@
 class EnemySpawn :public GameObject
 {
 	Enemy::Status BoostStatus_;
-
+	ELEVEL BeLevel_;	//前回のレベル
+	int BoostCount_;
 
 	int EnemyNum_;	//敵の数
+
+	float boostTimer_;	//ブーストタイマー
 
 	//敵の識別番号
 	unsigned int number_;

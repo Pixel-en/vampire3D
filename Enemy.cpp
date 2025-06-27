@@ -18,6 +18,7 @@ namespace {
 	const int RAYHEIGHT{ 5 }; //ÉåÉCÇÃçÇÇ≥
 }
 
+
 Enemy::Enemy(GameObject* parent)
 	:GameObject(parent, "")
 {
@@ -83,8 +84,17 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 
 	SetAnimation();
 
-	StatusUpdate();
+}
 
+void Enemy::MulBoostState(float _power, float _speed, float _maxhp, float _exp)
+{
+	SetBoostStatePower(_power);
+	SetBoostStateSpeed(_speed);
+	SetBoostStateMaxHp(_maxhp);
+	SetBoostStateExp(_exp);
+
+
+	StatusUpdate();
 }
 
 void Enemy::StatusUpdate()

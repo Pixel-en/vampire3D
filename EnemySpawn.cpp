@@ -17,6 +17,12 @@ namespace {
 	const int SPAWNHEIGHT{ 4 }; //敵のスポーン高さ
 	const int INITENEMYNUM{ 10 }; //初期スポーン数
 	const int ENEMYLEVEL[ELEVEL::END] = { 120,240,360,480 }; //敵のレベルごとのスポーン数
+	const float BOOSTTIME = { 30.0f }; //ブーストの時間
+
+	const float BOOSTPOWER = { 0.1f }; //レベルごとの攻撃力ブースト
+	const float BOOSTSPEED = { 0.1f }; //レベルごとのスピードブースト
+	const float BOOSTMAXHP = { 0.15f }; //レベルごとの最大体力ブースト
+	const float BOOSTEXP = { 0.4f }; //レベルごとの経験値ブースト
 }
 
 EnemySpawn::EnemySpawn(GameObject* parent)
@@ -31,6 +37,9 @@ EnemySpawn::EnemySpawn(GameObject* parent)
 	BoostStatus_.maxhp_ = 1;	//最大体力
 	BoostStatus_.exp_ = 1;		//経験値
 
+	BeLevel_ = ELEVEL::END;	//前回のレベル
+	BoostCount_ = 0; //ブーストカウント
+	boostTimer_ = BOOSTTIME; //ブーストタイマー
 }
 
 EnemySpawn::~EnemySpawn()
@@ -171,4 +180,23 @@ void EnemySpawn::SetEnemyData(Enemy* enemy)
 
 	enemy->Load(level, number_);
 
+	if (timer >= boostTimer_) {
+		//前回とレベルが変わったらカウントを0に戻す
+		if (level != BeLevel_) {
+			BoostCount_ = 0;
+		}
+		else
+			BoostCount_++;
+
+		boostTimer_ += BOOSTTIME; //ブーストタイマーをリセット
+	}
+
+	BoostStatus_.power_ = 1 + (BoostCount_ * BOOSTPOWER);	//攻撃力
+	BoostStatus_.speed_ = 1 + (BoostCount_ * BOOSTSPEED);	//スピード
+	BoostStatus_.maxhp_ = 1 + (BoostCount_ * BOOSTMAXHP);	//最大体力
+	BoostStatus_.exp_ = 1 + (BoostCount_ * BOOSTEXP);	//経験値
+
+	enemy->MulBoostState(BoostStatus_.power_, BoostStatus_.speed_, BoostStatus_.maxhp_, BoostStatus_.exp_);
+
+	BeLevel_ = level; //前回のレベルを更新
 }

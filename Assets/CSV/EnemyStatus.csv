@@ -1,5 +1,5 @@
 TYPE,LEVEL,攻撃力,スピード,体力,経験値,無敵時間
 Humanoid,Blue,5,5,5,2,0.5
-Humanoid,Yellow,5,5,5,2,0.5
-Humanoid,Green,5,5,5,2,0.5
-Humanoid,Red,5,5,5,2,0.5
+Humanoid,Yellow,7,7,8,5,0.5
+Humanoid,Green,10,10,12,12,0.5
+Humanoid,Red,15,15,18,27,0.5
