@@ -113,6 +113,7 @@ private:
 	std::set<int> RollListNum_;				//ロールされた武器
 	int levelCursor_;
 	bool StickTriggerY_;					//前フレームでスティックを倒しているか
+	bool isChoice_;
 
 	void WeaponRoll();	//武器のロール
 
@@ -171,5 +172,8 @@ public:
 	void LevelUP();
 
 	void SetTimer(float _time) { PlayTime_ = _time; }
+
+	//レベルアップを選択したかどうか
+	bool GetisChoice() { return isChoice_; }
 };
 

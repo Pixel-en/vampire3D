@@ -126,6 +126,7 @@ void PoisonThrow::cPoisonThrow::Initialize()
 
 	SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 0, 0), status_.size_);
 	AddCollider(collision);
+	NonClash();
 }
 
 void PoisonThrow::cPoisonThrow::Draw()

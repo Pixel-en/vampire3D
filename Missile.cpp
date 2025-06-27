@@ -130,6 +130,8 @@ XMFLOAT3 Missile::cMissile::searchEnemy()
 {
 	EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
 	std::vector<Enemy*> List = ep->GetEnemyList();
+	if (List.size() <= 0)
+		return XMFLOAT3(0, 0, 0);
 
 	float distance = fabs(varia_.originPos_ - List[0]->GetPosition());
 	int num = 0;

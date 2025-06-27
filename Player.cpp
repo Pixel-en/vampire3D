@@ -80,10 +80,12 @@ void Player::SuperUpdate()
 {
 	if (PauseON_) {
 		Input::SetPadVibration(0, 0);
-		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
+		HUD* hud = GetParent()->FindGameObject<HUD>();
+		if (hud->GetisChoice()) {
 			GetParent()->SetFlags(0b11101);
 			//GetParent()->SetChildFlags(0b11101);
 			PauseON_ = false;
+			AcquisitionEXP(0);
 		}
 	}
 }

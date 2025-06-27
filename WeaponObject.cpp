@@ -111,6 +111,7 @@ WeaponObject::WeaponObject(GameObject* parent)
 
 	Reset();
 	varia_.allowsMove_ = false;
+	Invisible();
 }
 
 WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
@@ -134,6 +135,7 @@ WeaponObject::WeaponObject(GameObject* parent, const std::string& name)
 
 	Reset();
 	varia_.allowsMove_ = false;
+	Invisible();
 }
 
 WeaponObject::~WeaponObject()

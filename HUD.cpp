@@ -217,6 +217,9 @@ void HUD::RadarDraw()
 //レベルアップした時の処理
 void HUD::LevelUP()
 {
+	if (Pause_) {
+		LevelUpdate();
+	}
 
 	Pause_ = true;
 
@@ -306,6 +309,7 @@ void HUD::LevelInitialize()
 	hLevelGaugeBar_ = -1;
 	hLevelFrameImage_ = -1;
 	hLevelCursorImage_ = -1;
+	isChoice_ = false;
 
 
 	hLevelBack_ = Image::Load("Assets\\Image\\UI\\LevelUpBackGround0.6.png");
@@ -421,6 +425,7 @@ void HUD::LevelSuperUpdate()
 		Image::SetTransform(hLevelCursorImage_, localTrans);
 
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
+			isChoice_ = true;
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
 			ObtainWeapon((*itr));
@@ -430,16 +435,21 @@ void HUD::LevelSuperUpdate()
 
 void HUD::LevelUpdate()
 {
+	isChoice_ = false;
 	Pause_ = false;
-	levelCursor_ = 0;
 
 	Player* player = GetParent()->FindGameObject<Player>();
+	levelCursor_ = 0;
+
 	float current = player->GetStatus().currentExp_;
 	float next = player->GetStatus().nextLvExp_;
 
 	float ratio = current / next;
 
 	HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEBAR].scale_ = { ratio,1,1 };
+
+
+
 }
 
 void HUD::LevelDraw()
