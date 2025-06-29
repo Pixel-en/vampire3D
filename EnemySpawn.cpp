@@ -11,7 +11,7 @@ using std::string;
 namespace {
 	const int SPAWNAREA{ 10 };
 	const int SPAWNAREALIMIT{ 50 };	//スポーンエリアの制限
-	const float SPAWNTIME{ 1.0f };
+	const float SPAWNTIME{ 100.0f };
 	const int SPAWNLIMIT{ 150 }; //スポーンする敵の数制限 200でも動くけど150くらいまでにしたほうがいいかも
 	const int ENEMYTYPE{ 1 }; //敵の種類数
 	const int SPAWNHEIGHT{ 4 }; //敵のスポーン高さ

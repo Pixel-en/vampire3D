@@ -70,7 +70,13 @@ void PlayScene::SuperUpdate()
 			Audio::Play(hLoopSound_);
 			Audio::Stop(hIntroSound_);
 		}
+
+
+		//HUDクラスを常に前に出す
+		int num = GetChildList()->size();
+		SwapChildList("HUD", num);
 	}
+
 }
 
 void PlayScene::Update()
@@ -94,9 +100,8 @@ void PlayScene::Update()
 	}
 	else {
 
-		int num = GetChildList()->size();
-		SwapChildList("HUD", num);
 		PlayTimer_ += Time::DeltaTime();
+
 
 		HUD* hud = FindGameObject<HUD>();
 		hud->SetTimer(PlayTimer_);

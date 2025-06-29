@@ -78,6 +78,7 @@ void Laser::cLaser::Move()
 		sizeboost = player->GetStatus().area_;
 	}
 
+
 	//大きくなるまでのタイマー
 	if (BiggerWaittimer_ < 0.0) {
 		Clash();
@@ -177,6 +178,7 @@ void Laser::cLaser::SetCollider()
 	if (player != nullptr) {
 		sizeboost = player->GetStatus().area_;
 	}
+
 
 	ClearCollider();
 	//コライダーセット
