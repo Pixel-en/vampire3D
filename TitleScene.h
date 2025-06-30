@@ -4,6 +4,9 @@
 class TitleScene : public GameObject
 {
 	int hImage_;
+
+	float timer_;
+	bool isbutton_;
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）

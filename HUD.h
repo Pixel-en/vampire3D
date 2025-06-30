@@ -146,6 +146,13 @@ private:
 	void EquipmentDraw();
 
 
+	/*--------クリア--------*/
+	bool clearFlag_;
+	void ClearInit();
+	void ClearDraw();
+
+
+
 	void UIPosRead();
 public:
 	HUD(GameObject* parent);
@@ -175,5 +182,8 @@ public:
 
 	//レベルアップを選択したかどうか
 	bool GetisChoice() { return isChoice_; }
+
+	void SetClearFlag(bool _flag);
+
 };
 

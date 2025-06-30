@@ -3,7 +3,7 @@
 #include "Engine/Input.h"
 #include "Engine/Image.h"
 
-static int handle = 0;
+const float TIMER{ 1.0f };
 
 TitleScene::TitleScene(GameObject* parent)
 	:GameObject(parent,"TitleScene"),hImage_(-1)
@@ -16,13 +16,23 @@ void TitleScene::Initialize()
 	assert(hImage_ >= 0);
 
 	//handle = TextFont::Load("Assets\\Kenney Pixel.tff");
+	timer_ = TIMER;
+	isbutton_ = false;
 }
 
 void TitleScene::Update()
 {
 	if (Input::IsKeyDown(DIK_RETURN)||Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
-		SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
-		sc->ChangeScene(SCENE_ID_PLAY);
+		isbutton_ = true;
+	}
+	if (isbutton_) {
+		if (timer_ <= 0.0f) {
+			SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
+			sc->ChangeScene(SCENE_ID_PLAY);
+		}
+		else {
+			timer_ -= Time::DeltaTime();
+		}
 	}
 }
 

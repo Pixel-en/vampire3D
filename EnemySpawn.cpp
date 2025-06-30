@@ -19,8 +19,8 @@ namespace {
 	const int ENEMYLEVEL[ELEVEL::END] = { 120,240,360,480 }; //敵のレベルごとのスポーン数
 	const float BOOSTTIME = { 30.0f }; //ブーストの時間
 
-	const float BOOSTPOWER = { 0.1f }; //レベルごとの攻撃力ブースト
-	const float BOOSTSPEED = { 0.1f }; //レベルごとのスピードブースト
+	const float BOOSTPOWER = { 0.05f }; //レベルごとの攻撃力ブースト
+	const float BOOSTSPEED = { 0.05f }; //レベルごとのスピードブースト
 	const float BOOSTMAXHP = { 0.15f }; //レベルごとの最大体力ブースト
 	const float BOOSTEXP = { 0.4f }; //レベルごとの経験値ブースト
 }

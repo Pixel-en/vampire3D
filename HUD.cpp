@@ -32,6 +32,7 @@ namespace {
 		const float RADARSCALE{ 1000.0f };			//レーダーのサイズに縮小
 		const float RADARRANGE{ 14.0f / 100.0f };	//レーダーの感知範囲
 		const int RADARALPHA{ 200 };
+		const int RADARBACKALPHA{ 100 };
 	}
 	namespace LEVEL {
 		const float LEVELGAUGEBARXPOS{ -1.0f };
@@ -48,10 +49,20 @@ namespace {
 		};
 		const float FRAMEIMAGEBUFFER{ 175 };
 		const int EQUIPMENTSMAX{ 6 };
+		const XMFLOAT3 NAMEPOS{ 780,40.0f, (170 + 5) };	//Zは使わないので計算用に使う
+		const XMFLOAT3 TEXTPOS1{780,105.0f,170};
+		const XMFLOAT3 TEXTPOS2{1250,115.0f,170};
+		const XMFLOAT3 LEVELPOS{1100,40.0f,170+5};
 	}
 	namespace EQUIPMENTS {
 		const float ICONBUFFERWIDTH{ 0.065f };
 		const float ICONBUFFERHEIGHT{ 0.12f };
+	}
+	namespace TIMER {
+		const XMFLOAT2 TIMERPOS{ 600, 30 };
+	}
+	namespace HPS {
+		const XMFLOAT2 HPPOS{ 130,23 };
 	}
 }
 
@@ -102,6 +113,7 @@ void HUD::Initialize()
 	HPInitialize();
 	EquipmentInitialize();
 	UIPosRead();
+	ClearInit();
 }
 
 void HUD::SuperUpdate()
@@ -124,6 +136,7 @@ void HUD::Draw()
 	LevelDraw();
 	HPDraw();
 	EquipmentDraw();
+	ClearDraw();
 }
 
 void HUD::Release()
@@ -193,7 +206,7 @@ void HUD::RadarDraw()
 	Image::SetAlpha(hREnemy_, RADAR::RADARALPHA);
 	Image::SetAlpha(hRadarFrame_, RADAR::RADARALPHA);
 	Image::SetAlpha(hRadarBack_, RADAR::RADARALPHA);
-	Image::SetAlpha(hRadarBack_, 100);
+	Image::SetAlpha(hRadarBack_, RADAR::RADARBACKALPHA);
 	//レーダーの背景
 	Image::SetTransform(hRadarBack_, HUDTransforms_[TRANSFORMTYPE::RADAR]);
 	Image::Draw(hRadarBack_);
@@ -280,6 +293,7 @@ void HUD::LevelUP()
 
 	WeaponRoll();
 }
+
 
 void HUD::WeaponRoll()
 {
@@ -482,7 +496,7 @@ void HUD::LevelDraw()
 			data.fontSize = 27;
 
 			//武器の名前
-			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].displayName_.c_str(), { 780,40.0f + (i * (170 + 5)) }, data);
+			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].displayName_.c_str(), { LEVEL::NAMEPOS.x,LEVEL::NAMEPOS.y + (i * LEVEL::NAMEPOS.z) }, data);
 
 
 			//武器のレベル
@@ -526,10 +540,10 @@ void HUD::LevelDraw()
 			}
 
 			//説明
-			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { 780,105.0f + (i * 170) }, { 1250,115.0f + (i * 170) }, data);
+			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].EffectText_[Lv].c_str(), { LEVEL::TEXTPOS1.x,LEVEL::TEXTPOS1.y + (i * LEVEL::TEXTPOS1.z) }, { LEVEL::TEXTPOS2.x,LEVEL::TEXTPOS2.y + (i * LEVEL::TEXTPOS2.z) }, data);
 
 			//レベル
-			TextFont::Draw(level.c_str(), { 1100,40.0f + (i * (170 + 5)) }, data);
+			TextFont::Draw(level.c_str(), { LEVEL::LEVELPOS.x,LEVEL::LEVELPOS.y + (i * LEVEL::LEVELPOS.z) }, data);
 
 		}
 	}
@@ -803,7 +817,7 @@ void HUD::TimerDraw()
 {
 	FontData data{};
 	data.fontSize = 30;
-	data.Color = D2D1::ColorF(255, 255, 255);
+	data.Color = D2D1::ColorF(255, 255, 255);	//白
 	data.font = TextFont::GetFontName(FontList::Gkktt);
 
 	int Stime = fmodf(PlayTime_, 60.0f);
@@ -812,7 +826,7 @@ void HUD::TimerDraw()
 	std::string seconds = std::to_string(Stime);
 	minutes.insert(0, 2 - minutes.length(), '0');
 	seconds.insert(0, 2 - seconds.length(), '0');
-	TextFont::Draw(minutes + ":" + seconds.c_str(), { 600,30 }, data);
+	TextFont::Draw(minutes + ":" + seconds.c_str(), HPS::HPPOS, data);
 }
 
 void HUD::HPInitialize()
@@ -867,7 +881,7 @@ void HUD::HPDraw()
 	data.Color = D2D1::ColorF(0, 0, 0);
 	data.fontSize = 20;
 	//HPの大きさを変える
-	TextFont::Draw(std::to_string(player->GetStatus().hp_) + "/" + std::to_string(player->GetStatus().maxHp_), { 130,23 }, data);
+	TextFont::Draw(std::to_string(player->GetStatus().hp_) + "/" + std::to_string(player->GetStatus().maxHp_), TIMER::TIMERPOS, data);
 }
 
 
@@ -916,4 +930,25 @@ void HUD::EquipmentDraw()
 		}
 	}
 
+}
+
+void HUD::SetClearFlag(bool _flag)
+{
+	clearFlag_ = _flag;
+}
+
+void HUD::ClearInit()
+{
+	clearFlag_ = false;
+}
+
+void HUD::ClearDraw()
+{
+	if (clearFlag_) {
+		FontData data{};
+		data.fontSize = 50;
+		data.Color = D2D1::ColorF(255, 255, 255);
+		data.font = TextFont::GetFontName(FontList::Gkktt);
+		TextFont::Draw("Clear!", {screenWidth / 2.0f, screenHeight / 2.0f}, data);
+	}
 }

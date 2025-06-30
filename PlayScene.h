@@ -15,6 +15,9 @@ class PlayScene : public GameObject
 	void LoadObject();
 	int LoadCount_;
 
+	bool isClear_;
+	float clearTimer_;
+
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）

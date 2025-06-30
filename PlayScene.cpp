@@ -14,6 +14,7 @@
 namespace {
 	const float PLAYTIME{ 600.0f };
 	const int OBJECTNUM{ 5 }; //ロードするオブジェクトの数
+	const float CLEARTIMER{ 3.0f };
 }
 
 void PlayScene::LoadObject()
@@ -60,6 +61,8 @@ void PlayScene::Initialize()
 	hLoopSound_ = Audio::Load("Assets\\Audio\\BGM\\Play_loop.wav", true);
 	HandleCheck(hLoopSound_, "プレイのループBGMがない");
 	LoadCount_ = 0;
+	isClear_ = false;
+	clearTimer_ = CLEARTIMER;
 }
 
 void PlayScene::SuperUpdate()
@@ -89,7 +92,7 @@ void PlayScene::Update()
 			PL->SetFlags(0b11101);
 			PL->SetBarScale((float)LoadCount_ / OBJECTNUM);
 			if (LoadCount_ >= OBJECTNUM) {
-				if (Input::IsKeyDown(DIK_SPACE)) {
+				if (Input::IsKeyDown(DIK_SPACE)||Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
 					isLoaded_ = true;
 					SetChildFlags(0b11101);
 					PL->KillMe();
@@ -99,16 +102,28 @@ void PlayScene::Update()
 		}
 	}
 	else {
-
-		PlayTimer_ += Time::DeltaTime();
+		if (!isClear_)
+			PlayTimer_ += Time::DeltaTime();
 
 
 		HUD* hud = FindGameObject<HUD>();
 		hud->SetTimer(PlayTimer_);
 
 		if (PlayTimer_ >= PLAYTIME) {
-			SceneManager* scene = GetRootJob()->FindGameObject<SceneManager>();
-			scene->ChangeScene(SCENE_ID_GAMECLEAR);
+			//描画のみする
+			SetChildFlags(0b10100);
+			hud->SetClearFlag(true);
+			isClear_ = true;
+		}
+
+		if (isClear_) {
+			if (clearTimer_ <= 0.0f) {
+				SceneManager* scene = GetRootJob()->FindGameObject<SceneManager>();
+				scene->ChangeScene(SCENE_ID_GAMECLEAR);
+			}
+			else {
+				clearTimer_ -= Time::DeltaTime();
+			}
 		}
 	}
 }

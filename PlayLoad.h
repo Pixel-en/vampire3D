@@ -12,8 +12,11 @@ class PlayLoad :public GameObject
 
 	int hBarImage_;
 
-	Transform FrameTrans_;;
+	int hStartImage_;
+
+	Transform FrameTrans_;
 	Transform BarTrans_;
+	Transform StartTrans_;
 
 	//ロード開始までのタイマー
 	float WaitTimer_;

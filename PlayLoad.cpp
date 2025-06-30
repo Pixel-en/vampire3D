@@ -28,6 +28,8 @@ void PlayLoad::Initialize()
 	HandleCheck(hBackImage_, "ロード中のバーの背景画像がない");
 	hBarImage_ = Image::Load("Assets\\Image\\UI\\ProgressBar.png");
 	HandleCheck(hBarImage_, "ロード中のバー画像がない");
+	hStartImage_ = Image::Load("Assets\\Image\\UI\\startMenu.png");
+	HandleCheck(hStartImage_);
 
 	FrameTrans_.position_ = FRAMEPOS;
 	BarTrans_.position_ = BARPOS;
@@ -35,6 +37,8 @@ void PlayLoad::Initialize()
 	BarTrans_.scale_ = { 0.0f, 1.0f, 1.0f };
 	WaitTimer_ = WAITTIME;
 	isStart_ = false;
+	StartTrans_.position_ = { 0,0,0 };
+	StartTrans_.scale_ = { 2.0,2.0,0 };
 }
 
 void PlayLoad::Update()
@@ -61,6 +65,7 @@ void PlayLoad::Draw()
 	Image::Draw(hBarImage_);
 	Image::SetTransform(hFrameImage_, FrameTrans_);
 	Image::Draw(hFrameImage_);
+	Image::SetTransform(hStartImage_, StartTrans_);
 
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Makinas);
@@ -69,6 +74,7 @@ void PlayLoad::Draw()
 	std::string text = "LOADING...";
 	if (BarTrans_.scale_.x >= 1.0f) {
 		text = "LOADING COMPLETE!";
+		Image::Draw(hStartImage_);
 	}
 
 	TextFont::Draw(text, { 900, 590 }, data);
