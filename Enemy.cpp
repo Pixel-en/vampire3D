@@ -7,6 +7,7 @@
 #include "Field.h"
 #include "Player.h"
 #include "EXPManager.h"
+#include "HUD.h"
 
 
 using std::string;
@@ -47,8 +48,22 @@ void Enemy::Initialize()
 
 void Enemy::Load(ELEVEL _level, unsigned int _number)
 {
+	status_.hp_ = -1;
+	status_.power_ = -1;
+	status_.speed_ = -1;
+	status_.maxhp_ = -1;
+	status_.exp_ = -1;
+	status_.invincibletime_ = -1.0f;
 	status_.number_ = _number;
 	status_.level_ = _level;
+
+	BoostStatus_.hp_ = 1;
+	BoostStatus_.power_ = 1;
+	BoostStatus_.speed_ = 1;
+	BoostStatus_.maxhp_ = 1;
+	BoostStatus_.exp_ = 1;
+	BoostStatus_.invincibletime_ = 1.0f;
+
 
 	string Level[ELEVEL::END] = { "Blue","Yellow","Green","Red" };
 
@@ -60,7 +75,7 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 			BaseStatus_.power_ = csv.GetValue(2, i);
 			BaseStatus_.speed_ = csv.GetValue(3, i);
 			BaseStatus_.hp_ = csv.GetValue(4, i);
-			BaseStatus_.maxhp_ = status_.hp_;
+			BaseStatus_.maxhp_ = BaseStatus_.hp_;
 			BaseStatus_.exp_ = csv.GetValue(5, i);
 			BaseStatus_.invincibletime_ = csv.GetValue(6, i);
 		}
@@ -73,11 +88,12 @@ void Enemy::Load(ELEVEL _level, unsigned int _number)
 	for (int i = 0; i < HP::HMAX; i++) {
 		for (int j = 0; j < LOD::LMAX; j++) {
 			for (int k = 0; k < ANIMATION::AMAX; i + k++) {
-				hModel_[i][j][k] = -1; //初期化
-				hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\" + objectName_ + "-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
-				//hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\EnemyOrigin\\Enemy-" + lod[j] + "-" + anim[k] + ".fbx");
-				HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
-
+				if (status_.level_ != ELEVEL::END) {
+					hModel_[i][j][k] = -1; //初期化
+					hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\" + objectName_ + "-" + Level[status_.level_] + "-" + hp[i] + "-" + lod[j] + "-" + anim[k] + ".fbx");
+					//hModel_[i][j][k] = Model::Load("Assets\\Model\\Character\\Enemy\\EnemyOrigin\\Enemy-" + lod[j] + "-" + anim[k] + ".fbx");
+					HandleCheck(hModel_[i][j][k], Level[status_.level_] + "," + hp[i] + "," + lod[j] + "," + anim[k] + "のEnemyモデルがない");
+				}
 			}
 		}
 	}
@@ -103,18 +119,21 @@ void Enemy::StatusUpdate()
 	status_.power_ = BaseStatus_.power_ * BoostStatus_.power_;
 	status_.speed_ = BaseStatus_.speed_ * BoostStatus_.speed_;
 	status_.maxhp_ = BaseStatus_.maxhp_ * BoostStatus_.maxhp_;
-	status_.exp_   = BaseStatus_.exp_   * BoostStatus_.exp_;
-
+	status_.exp_ = BaseStatus_.exp_ * BoostStatus_.exp_;
+	status_.hp_ = status_.maxhp_;
+	status_.invincibletime_ = BaseStatus_.invincibletime_;
 }
 
 void Enemy::SuperUpdate()
 {
-	Model::AnimPause(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
+	if (ModelLOD_ != LMAX)
+		Model::AnimPause(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
 }
 
 void Enemy::Update()
 {
-	Model::AnimPlay(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
+	if (ModelLOD_ != LMAX)
+		Model::AnimPlay(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
 
 	switch (ModelAnim_)
 	{
@@ -122,12 +141,12 @@ void Enemy::Update()
 		Move();
 		break;
 	case ANIMATION::HIT:
-		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetHitFrame()) {
+		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetHitFrame() && (ModelLOD_ != LMAX)) {
 			ModelAnim_ = ANIMATION::MOVE; //ヒットアニメーションが終わったら移動アニメーションに戻る
 		}
 		break;
 	case ANIMATION::DEATH:
-		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetDeathAnimFrame()) {
+		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetDeathAnimFrame() && (ModelLOD_ != LMAX)) {
 			EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
 			EManager->SpawnEXP(transform_.position_, status_.exp_);
 			KillMe();
@@ -294,6 +313,8 @@ bool Enemy::HitDamege(int _damege, float _knock)
 
 	if (status_.hp_ <= 0) {
 		ModelAnim_ = ANIMATION::DEATH;
+		HUD* hud = GetRootJob()->FindGameObject<HUD>();
+		hud->AddKnockDown();
 	}
 	else {
 		float HPratio = (float)status_.hp_ / status_.maxhp_;

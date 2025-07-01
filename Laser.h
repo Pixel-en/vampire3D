@@ -10,6 +10,7 @@ class Laser :public WeaponObject
 	{
 		float angle_;
 		float BiggerWaittimer_;	//レーザーが大きくなるまでのタイマー
+		bool isSizeSet_;
 
 		void Move() override;
 

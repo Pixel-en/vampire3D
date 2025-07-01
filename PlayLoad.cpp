@@ -7,6 +7,7 @@ namespace {
 	const XMFLOAT3 BARPOS{ 0.35, -0.8, 0 };
 	const XMFLOAT2 TEXTPOS{ 0.5f, -0.85f }; //テキストの位置
 	const float WAITTIME{ 1.0f }; //ロード開始までの待機時間
+	const int FONTSIZE{ 25 };
 }
 
 PlayLoad::PlayLoad(GameObject* parent)
@@ -70,7 +71,7 @@ void PlayLoad::Draw()
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Makinas);
 	data.Color = D2D1::ColorF(255, 255, 255);
-	data.fontSize = 25;
+	data.fontSize = FONTSIZE;
 	std::string text = "LOADING...";
 	if (BarTrans_.scale_.x >= 1.0f) {
 		text = "LOADING COMPLETE!";

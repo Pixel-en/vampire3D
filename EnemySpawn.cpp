@@ -99,11 +99,9 @@ void EnemySpawn::Update()
 
 			SetEnemyData(enemy);
 
-			int count = 0;
 			//oŒ»êŠ‚ðŒˆ‚ß‚é
 			do
 			{
-				count++;
 				int x, z;
 				x = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
 				z = (rand() % SPAWNAREA) + SPAWNAREALIMIT;
@@ -118,7 +116,6 @@ void EnemySpawn::Update()
 
 				enemy->SetPosition(p->GetPosition().x + x, SPAWNHEIGHT, p->GetPosition().z + z);
 			} while (enemy->SelfCollision(field));
-			Debug::Log(count, true);
 			EnemyList_.push_back(enemy);
 			timer = SPAWNTIME;
 			number_++;
@@ -135,8 +132,6 @@ void EnemySpawn::Update()
 		else
 			I++;
 	}
-
-	Debug::Log("Enemy Count: " + std::to_string(EnemyList_.size()), true);
 }
 
 void EnemySpawn::Draw()

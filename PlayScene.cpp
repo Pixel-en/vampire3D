@@ -12,7 +12,7 @@
 #include "PlayLoad.h"
 
 namespace {
-	const float PLAYTIME{ 600.0f };
+	const float PLAYTIME{ 300.0f };
 	const int OBJECTNUM{ 5 }; //ロードするオブジェクトの数
 	const float CLEARTIMER{ 3.0f };
 }
@@ -92,7 +92,7 @@ void PlayScene::Update()
 			PL->SetFlags(0b11101);
 			PL->SetBarScale((float)LoadCount_ / OBJECTNUM);
 			if (LoadCount_ >= OBJECTNUM) {
-				if (Input::IsKeyDown(DIK_SPACE)||Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
+				if (Input::IsKeyDown(DIK_RETURN)||Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
 					isLoaded_ = true;
 					SetChildFlags(0b11101);
 					PL->KillMe();

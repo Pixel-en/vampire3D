@@ -22,6 +22,7 @@ namespace {
 	const float RAYHEIGHT{ 5.0f };
 	const float GRAVITY{ 9.8f / 2.0f / 60.0f };
 	const float INVINCIBLETIME{ 0.5f };
+	const int FONTSIZE{ 35 };
 }
 
 Player::Player(GameObject* parent)
@@ -350,7 +351,7 @@ void Player::Draw()
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Gkktt);
 	data.Color = D2D1::ColorF(255, 255, 255);
-	data.fontSize = 35;
+	data.fontSize = FONTSIZE;
 #ifdef _DEBUG
 	TextFont::Draw("x=" + std::to_string(transform_.position_.x), { 30, 200 }, data);
 	TextFont::Draw("y=" + std::to_string(transform_.position_.y), { 30, 230 }, data);

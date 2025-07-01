@@ -53,6 +53,7 @@ namespace {
 		const XMFLOAT3 TEXTPOS1{780,105.0f,170};
 		const XMFLOAT3 TEXTPOS2{1250,115.0f,170};
 		const XMFLOAT3 LEVELPOS{1100,40.0f,170+5};
+		const int FONTSIZE{ 27 };
 	}
 	namespace EQUIPMENTS {
 		const float ICONBUFFERWIDTH{ 0.065f };
@@ -60,9 +61,18 @@ namespace {
 	}
 	namespace TIMER {
 		const XMFLOAT2 TIMERPOS{ 600, 30 };
+		const int FONTSIZE{ 30 };
 	}
 	namespace HPS {
 		const XMFLOAT2 HPPOS{ 130,23 };
+		const int FONTSIZE{ 20 };
+	}
+	namespace CLEAR {
+		const int FONTSIZE{ 50 };
+	}
+	namespace KNOCKS {
+		const XMFLOAT2 KNOCKPOS{ 110,50 };
+		const int FONTSIZE{ 20 };
 	}
 }
 
@@ -114,6 +124,7 @@ void HUD::Initialize()
 	EquipmentInitialize();
 	UIPosRead();
 	ClearInit();
+	KnockInit();
 }
 
 void HUD::SuperUpdate()
@@ -137,6 +148,7 @@ void HUD::Draw()
 	HPDraw();
 	EquipmentDraw();
 	ClearDraw();
+	KnockDraw();
 }
 
 void HUD::Release()
@@ -432,7 +444,7 @@ void HUD::LevelSuperUpdate()
 
 		levelCursor_ = levelCursor_ % LEVEL::WEAPONCHOICEVAL;
 		if (levelCursor_ < 0)
-			levelCursor_ = 3;
+			levelCursor_ = LEVEL::WEAPONCHOICEVAL - 1;
 
 		Transform localTrans;
 		localTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.x,HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.y - (levelCursor_ * LEVEL::FRAMEIMAGEBUFFER) / (screenHeight / 2.0f),0 };
@@ -493,7 +505,7 @@ void HUD::LevelDraw()
 			FontData data;
 			data.font = TextFont::GetFontName(FontList::Makinas);
 			data.Color = D2D1::ColorF(255, 255, 255);
-			data.fontSize = 27;
+			data.fontSize = LEVEL::FONTSIZE;
 
 			//•Ší‚Ì–¼‘O
 			TextFont::Draw(EquipmentList_[(*std::next(itr, i))].displayName_.c_str(), { LEVEL::NAMEPOS.x,LEVEL::NAMEPOS.y + (i * LEVEL::NAMEPOS.z) }, data);
@@ -816,7 +828,7 @@ void HUD::ObtainWeapon(int _num)
 void HUD::TimerDraw()
 {
 	FontData data{};
-	data.fontSize = 30;
+	data.fontSize = TIMER::FONTSIZE;
 	data.Color = D2D1::ColorF(255, 255, 255);	//”’
 	data.font = TextFont::GetFontName(FontList::Gkktt);
 
@@ -826,7 +838,7 @@ void HUD::TimerDraw()
 	std::string seconds = std::to_string(Stime);
 	minutes.insert(0, 2 - minutes.length(), '0');
 	seconds.insert(0, 2 - seconds.length(), '0');
-	TextFont::Draw(minutes + ":" + seconds.c_str(), HPS::HPPOS, data);
+	TextFont::Draw(minutes + ":" + seconds.c_str(), TIMER::TIMERPOS, data);
 }
 
 void HUD::HPInitialize()
@@ -879,9 +891,9 @@ void HUD::HPDraw()
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Gkktt);
 	data.Color = D2D1::ColorF(0, 0, 0);
-	data.fontSize = 20;
+	data.fontSize = HPS::FONTSIZE;
 	//HP‚Ì‘å‚«‚³‚ð•Ï‚¦‚é
-	TextFont::Draw(std::to_string(player->GetStatus().hp_) + "/" + std::to_string(player->GetStatus().maxHp_), TIMER::TIMERPOS, data);
+	TextFont::Draw(std::to_string(player->GetStatus().hp_) + "/" + std::to_string(player->GetStatus().maxHp_), HPS::HPPOS, data);
 }
 
 
@@ -946,9 +958,29 @@ void HUD::ClearDraw()
 {
 	if (clearFlag_) {
 		FontData data{};
-		data.fontSize = 50;
+		data.fontSize = CLEAR::FONTSIZE;
 		data.Color = D2D1::ColorF(255, 255, 255);
 		data.font = TextFont::GetFontName(FontList::Gkktt);
 		TextFont::Draw("Clear!", {screenWidth / 2.0f, screenHeight / 2.0f}, data);
 	}
+}
+
+void HUD::KnockInit()
+{
+	knockCount_ = 0;
+	hKnockImage_ = Image::Load("Assets\\Image\\UI\\Knock.png");
+	HandleCheck(hKnockImage_);
+}
+
+void HUD::KnockDraw()
+{
+	Image::SetTransform(hKnockImage_, HUDTransforms_[KNOCK]);
+	Image::Draw(hKnockImage_);
+
+	FontData data;
+	data.font = TextFont::GetFontName(FontList::Gkktt);
+	data.Color = D2D1::ColorF(0, 0, 0);
+	data.fontSize = KNOCKS::FONTSIZE;
+	//HP‚Ì‘å‚«‚³‚ð•Ï‚¦‚é
+	TextFont::Draw(std::to_string(knockCount_), KNOCKS::KNOCKPOS, data);
 }

@@ -68,6 +68,8 @@ private:
 		EQUIPICON,
 		EQUIPBACK,
 		EQUIPMENTS,
+		//åÇîjêî
+		KNOCK,
 
 
 		MAX
@@ -151,6 +153,12 @@ private:
 	void ClearInit();
 	void ClearDraw();
 
+	/*--------åÇîjêî-----------*/
+
+	int hKnockImage_;
+	int knockCount_;
+	void KnockInit();
+	void KnockDraw();
 
 
 	void UIPosRead();
@@ -185,5 +193,6 @@ public:
 
 	void SetClearFlag(bool _flag);
 
+	void AddKnockDown() { knockCount_++; }
 };
 

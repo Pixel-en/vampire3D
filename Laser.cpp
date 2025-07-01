@@ -84,10 +84,15 @@ void Laser::cLaser::Move()
 		Clash();
 
 		//徐々に大きく
-		if (transform_.scale_.x < status_.size_ * sizeboost)
+		if (transform_.scale_.x < status_.size_ * sizeboost) {
 			transform_.scale_ += {LASERSIZERATE, LASERSIZERATE, 0};
+			isSizeSet_ = false;
+		}
 		else {
-			transform_.scale_ = { status_.size_ * sizeboost,status_.size_ * sizeboost,transform_.scale_.z * sizeboost };
+			if(!isSizeSet_)
+				transform_.scale_ = { status_.size_ * sizeboost,status_.size_ * sizeboost,transform_.scale_.z * sizeboost };
+			isSizeSet_ = true;
+			
 
 			//攻撃持続タイマー
 			if (varia_.AttackTime_ < 0.0f) {
@@ -107,6 +112,7 @@ void Laser::cLaser::Move()
 
 void Laser::cLaser::ResetSub()
 {
+	transform_.position_.y += 1.5f;
 	XMFLOAT3 StartPos = transform_.position_;
 
 	//前方向ベクトル

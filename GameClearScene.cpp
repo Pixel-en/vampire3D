@@ -16,7 +16,7 @@ void GameClearScene::Initialize()
 
 void GameClearScene::Update()
 {
-	if (Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
+	if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
 		SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
 		sc->ChangeScene(SCENE_ID_TITLE);
 	}
