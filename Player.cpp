@@ -50,8 +50,6 @@ Player::Player(GameObject* parent)
 	status_.currentExp_ = 0;
 	status_.nextLvExp_ = 3;
 	status_.totalExp_ = 0;
-
-	PauseON_ = false;
 }
 
 Player::~Player()
@@ -79,16 +77,6 @@ void Player::Initialize()
 
 void Player::SuperUpdate()
 {
-	if (PauseON_) {
-		Input::SetPadVibration(0, 0);
-		HUD* hud = GetParent()->FindGameObject<HUD>();
-		if (hud->GetisChoice()) {
-			GetParent()->SetFlags(0b11101);
-			//GetParent()->SetChildFlags(0b11101);
-			PauseON_ = false;
-			AcquisitionEXP(0);
-		}
-	}
 }
 
 void Player::Update()
@@ -437,9 +425,6 @@ void Player::AcquisitionEXP(int _exp)
 	status_.currentExp_ += (_exp * status_.ExpBoost_);
 
 	if (status_.currentExp_ >= status_.nextLvExp_) {
-		//ポーズ状態にする
-		//GetParent()->SetChildFlags(0b10101);
-		GetParent()->SetFlags(0b10101);
 		status_.level_++;							//レベルアップ
 		status_.totalExp_ += status_.currentExp_;	//トータルに加算
 		status_.currentExp_ -= status_.nextLvExp_;	//余剰分を算出
@@ -460,7 +445,6 @@ void Player::AcquisitionEXP(int _exp)
 		else {
 			status_.nextLvExp_ += 16;
 		}
-		PauseON_ = true;
 	}
 
 }

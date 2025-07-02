@@ -41,7 +41,7 @@ namespace {
 		const int EQUIPMENTLISTNUM = WEAPONTYPE::END + WEAPONTYPE::AEND - WEAPONTYPE::ARMOR + WEAPONTYPE::SEND - WEAPONTYPE::MAXHP;
 
 		//装備の名前リスト
-		const std::array<std::string,  EQUIPMENTLISTNUM>EQUIPMENTSNAMELIST = {
+		const std::array<std::string, EQUIPMENTLISTNUM>EQUIPMENTSNAMELIST = {
 			"Knife","PoisonThrow","SpikeOrb","Missile","Laser","Bomb",
 			"Armor","FreeMind","WideAmulet","KnowledgeBook","HeartCream",
 			"WonderCookie","MuscleSuit","EnergyDrink","MagicHand","Monocle",
@@ -50,9 +50,9 @@ namespace {
 		const float FRAMEIMAGEBUFFER{ 175 };
 		const int EQUIPMENTSMAX{ 6 };
 		const XMFLOAT3 NAMEPOS{ 780,40.0f, (170 + 5) };	//Zは使わないので計算用に使う
-		const XMFLOAT3 TEXTPOS1{780,105.0f,170};
-		const XMFLOAT3 TEXTPOS2{1250,115.0f,170};
-		const XMFLOAT3 LEVELPOS{1100,40.0f,170+5};
+		const XMFLOAT3 TEXTPOS1{ 780,105.0f,170 };
+		const XMFLOAT3 TEXTPOS2{ 1250,115.0f,170 };
+		const XMFLOAT3 LEVELPOS{ 1100,40.0f,170 + 5 };
 		const int FONTSIZE{ 27 };
 	}
 	namespace EQUIPMENTS {
@@ -125,11 +125,13 @@ void HUD::Initialize()
 	UIPosRead();
 	ClearInit();
 	KnockInit();
+	PauseInit();
 }
 
 void HUD::SuperUpdate()
 {
 	LevelSuperUpdate();
+	PauseSuperUpdate();
 }
 
 void HUD::Update()
@@ -138,12 +140,14 @@ void HUD::Update()
 	RadarUpdate();
 
 	HPUpdate();
+	PauseUpdate();
 }
 
 void HUD::Draw()
 {
 	TimerDraw();
 	RadarDraw();
+	PauseDraw();
 	LevelDraw();
 	HPDraw();
 	EquipmentDraw();
@@ -239,18 +243,24 @@ void HUD::RadarDraw()
 
 }
 
-//レベルアップした時の処理
+//レベルアップ時に行う準備
 void HUD::LevelUP()
 {
-	if (Pause_) {
+
+	//止める
+	GetParent()->SetFlags(0b10101);
+
+	//連続レベルアップ時に初期化
+	if (isLevelUp_) {
+		//レベルアップのカーソルなどの初期化
 		LevelUpdate();
 	}
 
-	Pause_ = true;
+	isLevelUp_ = true;
 
 	Player* player = GetParent()->FindGameObject<Player>();
 
-	//装備数が最大になったら
+	//武器の装備数が最大になったら取得してないものはリストから消して選べないようにする
 	if (player->MyWeaponList_.size() >= LEVEL::EQUIPMENTSMAX) {
 		for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
 			//武器
@@ -265,6 +275,7 @@ void HUD::LevelUP()
 		}
 	}
 
+	//防具の装備数が最大になったら取得してないものはリストから削除して選べないようにする
 	if (player->MyArmorList_.size() >= LEVEL::EQUIPMENTSMAX) {
 		for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
 			//防具
@@ -282,7 +293,9 @@ void HUD::LevelUP()
 	//リストの整理
 	//レベルが最大のものがあればリストから除外
 	for (auto itr = EquipmentList_.begin(); itr != EquipmentList_.end();) {
+		//武器と防具で検索しレベルを確認する
 		if ((*itr).num_ <= WEAPONTYPE::END) {
+			//武器
 			WeaponObject* obj = (WeaponObject*)GetParent()->FindChildObject((*itr).name_);
 			if (obj != nullptr) {
 				if (obj->GetLv() >= (*itr).MaxLevel_) {
@@ -292,6 +305,7 @@ void HUD::LevelUP()
 			}
 		}
 		else {
+			//防具
 			ArmorObject* armor = (ArmorObject*)GetParent()->FindChildObject((*itr).name_);
 			if (armor != nullptr) {
 				if (armor->GetNumLevel() >= (*itr).MaxLevel_) {
@@ -303,11 +317,11 @@ void HUD::LevelUP()
 		itr++;
 	}
 
-	WeaponRoll();
+	EquipmentRoll();
 }
 
 
-void HUD::WeaponRoll()
+void HUD::EquipmentRoll()
 {
 	//足りなくなったらステータスアップを追加する
 	if (EquipmentList_.size() < LEVEL::WEAPONCHOICEVAL) {
@@ -330,16 +344,11 @@ void HUD::WeaponRoll()
 
 void HUD::LevelInitialize()
 {
-	hLevelBack_ = -1;
 	hLevelGaugeFrame_ = -1;
 	hLevelGaugeBar_ = -1;
 	hLevelFrameImage_ = -1;
 	hLevelCursorImage_ = -1;
-	isChoice_ = false;
 
-
-	hLevelBack_ = Image::Load("Assets\\Image\\UI\\LevelUpBackGround0.6.png");
-	HandleCheck(hLevelBack_);
 	hLevelGaugeFrame_ = Image::Load("Assets\\Image\\UI\\LevelFrame.png");
 	HandleCheck(hLevelGaugeFrame_);
 	hLevelGaugeBar_ = Image::Load("Assets\\Image\\UI\\LevelBar.png");
@@ -428,8 +437,13 @@ void HUD::LevelInitialize()
 
 void HUD::LevelSuperUpdate()
 {
-	if (Pause_) {
+	//レベルアップ中なら動かす
+	if (isLevelUp_) {
 
+		//バイブレーションを0にしておく
+		Input::SetPadVibration(0, 0);
+
+		//カーソル移動
 		if ((Input::IsKeyDown(DIK_UP) || Input::GetPadStickL().y >= 0.5f) && !StickTriggerY_)
 		{
 			levelCursor_--;
@@ -439,52 +453,63 @@ void HUD::LevelSuperUpdate()
 			levelCursor_++;
 			StickTriggerY_ = true;
 		}
+
+		//カーソルを動かしてないときはfalseにしてフレームを動かせるようにする(連続入力を防ぐため)
 		if (Input::GetPadStickL().y >= -0.5f && Input::GetPadStickL().y <= 0.5f)
 			StickTriggerY_ = false;
 
+		//一番下でした入力が入ったときに上にする
 		levelCursor_ = levelCursor_ % LEVEL::WEAPONCHOICEVAL;
+
+		//同様に下にする
 		if (levelCursor_ < 0)
 			levelCursor_ = LEVEL::WEAPONCHOICEVAL - 1;
 
+		//レベルアップのカーソル位置を設定する
 		Transform localTrans;
 		localTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.x,HUDTransforms_[TRANSFORMTYPE::LEVELCURSOR].position_.y - (levelCursor_ * LEVEL::FRAMEIMAGEBUFFER) / (screenHeight / 2.0f),0 };
 		Image::SetTransform(hLevelCursorImage_, localTrans);
 
+		//決定
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
-			isChoice_ = true;
+			//停止状態を解除する
+			GetParent()->SetFlags(0b11101);
+			
+			//ロールリストからカーソルの位置番目の装備リストの番号を取得する
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
+			//取得した装備リストの番号を送る
 			ObtainWeapon((*itr));
+
+			//０の経験値を与えることで再度レベルアップできるか試す
+			Player* player = GetRootJob()->FindGameObject<Player>();
+			player->AcquisitionEXP(0);
 		}
 	}
 }
 
 void HUD::LevelUpdate()
 {
-	isChoice_ = false;
-	Pause_ = false;
+	//レベルアップ状態の解除
+	isLevelUp_ = false;
 
 	Player* player = GetParent()->FindGameObject<Player>();
+	//カーソルの位置の初期化
 	levelCursor_ = 0;
 
+	//経験値バーの長さを合わせる
 	float current = player->GetStatus().currentExp_;
 	float next = player->GetStatus().nextLvExp_;
 
 	float ratio = current / next;
 
 	HUDTransforms_[TRANSFORMTYPE::LEVELGAUGEBAR].scale_ = { ratio,1,1 };
-
-
-
 }
 
 void HUD::LevelDraw()
 {
 
-
-	if (Pause_) {
-		Image::SetTransform(hLevelBack_, HUDTransforms_[TRANSFORMTYPE::LEVELBACK]);
-		Image::Draw(hLevelBack_);
+	if (isLevelUp_) {
 
 		//先にTransformのセットはやってある
 		Image::Draw(hLevelCursorImage_);
@@ -512,7 +537,7 @@ void HUD::LevelDraw()
 
 
 			//武器のレベル
-			//武器のリストになかったら装備のリストに
+			//武器のリストになかったら防具のリストに
 			for (int j = 0; j < player->MyWeaponList_.size(); j++) {
 				if (EquipmentList_[(*std::next(itr, i))].name_ == player->MyWeaponList_[j]->GetObjectName()) {
 					level = "Level:" + std::to_string(player->MyWeaponList_[j]->GetLv() + 1);
@@ -825,6 +850,63 @@ void HUD::ObtainWeapon(int _num)
 	player->StatusUpdate();
 }
 
+void HUD::PauseInit()
+{
+	hPauseBack_ = -1;
+	hPauseBack_ = Image::Load("Assets\\Image\\UI\\PauseBackGround0.6.png");
+	HandleCheck(hPauseBack_);
+
+	pause_ = false;
+	BePause_ = false;
+}
+
+void HUD::PauseSuperUpdate()
+{
+	//分けることでしっかり切り替えられる+レベルアップ時にポーズしない
+	if (Input::IsKeyDown(DIK_ESCAPE)) {
+		//ポーズ中のみ再開させる
+		if (pause_) {
+			GetParent()->SetFlags(11101);
+			BePause_ = true;
+		}
+		pause_ = false;
+	}
+}
+
+void HUD::PauseUpdate()
+{
+	if (Input::IsKeyDown(DIK_ESCAPE)&&!BePause_) {
+		pause_ = true;
+		GetParent()->SetFlags(10101);
+	}
+
+	BePause_ = false;
+}
+
+void HUD::PauseDraw()
+{
+	//レベルアップ時またはポーズ時に表示
+	if (isLevelUp_ || pause_) {
+		//背景を表示
+		Image::SetTransform(hPauseBack_, HUDTransforms_[TRANSFORMTYPE::PAUSEBACK]);
+		Image::Draw(hPauseBack_);
+
+		Player* player = GetRootJob()->FindGameObject<Player>();
+
+		FontData data{};
+		data.fontSize = 30;
+		data.Color = D2D1::ColorF(255, 255, 255);
+		data.font = TextFont::GetFontName(FontList::Makinas);
+
+
+		TextFont::Draw("strength：" + std::to_string(player->GetStatus().strength_), { 100, 450 }, data);
+		TextFont::Draw("spped：" + std::to_string(player->GetStatus().speed_), { 100,500 }, data);
+		TextFont::Draw("range：" + std::to_string(player->GetStatus().collectionRange_), { 100, 550 }, data);
+		TextFont::Draw("critical：" + std::to_string(player->GetStatus().critical_), { 100, 600 }, data);
+		TextFont::Draw("haste：" + std::to_string(player->GetStatus().haste_), { 100, 650 }, data);
+	}
+}
+
 void HUD::TimerDraw()
 {
 	FontData data{};
@@ -961,7 +1043,7 @@ void HUD::ClearDraw()
 		data.fontSize = CLEAR::FONTSIZE;
 		data.Color = D2D1::ColorF(255, 255, 255);
 		data.font = TextFont::GetFontName(FontList::Gkktt);
-		TextFont::Draw("Clear!", {screenWidth / 2.0f, screenHeight / 2.0f}, data);
+		TextFont::Draw("Clear!", { screenWidth / 2.0f, screenHeight / 2.0f }, data);
 	}
 }
 

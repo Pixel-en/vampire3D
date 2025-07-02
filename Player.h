@@ -16,7 +16,7 @@ private:
 		int maxHp_;						//最大体力(実数値)
 		float speed_;					//移動速度(実数値)
 		float strength_;				//攻撃力(割合)
-		int critical_;					//クリティカル率(割合)
+		float critical_;					//クリティカル率(割合)
 		float collectionRange_;			//回収範囲(割合)
 		float haste_;					//攻撃頻度(割合)
 
@@ -81,13 +81,13 @@ public:
 		if (_isMult) Booststatus_.strength_ *= _strength;
 		else Booststatus_.strength_ /= _strength;
 	}
-	
+
 	/// <summary>
 	/// trueなら乗算、falseなら除算をブーストに行う
 	/// </summary>
 	void MultDivBoostStatusCritical(float _critical, bool _isMult) {
-		if (_isMult) Booststatus_.critical_ *= _critical;
-		else Booststatus_.critical_ /= _critical;
+		if (_isMult) Booststatus_.critical_ = Booststatus_.critical_ * _critical;
+		else Booststatus_.critical_ = Booststatus_.critical_ / _critical;
 	}
 
 	void MultDivBoostStatusHaste(float _haste, bool _isMult) {
@@ -109,13 +109,13 @@ public:
 	//最大HPだけ足し算
 	void StatusUpdate();
 
+	//今動いているかどうかを返す
 	bool isMove();
 
 private:
 
 	bool onGround_;	//地面についているか
 	float gravity;	//重力
-	bool PauseON_;
 
 	int hModel_;			//モデルハンドル
 	float lookHeight_;	//視点の高さ

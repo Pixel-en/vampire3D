@@ -53,12 +53,13 @@ private:
 		RADARENEMY,
 		RADARPLAYER,
 		//レベル
-		LEVELBACK,
 		LEVELGAUGEFRAME,
 		LEVELGAUGEBAR,
 		LEVELCURSOR,
 		LEVELFRAME,
 		LEVELICON,
+		//ポーズ
+		PAUSEBACK,
 		//HP
 		HPBACK,
 		HPGAUGE,
@@ -89,8 +90,6 @@ private:
 	void RadarDraw();
 
 	/*------レベル用------*/
-
-	int hLevelBack_;			//レベルアップの背景用画像
 	int hLevelGaugeFrame_;		//経験値のフレーム
 	int hLevelGaugeBar_;		//経験値のバー
 	int hLevelCursor_;
@@ -98,7 +97,7 @@ private:
 	int hLevelCursorImage_;
 	int hLevelIconImage_[WEAPONTYPE::END + (WEAPONTYPE::AEND - WEAPONTYPE::ARMOR) + (WEAPONTYPE::SEND - WEAPONTYPE::MAXHP)];	//武器のアイコン
 
-	bool Pause_;						//ポーズ中かどうか
+	bool isLevelUp_;						//レベルアップしているかどうか
 
 	struct EquipmentLevel
 	{
@@ -115,15 +114,26 @@ private:
 	std::set<int> RollListNum_;				//ロールされた武器
 	int levelCursor_;
 	bool StickTriggerY_;					//前フレームでスティックを倒しているか
-	bool isChoice_;
 
-	void WeaponRoll();	//武器のロール
+	//武器&防具のロール
+	void EquipmentRoll();
 
 	void LevelInitialize();
 	void LevelSuperUpdate();
 	void LevelUpdate();
 	void LevelDraw();
 	void ObtainWeapon(int _num);
+
+	/*--------ポーズ画面--------*/
+	int hPauseBack_;	//背景のハンドル
+	bool pause_;		//ポーズ中かどうか
+	bool BePause_;		//ポーズしていたかどうか
+
+	void PauseInit();
+	void PauseSuperUpdate();
+	void PauseUpdate();
+	void PauseDraw();
+
 
 	/*-----タイマー-----*/
 	float PlayTime_;
@@ -182,14 +192,11 @@ public:
 	void Release() override;
 
 	/// <summary>
-	/// レベルが上がった時に行う
+	/// レベルが上がった時に行う準備
 	/// </summary>
 	void LevelUP();
 
 	void SetTimer(float _time) { PlayTime_ = _time; }
-
-	//レベルアップを選択したかどうか
-	bool GetisChoice() { return isChoice_; }
 
 	void SetClearFlag(bool _flag);
 

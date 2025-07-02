@@ -53,8 +53,8 @@ void MuscleSuit::LevelUp(std::string str)
 			BeBuff_ = val;
 			break;
 		case CRITICAL:
-			boost = val / BeBuff_;
-			player->MultDivBoostStatusCritical(val, true);
+			boost = val / BeDBuff_;
+			player->MultDivBoostStatusCritical(boost, true);
 			BeDBuff_ = val;
 			break;
 		default:
