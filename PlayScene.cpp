@@ -12,7 +12,7 @@
 #include "PlayLoad.h"
 
 namespace {
-	const float PLAYTIME{ 300.0f };
+	const float PLAYTIME{ 600.0f };
 	const int OBJECTNUM{ 5 }; //ロードするオブジェクトの数
 	const float CLEARTIMER{ 3.0f };
 }

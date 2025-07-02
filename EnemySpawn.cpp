@@ -161,7 +161,7 @@ void EnemySpawn::AddEnemyNum(int num)
 
 void EnemySpawn::SetEnemyData(Enemy* enemy)
 {
-	ELEVEL level = ELEVEL::END; //初期レベル
+	ELEVEL level = ELEVEL::RED; //初期レベル
 	PlayScene* scene = GetRootJob()->FindGameObject<PlayScene>();
 	float timer = scene->GetPlayTimer();
 
@@ -192,6 +192,7 @@ void EnemySpawn::SetEnemyData(Enemy* enemy)
 	BoostStatus_.exp_ = 1 + (BoostCount_ * BOOSTEXP);	//経験値
 
 	enemy->MulBoostState(BoostStatus_.power_, BoostStatus_.speed_, BoostStatus_.maxhp_, BoostStatus_.exp_);
+	Debug::Log(std::to_string(BoostCount_), true);
 
 	BeLevel_ = level; //前回のレベルを更新
 }
