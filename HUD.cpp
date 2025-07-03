@@ -899,12 +899,20 @@ void HUD::PauseDraw()
 		data.font = TextFont::GetFontName(FontList::Makinas);
 
 
-		TextFont::Draw("strength：" + std::to_string(player->GetStatus().strength_), { 100, 450 }, data);
-		TextFont::Draw("spped：" + std::to_string(player->GetStatus().speed_), { 100,500 }, data);
-		TextFont::Draw("range：" + std::to_string(player->GetStatus().collectionRange_), { 100, 550 }, data);
-		TextFont::Draw("critical：" + std::to_string(player->GetStatus().critical_), { 100, 600 }, data);
-		TextFont::Draw("haste：" + std::to_string(player->GetStatus().haste_), { 100, 650 }, data);
+		TextFont::Draw("strength：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().strength_))+"："+std::to_string(player->GetStatus().strength_), {100, 450}, data);
+		TextFont::Draw("spped：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().speed_)) + "：" + std::to_string(player->GetStatus().speed_), { 100,500 }, data);
+		TextFont::Draw("range：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().collectionRange_)) + "：" + std::to_string(player->GetStatus().collectionRange_), { 100, 550 }, data);
+		TextFont::Draw("critical：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().critical_)) + "：" + std::to_string(player->GetStatus().critical_), { 100, 600 }, data);
+		TextFont::Draw("haste：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().haste_)) + "：" + std::to_string(player->GetStatus().haste_), { 100, 650 }, data);
 	}
+}
+
+int HUD::StatusConvertBoost(float _status)
+{
+	float status = _status;
+	status -= 1.0f;
+	int boost = status * 100;
+	return boost;
 }
 
 void HUD::TimerDraw()

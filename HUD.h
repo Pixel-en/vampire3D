@@ -133,6 +133,8 @@ private:
 	void PauseSuperUpdate();
 	void PauseUpdate();
 	void PauseDraw();
+	//ステータスがどれくらい上がっているのか%に変換する
+	int StatusConvertBoost(float _status);
 
 
 	/*-----タイマー-----*/

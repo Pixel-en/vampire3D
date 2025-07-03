@@ -5,6 +5,10 @@
 Monocle::Monocle(GameObject* parent)
 	:ArmorObject(parent, "Monocle")
 {
+	Buff_ = 1.0f;
+	MBuff_ = 1.0f;
+	isMul_ = false;
+	MisMul_ = false;
 }
 
 Monocle::~Monocle()
@@ -22,17 +26,29 @@ void Monocle::Update()
 	if (player == nullptr)
 		return;
 
+	//プレイヤーの体力が最大なら
 	if (player->GetStatus().maxHp_ == player->GetStatus().hp_) {
-		if (!isMul_) {
-			player->MultDivBoostStatusCritical(Buff_, true);
-			isMul_ = true;
+		if (!MisMul_) {
+			//パッシブを解除してマックス時の付ける
+			//バフがついているなら消す
+			if (isMul_)
+				player->MultDivBoostStatusCritical(Buff_, false);
+
+			player->MultDivBoostStatusCritical(MBuff_, true);
+			MisMul_ = true;
+			isMul_ = false;
 		}
 
 	}
 	else {
-		if (isMul_) {
-			player->MultDivBoostStatusCritical(Buff_, false);
-			isMul_ = false;
+		if (!isMul_) {
+			//バフがついているなら消す
+			if (MisMul_)
+				player->MultDivBoostStatusCritical(MBuff_, false);
+			
+			player->MultDivBoostStatusCritical(Buff_, true);
+			isMul_ = true;
+			MisMul_ = false;
 		}
 	}
 }
@@ -49,6 +65,12 @@ void Monocle::LevelUp(std::string str)
 	if (player == nullptr)
 		return;
 
+	//前のバフを消す
+	if (player->GetStatus().maxHp_ == player->GetStatus().hp_)
+		player->MultDivBoostStatusCritical(MBuff_, false);
+	else
+		player->MultDivBoostStatusCritical(Buff_, true);
+
 	std::stringstream ss{ str };
 	std::string temp;
 	int count = 0;
@@ -61,26 +83,22 @@ void Monocle::LevelUp(std::string str)
 	{
 		//値を取得
 		float val = std::stof(temp);
-		float boost;
 		switch (count)
 		{
 		case CRITICAL:
-			//前回の追加分の逆数をかけることで前回の分を消す
-			boost = val / BeBuff_;
-			player->MultDivBoostStatusSpeed(boost, true);
-			BeBuff_ = val;
+			Buff_ = val;
 			break;
 		case MAXCRITICAL:
-			Buff_ = val;
-			if (isMul_) {
-				player->MultDivBoostStatusCritical(BeBuff2_, false);
-			}
-			BeBuff2_ = val;
+			MBuff_ = val;
 			break;
 		default:
 			break;
 		}
 		count++;
 	}
+
+	//付け直すためリセット
+	isMul_ = false;
+	MisMul_ = false;
 
 }

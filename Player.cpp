@@ -81,6 +81,8 @@ void Player::SuperUpdate()
 
 void Player::Update()
 {
+	StatusUpdate();
+
 	Move();
 
 

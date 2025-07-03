@@ -3,10 +3,11 @@
 
 class Monocle :public ArmorObject
 {
-	float BeBuff2_;
 	float Buff_;
+	float MBuff_;
 
 	bool isMul_;
+	bool MisMul_;
 public:
 	Monocle(GameObject* parent);
 

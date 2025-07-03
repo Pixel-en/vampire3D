@@ -27,6 +27,7 @@ void ArmorObject::Initialize()
 
 void ArmorObject::Update()
 {
+	exit(0);
 }
 
 void ArmorObject::Draw()

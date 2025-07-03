@@ -9,6 +9,8 @@ Cushion::Cushion(GameObject* parent)
 	stopMaxTime_ = 0.0f;
 	BuffTimer_ = 0.0f;
 	BuffMaxTime_ = 0.0f;
+	Buff_ = 1.0f;
+	upState_ = MAX;
 }
 
 Cushion::~Cushion()
@@ -28,7 +30,7 @@ void Cushion::Update()
 		return;
 
 	//動いていないなら
-	if (player->isMove()) {
+	if (!player->isMove()) {
 		//カウントして時間になったかつバフが切れているなら
 		if (BuffTimer_ <= 0.0f) {
 			if (stopTimer_ <= 0.0f) {
@@ -143,6 +145,8 @@ void Cushion::LevelUp(std::string str)
 		{
 		case STOPTIME:
 			stopMaxTime_ = val;
+			if (stopTimer_ <= 0.0f)
+				stopTimer_ = stopMaxTime_;
 			break;
 		case BUFFTIME:
 			BuffMaxTime_ = val;
