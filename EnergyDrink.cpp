@@ -84,7 +84,7 @@ void EnergyDrink::LevelUp(std::string str)
 			//攻撃と頻度のブーストを行う
 			boost = val / BeBuff_;
 			player->MultDivBoostStatusStrength(val, true);
-			player->MultDivBoostStatusHaste(val, true);
+			player->AddSubBoostStatusHaste(val, true);
 			BeBuff_ = val;
 			break;
 		default:

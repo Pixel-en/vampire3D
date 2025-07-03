@@ -20,7 +20,9 @@ void WeaponObject::Reset()
 
 	transform_ = player->GetTransform();
 	varia_.originPos_ = player->GetPosition();
-	varia_.ReStartTimer_ = status_.restart_ * player->GetStatus().haste_;
+
+	//リスタートの計算をする
+	varia_.ReStartTimer_ = status_.restart_ /player->GetStatus().haste_;
 
 	Visible();
 	Clash();

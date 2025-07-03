@@ -161,7 +161,7 @@ void Player::PlayerStatusLoad()
 	Booststatus_.strength_ = 1;
 	Booststatus_.critical_ = 1;
 	Booststatus_.collectionRange_ = 1;
-	Booststatus_.haste_ = 1;
+	Booststatus_.haste_ = 0.0f;
 	Booststatus_.criticalBoost_ = 1;
 	Booststatus_.area_ = 1;
 	Booststatus_.resist_ = 1;

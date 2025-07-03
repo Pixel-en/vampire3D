@@ -54,7 +54,7 @@ void Cushion::Update()
 					upState_ = STATE::RANGE;
 					break;
 				case STATE::HASTE:
-					player->MultDivBoostStatusHaste(Buff_, true);
+					player->AddSubBoostStatusHaste(Buff_, true);
 					upState_ = STATE::HASTE;
 					break;
 				case STATE::CRITICAL:
@@ -95,7 +95,7 @@ void Cushion::Update()
 			upState_ = Cushion::MAX; //リセット
 			break;
 		case Cushion::HASTE:
-			player->MultDivBoostStatusHaste(Buff_, false);
+			player->AddSubBoostStatusHaste(Buff_, false);
 			upState_ = Cushion::MAX; //リセット
 			break;
 		case Cushion::CRITICAL:
@@ -165,7 +165,7 @@ void Cushion::LevelUp(std::string str)
 				player->MultDivBoostStatusCollectionRange(Buff_, false);
 				break;
 			case Cushion::HASTE:
-				player->MultDivBoostStatusHaste(Buff_, false);
+				player->AddSubBoostStatusHaste(Buff_, false);
 				break;
 			case Cushion::CRITICAL:
 				player->MultDivBoostStatusCritical(Buff_, false);
@@ -190,7 +190,7 @@ void Cushion::LevelUp(std::string str)
 				player->MultDivBoostStatusCollectionRange(Buff_, true);
 				break;
 			case STATE::HASTE:
-				player->MultDivBoostStatusHaste(Buff_, true);
+				player->AddSubBoostStatusHaste(Buff_, true);
 				break;
 			case STATE::CRITICAL:
 				player->MultDivBoostStatusCritical(Buff_, true);

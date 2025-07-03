@@ -90,9 +90,13 @@ public:
 		else Booststatus_.critical_ = Booststatus_.critical_ / _critical;
 	}
 
-	void MultDivBoostStatusHaste(float _haste, bool _isMult) {
-		if (_isMult) Booststatus_.haste_ *= _haste;
-		else Booststatus_.haste_ /= _haste;
+	//true‚Å‰ÁZ,false‚ÅœZ
+	void AddSubBoostStatusHaste(float _haste, bool _isMult) {
+		
+		float val = fmodf(_haste, 1.0f);
+
+		if (_isMult) Booststatus_.haste_ += val;
+		else Booststatus_.haste_ -= val;
 	}
 	void MultDivBoostStatusCollectionRange(float _collectionRange, bool _isMult) {
 		if (_isMult) Booststatus_.collectionRange_ *= _collectionRange;

@@ -474,7 +474,7 @@ void HUD::LevelSuperUpdate()
 		if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_B)) {
 			//停止状態を解除する
 			GetParent()->SetFlags(0b11101);
-			
+
 			//ロールリストからカーソルの位置番目の装備リストの番号を取得する
 			auto itr = RollListNum_.begin();
 			std::advance(itr, levelCursor_);
@@ -836,7 +836,7 @@ void HUD::ObtainWeapon(int _num)
 	case WEAPONTYPE::HASTE: {
 		//ヘイストを上げる
 		float temp = std::stof(EquipmentList_[_num].instruction_.back());
-		player->MultDivBoostStatusHaste(temp, true);
+		player->AddSubBoostStatusHaste(temp, true);
 		needpop = false;	//ポップしない
 	}
 						  break;
@@ -875,7 +875,7 @@ void HUD::PauseSuperUpdate()
 
 void HUD::PauseUpdate()
 {
-	if (Input::IsKeyDown(DIK_ESCAPE)&&!BePause_) {
+	if (Input::IsKeyDown(DIK_ESCAPE) && !BePause_) {
 		pause_ = true;
 		GetParent()->SetFlags(10101);
 	}
@@ -899,11 +899,11 @@ void HUD::PauseDraw()
 		data.font = TextFont::GetFontName(FontList::Makinas);
 
 
-		TextFont::Draw("strength：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().strength_))+"："+std::to_string(player->GetStatus().strength_), {100, 450}, data);
+		TextFont::Draw("strength：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().strength_)) + "：" + std::to_string(player->GetStatus().strength_), { 100, 450 }, data);
 		TextFont::Draw("spped：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().speed_)) + "：" + std::to_string(player->GetStatus().speed_), { 100,500 }, data);
 		TextFont::Draw("range：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().collectionRange_)) + "：" + std::to_string(player->GetStatus().collectionRange_), { 100, 550 }, data);
 		TextFont::Draw("critical：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().critical_)) + "：" + std::to_string(player->GetStatus().critical_), { 100, 600 }, data);
-		TextFont::Draw("haste：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().haste_)) + "：" + std::to_string(player->GetStatus().haste_), { 100, 650 }, data);
+		TextFont::Draw("haste：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().haste_ + 1.0f)) + "：" + std::to_string(player->GetStatus().haste_), { 100, 650 }, data);
 	}
 }
 
