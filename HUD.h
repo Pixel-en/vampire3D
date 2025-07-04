@@ -134,7 +134,7 @@ private:
 	void PauseUpdate();
 	void PauseDraw();
 	//ステータスがどれくらい上がっているのか%に変換する
-	int StatusConvertBoost(float _status);
+	std::string StatusConvertBoost(float _status);
 
 
 	/*-----タイマー-----*/

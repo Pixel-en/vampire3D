@@ -893,26 +893,71 @@ void HUD::PauseDraw()
 
 		Player* player = GetRootJob()->FindGameObject<Player>();
 
+
 		FontData data{};
 		data.fontSize = 30;
 		data.Color = D2D1::ColorF(255, 255, 255);
 		data.font = TextFont::GetFontName(FontList::Makinas);
 
+		for (int i = 0;i < SEND - MAXHP;i++) {
 
-		TextFont::Draw("strength：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().strength_)) + "：" + std::to_string(player->GetStatus().strength_), { 100, 450 }, data);
-		TextFont::Draw("spped：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().speed_)) + "：" + std::to_string(player->GetStatus().speed_), { 100,500 }, data);
-		TextFont::Draw("range：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().collectionRange_)) + "：" + std::to_string(player->GetStatus().collectionRange_), { 100, 550 }, data);
-		TextFont::Draw("critical：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().critical_)) + "：" + std::to_string(player->GetStatus().critical_), { 100, 600 }, data);
-		TextFont::Draw("haste：" + std::to_string(StatusConvertBoost(player->GetBoostStatus().haste_ + 1.0f)) + "：" + std::to_string(player->GetStatus().haste_), { 100, 650 }, data);
+			std::string name, val;
+
+			int index = LEVEL::EQUIPMENTLISTNUM - (SEND - MAXHP) + i;
+			for (int j = 0;j < StatusUpList_.size();j++) {
+				if (LEVEL::EQUIPMENTSNAMELIST[index] == StatusUpList_[j].name_) {
+					name = StatusUpList_[j].displayName_;
+					break;
+				}
+			}
+
+			switch (i + WEAPONTYPE::MAXHP)
+			{
+			case WEAPONTYPE::MAXHP:
+				val = StatusConvertBoost(player->GetBoostStatus().maxHp_ + 1.0f);
+				break;
+			case WEAPONTYPE::SPD:
+				val = StatusConvertBoost(player->GetBoostStatus().speed_);
+				break;
+			case WEAPONTYPE::STR:
+				val=StatusConvertBoost(player->GetBoostStatus().strength_);
+				break;
+			case WEAPONTYPE::CRT:
+				val = StatusConvertBoost(player->GetBoostStatus().critical_);
+				break;
+			case WEAPONTYPE::COLLECT:
+				val=StatusConvertBoost(player->GetBoostStatus().collectionRange_);
+				break;
+			case WEAPONTYPE::HASTE:
+				val = StatusConvertBoost(player->GetBoostStatus().haste_ + 1.0f);
+				break;
+			default:
+				break;
+			}
+
+			TextFont::Draw(name + "：" + val, { 50,400 + float(i * 50) }, data);
+
+		}
+
+		//TextFont::Draw("strength：" + StatusConvertBoost(player->GetBoostStatus().strength_) + "：" + std::to_string(player->GetStatus().strength_), { 100, 450 }, data);
+		//TextFont::Draw("spped：" + StatusConvertBoost(player->GetBoostStatus().speed_) + "：" + std::to_string(player->GetStatus().speed_), { 100,500 }, data);
+		//TextFont::Draw("range：" + StatusConvertBoost(player->GetBoostStatus().collectionRange_) + "：" + std::to_string(player->GetStatus().collectionRange_), { 100, 550 }, data);
+		//TextFont::Draw("critical：" + StatusConvertBoost(player->GetBoostStatus().critical_) + "：" + std::to_string(player->GetStatus().critical_), { 100, 600 }, data);
+		//TextFont::Draw("haste：" + StatusConvertBoost(player->GetBoostStatus().haste_ + 1.0f) + "：" + std::to_string(player->GetStatus().haste_), { 100, 650 }, data);
 	}
 }
 
-int HUD::StatusConvertBoost(float _status)
+std::string HUD::StatusConvertBoost(float _status)
 {
+	std::string sing = "";
 	float status = _status;
+	//もともと１が入ってるため100が出たときは何も加算されてないということで-100引く
 	status -= 1.0f;
-	int boost = status * 100;
-	return boost;
+	int boost = std::roundf(status * 100);
+	if (boost > 0)
+		sing = "+";
+
+	return  sing + std::to_string(boost) + "%";
 }
 
 void HUD::TimerDraw()

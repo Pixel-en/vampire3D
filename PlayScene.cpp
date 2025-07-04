@@ -84,18 +84,27 @@ void PlayScene::SuperUpdate()
 
 void PlayScene::Update()
 {
+	//ロードが終わってないなら
 	if (!isLoaded_) {
 		PlayLoad* PL = FindGameObject<PlayLoad>();
 		if (PL->GetIsStart()) {
+			//インスタンスを作る
 			LoadObject();
+			//更新と描画をしないようにする
 			SetChildFlags(0b10001);
+			//PlayLoadのみ描画と交信を行う
 			PL->SetFlags(0b11101);
+			//準備の割合を送る
 			PL->SetBarScale((float)LoadCount_ / OBJECTNUM);
+			//準備が完了したら
 			if (LoadCount_ >= OBJECTNUM) {
 				if (Input::IsKeyDown(DIK_RETURN)||Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
 					isLoaded_ = true;
+					//描画と更新をするようにする
 					SetChildFlags(0b11101);
+					//ロード画面は殺す
 					PL->KillMe();
+					//BGMをつける
 					Audio::Play(hIntroSound_);
 				}
 			}
