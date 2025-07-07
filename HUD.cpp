@@ -48,7 +48,7 @@ namespace {
 			"Cushion","LifeFragment","MaxHp","Speed","Strength","Critical","Collect","Haste"
 		};
 		const float FRAMEIMAGEBUFFER{ 175 };
-		const int EQUIPMENTSMAX{ 6 };
+		const int EQUIPMENTSMAX{ 1 };
 		const XMFLOAT3 NAMEPOS{ 780,40.0f, (170 + 5) };	//Zは使わないので計算用に使う
 		const XMFLOAT3 TEXTPOS1{ 780,105.0f,170 };
 		const XMFLOAT3 TEXTPOS2{ 1250,115.0f,170 };
@@ -853,11 +853,16 @@ void HUD::ObtainWeapon(int _num)
 void HUD::PauseInit()
 {
 	hPauseBack_ = -1;
+	hPauseStatusFrame_ = -1;
 	hPauseBack_ = Image::Load("Assets\\Image\\UI\\PauseBackGround0.6.png");
 	HandleCheck(hPauseBack_);
+	hPauseStatusFrame_ = Image::Load("Assets\\Image\\UI\\PauseStatusFrame.png");
+	HandleCheck(hPauseStatusFrame_);
 
 	pause_ = false;
 	BePause_ = false;
+
+	trans.position_ = { -0.8f,0.2f,0 };
 }
 
 void HUD::PauseSuperUpdate()
@@ -893,6 +898,18 @@ void HUD::PauseDraw()
 
 		Player* player = GetRootJob()->FindGameObject<Player>();
 
+		
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT))
+			trans.position_.x -= 0.01f;
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT))
+			trans.position_.x += 0.01f;
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP))
+			trans.position_.y += 0.01f;
+		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN))
+			trans.position_.y -= 0.01f;
+
+		Debug::Log("HUD: ");
+		Debug::Log(trans.position_, true);
 
 		FontData data{};
 		data.fontSize = 30;
@@ -910,6 +927,10 @@ void HUD::PauseDraw()
 					break;
 				}
 			}
+			Transform temp = trans;
+			temp.position_.y -= i * 0.17;
+			Image::SetTransform(hPauseStatusFrame_, temp);
+			Image::Draw(hPauseStatusFrame_);
 
 			switch (i + WEAPONTYPE::MAXHP)
 			{

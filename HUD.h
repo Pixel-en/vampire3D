@@ -126,8 +126,11 @@ private:
 
 	/*--------ポーズ画面--------*/
 	int hPauseBack_;	//背景のハンドル
+	int hPauseStatusFrame_;
 	bool pause_;		//ポーズ中かどうか
 	bool BePause_;		//ポーズしていたかどうか
+	Transform trans;
+
 
 	void PauseInit();
 	void PauseSuperUpdate();
