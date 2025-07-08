@@ -98,7 +98,7 @@ void PlayScene::Update()
 			PL->SetBarScale((float)LoadCount_ / OBJECTNUM);
 			//èÄîıÇ™äÆóπÇµÇΩÇÁ
 			if (LoadCount_ >= OBJECTNUM) {
-				if (Input::IsKeyDown(DIK_RETURN)||Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
+				if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadAllButtonDown()) {
 					isLoaded_ = true;
 					//ï`âÊÇ∆çXêVÇÇ∑ÇÈÇÊÇ§Ç…Ç∑ÇÈ
 					SetChildFlags(0b11101);

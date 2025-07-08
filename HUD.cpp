@@ -48,7 +48,7 @@ namespace {
 			"Cushion","LifeFragment","MaxHp","Speed","Strength","Critical","Collect","Haste"
 		};
 		const float FRAMEIMAGEBUFFER{ 175 };
-		const int EQUIPMENTSMAX{ 1 };
+		const int EQUIPMENTSMAX{ 6 };
 		const XMFLOAT3 NAMEPOS{ 780,40.0f, (170 + 5) };	//Zは使わないので計算用に使う
 		const XMFLOAT3 TEXTPOS1{ 780,105.0f,170 };
 		const XMFLOAT3 TEXTPOS2{ 1250,115.0f,170 };
@@ -58,6 +58,9 @@ namespace {
 	namespace EQUIPMENTS {
 		const float ICONBUFFERWIDTH{ 0.065f };
 		const float ICONBUFFERHEIGHT{ 0.12f };
+	}
+	namespace PAUSE {
+		const XMFLOAT3 FONTPOS{ 80,350,61 };//Zは使わないので計算用に使う
 	}
 	namespace TIMER {
 		const XMFLOAT2 TIMERPOS{ 600, 30 };
@@ -458,6 +461,7 @@ void HUD::LevelSuperUpdate()
 		if (Input::GetPadStickL().y >= -0.5f && Input::GetPadStickL().y <= 0.5f)
 			StickTriggerY_ = false;
 
+
 		//一番下でした入力が入ったときに上にする
 		levelCursor_ = levelCursor_ % LEVEL::WEAPONCHOICEVAL;
 
@@ -529,7 +533,7 @@ void HUD::LevelDraw()
 			int Lv = 0;
 			FontData data;
 			data.font = TextFont::GetFontName(FontList::Makinas);
-			data.Color = D2D1::ColorF(255, 255, 255);
+			data.Color = D2D1::ColorF(D2D1::ColorF::White);
 			data.fontSize = LEVEL::FONTSIZE;
 
 			//武器の名前
@@ -812,7 +816,7 @@ void HUD::ObtainWeapon(int _num)
 		needpop = false;	//ポップしない
 	}
 						break;
-	case WEAPONTYPE::STR: {
+	case WEAPONTYPE::ATK: {
 		//攻撃力を上げる
 		float temp = std::stof(EquipmentList_[_num].instruction_.back());
 		player->MultDivBoostStatusStrength(temp, true);
@@ -861,14 +865,12 @@ void HUD::PauseInit()
 
 	pause_ = false;
 	BePause_ = false;
-
-	trans.position_ = { -0.8f,0.2f,0 };
 }
 
 void HUD::PauseSuperUpdate()
 {
 	//分けることでしっかり切り替えられる+レベルアップ時にポーズしない
-	if (Input::IsKeyDown(DIK_ESCAPE)) {
+	if ((Input::IsKeyDown(DIK_ESCAPE)||Input::IsPadButtonDown(XINPUT_GAMEPAD_START))) {
 		//ポーズ中のみ再開させる
 		if (pause_) {
 			GetParent()->SetFlags(11101);
@@ -880,12 +882,13 @@ void HUD::PauseSuperUpdate()
 
 void HUD::PauseUpdate()
 {
-	if (Input::IsKeyDown(DIK_ESCAPE) && !BePause_) {
+	if ((Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) && !BePause_) {
 		pause_ = true;
 		GetParent()->SetFlags(10101);
 	}
 
 	BePause_ = false;
+
 }
 
 void HUD::PauseDraw()
@@ -898,25 +901,18 @@ void HUD::PauseDraw()
 
 		Player* player = GetRootJob()->FindGameObject<Player>();
 
-		
-		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_LEFT))
-			trans.position_.x -= 0.01f;
-		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_RIGHT))
-			trans.position_.x += 0.01f;
-		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_UP))
-			trans.position_.y += 0.01f;
-		if (Input::IsPadButtonDown(XINPUT_GAMEPAD_DPAD_DOWN))
-			trans.position_.y -= 0.01f;
-
-		Debug::Log("HUD: ");
-		Debug::Log(trans.position_, true);
-
 		FontData data{};
 		data.fontSize = 30;
-		data.Color = D2D1::ColorF(255, 255, 255);
+		data.Color = D2D1::ColorF(D2D1::ColorF::White);
 		data.font = TextFont::GetFontName(FontList::Makinas);
 
 		for (int i = 0;i < SEND - MAXHP;i++) {
+
+			//フレームを出す
+			Transform FrameTrans = HUDTransforms_[TRANSFORMTYPE::PAUSEFRAME];
+			FrameTrans.position_.y -= (i * FrameTrans.position_.z);
+			Image::SetTransform(hPauseStatusFrame_, FrameTrans);
+			Image::Draw(hPauseStatusFrame_);
 
 			std::string name, val;
 
@@ -927,10 +923,6 @@ void HUD::PauseDraw()
 					break;
 				}
 			}
-			Transform temp = trans;
-			temp.position_.y -= i * 0.17;
-			Image::SetTransform(hPauseStatusFrame_, temp);
-			Image::Draw(hPauseStatusFrame_);
 
 			switch (i + WEAPONTYPE::MAXHP)
 			{
@@ -940,7 +932,7 @@ void HUD::PauseDraw()
 			case WEAPONTYPE::SPD:
 				val = StatusConvertBoost(player->GetBoostStatus().speed_);
 				break;
-			case WEAPONTYPE::STR:
+			case WEAPONTYPE::ATK:
 				val=StatusConvertBoost(player->GetBoostStatus().strength_);
 				break;
 			case WEAPONTYPE::CRT:
@@ -956,15 +948,17 @@ void HUD::PauseDraw()
 				break;
 			}
 
-			TextFont::Draw(name + "：" + val, { 50,400 + float(i * 50) }, data);
+			TextFont::Draw(name + "：" + val, { PAUSE::FONTPOS.x,PAUSE::FONTPOS.y + float(i * PAUSE::FONTPOS.z) }, data);
+
+
+			//アイコン表示
+			Transform transIcon = HUDTransforms_[TRANSFORMTYPE::PAUSEICON];
+			transIcon.position_.y -= (i * transIcon.position_.z);
+
+			Image::SetTransform(hLevelIconImage_[index], transIcon);
+			Image::Draw(hLevelIconImage_[index]);
 
 		}
-
-		//TextFont::Draw("strength：" + StatusConvertBoost(player->GetBoostStatus().strength_) + "：" + std::to_string(player->GetStatus().strength_), { 100, 450 }, data);
-		//TextFont::Draw("spped：" + StatusConvertBoost(player->GetBoostStatus().speed_) + "：" + std::to_string(player->GetStatus().speed_), { 100,500 }, data);
-		//TextFont::Draw("range：" + StatusConvertBoost(player->GetBoostStatus().collectionRange_) + "：" + std::to_string(player->GetStatus().collectionRange_), { 100, 550 }, data);
-		//TextFont::Draw("critical：" + StatusConvertBoost(player->GetBoostStatus().critical_) + "：" + std::to_string(player->GetStatus().critical_), { 100, 600 }, data);
-		//TextFont::Draw("haste：" + StatusConvertBoost(player->GetBoostStatus().haste_ + 1.0f) + "：" + std::to_string(player->GetStatus().haste_), { 100, 650 }, data);
 	}
 }
 
@@ -985,7 +979,7 @@ void HUD::TimerDraw()
 {
 	FontData data{};
 	data.fontSize = TIMER::FONTSIZE;
-	data.Color = D2D1::ColorF(255, 255, 255);	//白
+	data.Color = D2D1::ColorF(D2D1::ColorF::White);	//白
 	data.font = TextFont::GetFontName(FontList::Gkktt);
 
 	int Stime = fmodf(PlayTime_, 60.0f);
@@ -1046,7 +1040,7 @@ void HUD::HPDraw()
 
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Gkktt);
-	data.Color = D2D1::ColorF(0, 0, 0);
+	data.Color = D2D1::ColorF(D2D1::ColorF::White);
 	data.fontSize = HPS::FONTSIZE;
 	//HPの大きさを変える
 	TextFont::Draw(std::to_string(player->GetStatus().hp_) + "/" + std::to_string(player->GetStatus().maxHp_), HPS::HPPOS, data);
@@ -1115,7 +1109,7 @@ void HUD::ClearDraw()
 	if (clearFlag_) {
 		FontData data{};
 		data.fontSize = CLEAR::FONTSIZE;
-		data.Color = D2D1::ColorF(255, 255, 255);
+		data.Color = D2D1::ColorF(D2D1::ColorF::White);
 		data.font = TextFont::GetFontName(FontList::Gkktt);
 		TextFont::Draw("Clear!", { screenWidth / 2.0f, screenHeight / 2.0f }, data);
 	}
@@ -1135,7 +1129,7 @@ void HUD::KnockDraw()
 
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Gkktt);
-	data.Color = D2D1::ColorF(0, 0, 0);
+	data.Color = D2D1::ColorF(D2D1::ColorF::White);
 	data.fontSize = KNOCKS::FONTSIZE;
 	//HPの大きさを変える
 	TextFont::Draw(std::to_string(knockCount_), KNOCKS::KNOCKPOS, data);

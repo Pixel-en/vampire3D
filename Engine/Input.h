@@ -87,6 +87,21 @@ namespace Input
 	//戻値：放した瞬間だったらtrue
 	bool IsPadButtonUp(int buttonCode, int padID = 0);
 
+	//コントローラーのいずれかのボタンが押されているか調べる
+	//引数：buttonCode	調べたいボタンの番号
+	//戻値：押されていればtrue
+	bool IsPadAllButton(int padID = 0);
+
+	//コントローラーのいずれかのボタンを今押したか調べる（押しっぱなしは無効）
+	//引数：buttonCode	調べたいボタンの番号
+	//戻値：押した瞬間だったらtrue
+	bool IsPadAllButtonDown(int padID = 0);
+
+	//コントローラーのいずれかのボタンを今放したか調べる
+	//引数：buttonCode	調べたいボタンの番号
+	//戻値：放した瞬間だったらtrue
+	bool IsPadAllButtonUp(int buttonCode, int padID = 0);
+
 	//左スティックの傾きを取得
 	//戻値:傾き具合（-1～1）
 	XMFLOAT3 GetPadStickL(int padID = 0);

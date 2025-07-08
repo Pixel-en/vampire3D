@@ -33,7 +33,7 @@ namespace{
 
 		MAXHP=201,
 		SPD,
-		STR,
+		ATK,
 		CRT,
 		COLLECT,
 		HASTE,
@@ -60,6 +60,8 @@ private:
 		LEVELICON,
 		//ポーズ
 		PAUSEBACK,
+		PAUSEFRAME,
+		PAUSEICON,
 		//HP
 		HPBACK,
 		HPGAUGE,
@@ -129,7 +131,6 @@ private:
 	int hPauseStatusFrame_;
 	bool pause_;		//ポーズ中かどうか
 	bool BePause_;		//ポーズしていたかどうか
-	Transform trans;
 
 
 	void PauseInit();

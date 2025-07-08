@@ -185,8 +185,9 @@ bool Player::WeaponStateWrite(std::string name, WeaponObject::Status& _state)
 
 void Player::HealingHp(int _hp)
 {
-	if (status_.hp_ >= status_.maxHp_)
+	if (status_.hp_ >= status_.maxHp_ && _hp >= 0)
 		return; //‘Ì—Í‚ªÅ‘å‚È‚ç‰½‚à‚µ‚È‚¢
+
 	status_.hp_ += _hp;
 	if (status_.hp_ > status_.maxHp_)
 		status_.hp_ = status_.maxHp_; //‘Ì—Í‚ªÅ‘å’l‚ğ’´‚¦‚È‚¢‚æ‚¤‚É‚·‚é

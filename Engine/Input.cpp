@@ -214,6 +214,35 @@ namespace Input
 		return false;
 	}
 
+	bool IsPadAllButton(int padID)
+	{
+		if (controllerState_[padID].Gamepad.wButtons)
+		{
+			return true; //押してる
+		}
+		return false; //押してない
+	}
+
+	bool IsPadAllButtonDown(int padID)
+	{
+		//今は押してて、前回は押してない
+		if (IsPadAllButton(padID) && !(prevControllerState_[padID].Gamepad.wButtons ))
+		{
+			return true;
+		}
+		return false;
+	}
+
+	bool IsPadAllButtonUp(int buttonCode, int padID)
+	{
+		//今押してなくて、前回は押してる
+		if (!IsPadAllButton(padID) && prevControllerState_[padID].Gamepad.wButtons)
+		{
+			return true;
+		}
+		return false;
+	}
+
 
 	float GetAnalogValue(int raw, int max, int deadZone)
 	{
@@ -247,7 +276,6 @@ namespace Input
 
 		return result;
 	}
-
 
 	//左スティックの傾きを取得
 	XMFLOAT3 GetPadStickL(int padID)
