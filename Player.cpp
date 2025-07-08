@@ -341,7 +341,7 @@ void Player::Draw()
 
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Gkktt);
-	data.Color = D2D1::ColorF(255, 255, 255);
+	data.Color = D2D1::ColorF(D2D1::ColorF::White);
 	data.fontSize = FONTSIZE;
 #ifdef _DEBUG
 	TextFont::Draw("x=" + std::to_string(transform_.position_.x), { 30, 200 }, data);

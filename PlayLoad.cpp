@@ -75,7 +75,8 @@ void PlayLoad::Draw()
 	std::string text = "LOADING...";
 	if (BarTrans_.scale_.x >= 1.0f) {
 		text = "LOADING COMPLETE!";
-		Image::Draw(hStartImage_);
+		//Image::Draw(hStartImage_);
+		TextFont::Draw("ボタンを押してスタート", { 490,screenHeight / 2.0f }, data);
 	}
 
 	TextFont::Draw(text, { 900, 590 }, data);
