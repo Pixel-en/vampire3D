@@ -164,10 +164,10 @@ private:
 	void EquipmentDraw();
 
 
-	/*--------クリア--------*/
-	bool clearFlag_;
-	void ClearInit();
-	void ClearDraw();
+	/*--------シーン移動メッセージ--------*/
+	std::string sceneMessage_;
+	void SceneMessageInit();
+	void SceneMessageDraw();
 
 	/*--------撃破数-----------*/
 
@@ -204,7 +204,7 @@ public:
 
 	void SetTimer(float _time) { PlayTime_ = _time; }
 
-	void SetClearFlag(bool _flag);
+	void SetSceneMessage(std::string _str);
 
 	void AddKnockDown() { knockCount_++; }
 };

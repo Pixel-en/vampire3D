@@ -6,10 +6,11 @@
 #include "Engine/SphereCollider.h"
 #include "Engine/BoxCollider.h"
 #include "Engine/CsvReader.h"
-#include "Engine/SceneManager.h"
 #include "Engine/TextFont.h"
 #include <algorithm>
+#include "Engine/Audio.h"
 
+#include "PlayScene.h"
 #include "Field.h"
 #include "EnemySpawn.h"
 #include "Knife.h"
@@ -23,6 +24,7 @@ namespace {
 	const float GRAVITY{ 9.8f / 2.0f / 60.0f };
 	const float INVINCIBLETIME{ 0.5f };
 	const int FONTSIZE{ 35 };
+	const int EXPSECOUNT{ 10 };	//経験値取得のSEの同時再生数
 }
 
 Player::Player(GameObject* parent)
@@ -67,6 +69,12 @@ void Player::Initialize()
 	hImage_ = Image::Load("Assets\\Image\\UI\\Test_Crosshair.png");
 	HandleCheck(hImage_, "クロスヘアがない");
 
+	hSEDead_ = Audio::Load("Assets\\Audio\\SE\\Dead.wav",false);
+	HandleCheck(hSEDead_, "プレイヤーの死亡SEがない");
+
+	hSEEXP_ = Audio::Load("Assets\\Audio\\SE\\EXP.wav", false, EXPSECOUNT);
+	HandleCheck(hSEEXP_, "プレイヤーの経験値取得SEがない");
+
 	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1.5, 0), 2);
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1, 0), XMFLOAT3(1.0f, 3.0, 1.0f));
 	AddCollider(collision);
@@ -81,6 +89,7 @@ void Player::SuperUpdate()
 
 void Player::Update()
 {
+
 	StatusUpdate();
 
 	Move();
@@ -92,6 +101,7 @@ void Player::Update()
 			Input::SetPadVibration(0, 0);
 	}
 
+	//デバッグ用経験値取得
 #ifdef _DEBUG
 	if (Input::IsKeyDown(DIK_Y)) {
 		AcquisitionEXP(10);
@@ -339,11 +349,11 @@ void Player::Draw()
 	Image::SetTransform(hImage_, crossTrans);
 	Image::Draw(hImage_);
 
+#ifdef _DEBUG
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Gkktt);
 	data.Color = D2D1::ColorF(D2D1::ColorF::White);
 	data.fontSize = FONTSIZE;
-#ifdef _DEBUG
 	TextFont::Draw("x=" + std::to_string(transform_.position_.x), { 30, 200 }, data);
 	TextFont::Draw("y=" + std::to_string(transform_.position_.y), { 30, 230 }, data);
 	TextFont::Draw("z=" + std::to_string(transform_.position_.z), { 30, 260 }, data);
@@ -359,7 +369,7 @@ void Player::OnCollision(GameObject* pTarget)
 {
 	if (pTarget->GetObjectTag() == "Enemy")
 	{
-		if (InvincibleTimer_ > 0.0f)
+		if (InvincibleTimer_ > 0.0f||die_)
 			return;
 
 		EnemySpawn* ep = GetRootJob()->FindGameObject<EnemySpawn>();
@@ -374,9 +384,18 @@ void Player::OnCollision(GameObject* pTarget)
 				status_.hp_ -= (damege - status_.resist_);
 				Input::SetPadVibration(0.5f * 65535, 0.5f * 65535);
 				if (status_.hp_ <= 0) {
-					SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
-					sc->ChangeScene(SCENE_ID_GAMEOVER);
+					//プレイヤーが死んだことを伝える
+					PlayScene* pc = GetRootJob()->FindGameObject<PlayScene>();
+					pc->PlayerDead();
+					//死亡フラグを付ける
+					die_ = true;
+					//更新もしない
+					Leave();
+					//描画もしない
+					Invisible();
+					status_.hp_ = 0;
 					Input::SetPadVibration(0, 0);
+					Audio::Play(hSEDead_);
 				}
 				isDamege_ = true;
 				InvincibleTimer_ = INVINCIBLETIME;
@@ -425,7 +444,12 @@ void Player::OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterato
 
 void Player::AcquisitionEXP(int _exp)
 {
+	//死んでいたら経験値を増やさない
+	if (die_)
+		return;
+
 	status_.currentExp_ += (_exp * status_.ExpBoost_);
+	Audio::Play(hSEEXP_);
 
 	if (status_.currentExp_ >= status_.nextLvExp_) {
 		status_.level_++;							//レベルアップ

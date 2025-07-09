@@ -18,6 +18,9 @@ class PlayScene : public GameObject
 	bool isClear_;
 	float clearTimer_;
 
+	bool isGameOver_;
+	float gameOverTimer_;
+
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）
@@ -38,4 +41,6 @@ public:
 	void Release() override;
 
 	float GetPlayTimer() { return PlayTimer_; }
+
+	void PlayerDead() ;
 };

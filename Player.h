@@ -47,6 +47,10 @@ private:
 
 	std::map<std::string, WeaponObject::Status> WeaponState_;
 
+	bool die_;
+	int hSEDead_;
+	int hSEEXP_;
+
 public:
 	std::vector<WeaponObject*> MyWeaponList_;
 	std::vector<ArmorObject*> MyArmorList_;

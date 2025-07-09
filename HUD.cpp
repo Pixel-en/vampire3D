@@ -70,8 +70,10 @@ namespace {
 		const XMFLOAT2 HPPOS{ 130,23 };
 		const int FONTSIZE{ 20 };
 	}
-	namespace CLEAR {
+	namespace SCENEMESSAGE {
 		const int FONTSIZE{ 50 };
+		const XMFLOAT2 POS1{440,330};
+		const XMFLOAT2 POS2{ 840, 390 };
 	}
 	namespace KNOCKS {
 		const XMFLOAT2 KNOCKPOS{ 110,50 };
@@ -126,7 +128,7 @@ void HUD::Initialize()
 	HPInitialize();
 	EquipmentInitialize();
 	UIPosRead();
-	ClearInit();
+	SceneMessageInit();
 	KnockInit();
 	PauseInit();
 }
@@ -154,7 +156,7 @@ void HUD::Draw()
 	LevelDraw();
 	HPDraw();
 	EquipmentDraw();
-	ClearDraw();
+	SceneMessageDraw();
 	KnockDraw();
 }
 
@@ -966,8 +968,8 @@ std::string HUD::StatusConvertBoost(float _status)
 {
 	std::string sing = "";
 	float status = _status;
-	//‚à‚Æ‚à‚Æ‚P‚ª“ü‚Á‚Ä‚é‚½‚ß100‚ªo‚½‚Æ‚«‚Í‰½‚à‰ÁŽZ‚³‚ê‚Ä‚È‚¢‚Æ‚¢‚¤‚±‚Æ‚Å-100ˆø‚­
 	status -= 1.0f;
+	//100•ª—¦‚Ö‚Ì•ÏŠ·
 	int boost = std::roundf(status * 100);
 	if (boost > 0)
 		sing = "+";
@@ -1094,24 +1096,24 @@ void HUD::EquipmentDraw()
 
 }
 
-void HUD::SetClearFlag(bool _flag)
+void HUD::SetSceneMessage(std::string _str)
 {
-	clearFlag_ = _flag;
+	sceneMessage_ = _str;
 }
 
-void HUD::ClearInit()
+void HUD::SceneMessageInit()
 {
-	clearFlag_ = false;
+	sceneMessage_ = "";
 }
 
-void HUD::ClearDraw()
+void HUD::SceneMessageDraw()
 {
-	if (clearFlag_) {
+	if (sceneMessage_.length()>0) {
 		FontData data{};
-		data.fontSize = CLEAR::FONTSIZE;
+		data.fontSize = SCENEMESSAGE::FONTSIZE;
 		data.Color = D2D1::ColorF(D2D1::ColorF::White);
 		data.font = TextFont::GetFontName(FontList::Gkktt);
-		TextFont::Draw("Clear!", { screenWidth / 2.0f, screenHeight / 2.0f }, data);
+		TextFont::Draw(sceneMessage_, SCENEMESSAGE::POS1,SCENEMESSAGE::POS2, data);
 	}
 }
 
