@@ -77,6 +77,7 @@ void LifeFragment::LevelUp(std::string str)
 			rate_ = val;
 			break;
 		case SPPED:
+			if (BuffFlag_) //ƒoƒt‚ª‚©‚©‚Á‚Ä‚¢‚é‚È‚ç
 			player->MultDivBoostStatusSpeed(BuffSpeed_, false);
 			BuffSpeed_ = val;
 			BuffFlag_ = false; //‰Šú‰»

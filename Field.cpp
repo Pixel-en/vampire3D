@@ -24,7 +24,6 @@ void Field::SpawnField(int num)
 			fieldPosList_.push_back(data);
 		}
 	}
-	//‚±‚±C³‚µ‚½‚¢
 	currentNum_ = fieldPosList_.size() / 2;
 	Debug::Log(temp);
 	Debug::Log("‚ğ’†S‚É¶¬", true);

@@ -141,15 +141,19 @@ void Enemy::Update()
 		Move();
 		break;
 	case ANIMATION::HIT:
-		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetHitFrame() && (ModelLOD_ != LMAX)) {
-			ModelAnim_ = ANIMATION::MOVE; //ヒットアニメーションが終わったら移動アニメーションに戻る
+		if ((ModelLOD_ != LMAX)) {
+			if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetHitFrame()) {
+				ModelAnim_ = ANIMATION::MOVE; //ヒットアニメーションが終わったら移動アニメーションに戻る
+			}
 		}
 		break;
 	case ANIMATION::DEATH:
-		if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetDeathAnimFrame() && (ModelLOD_ != LMAX)) {
-			EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
-			EManager->SpawnEXP(transform_.position_, status_.exp_);
-			KillMe();
+		if ((ModelLOD_ != LMAX)) {
+			if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetDeathAnimFrame()) {
+				EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
+				EManager->SpawnEXP(transform_.position_, status_.exp_);
+				KillMe();
+			}
 		}
 		break;
 	default:
