@@ -1,6 +1,8 @@
 #include "Bomb.h"
 #include "EnemySpawn.h"
 #include "Player.h"
+#include "Engine/VFX.h"
+#include "PlayScene.h"
 
 namespace {
 	const int LISTMAX{ 30 };
@@ -9,10 +11,11 @@ namespace {
 
 void Bomb::AddBullet()
 {
+	spawncount_++;
 }
 
 Bomb::Bomb(GameObject* parent)
-	:WeaponObject(parent,"Bomb")
+	:WeaponObject(parent, "Bomb")
 {
 	spawncount_ = 1;
 }
@@ -42,7 +45,7 @@ void Bomb::Update()
 			Bomb::cBomb* c = Instantiate<Bomb::cBomb>(GetParent());
 			c->SetStatus(status_);
 			c->SetRotateY(i * rot);
- 			List_.push_back(c);
+			List_.push_back(c);
 		}
 		Reset();
 	}
@@ -59,8 +62,6 @@ void Bomb::Update()
 			itr++;
 		}
 	}
-	int a = List_.size();
-	Debug::Log(a, true);
 }
 
 void Bomb::Draw()
@@ -75,7 +76,7 @@ void Bomb::Release()
 void Bomb::cBomb::Move()
 {
 	if (ignite_) {
-		if (detonateTimer_<0.0f) {
+		if (detonateTimer_ < 0.0f) {
 			detonate_ = true;
 		}
 		else {
@@ -88,6 +89,7 @@ void Bomb::cBomb::Move()
 		CollisionSizeSet(status_.size_ * 2.0f);
 
 		if (varia_.AttackTime_ < 0.0f) {
+			EffectUpdate();
 			Stop();
 			KillMe();
 			return;
@@ -109,8 +111,24 @@ void Bomb::cBomb::ResetSub()
 	transform_.position_ += dir * 2.0f;
 }
 
+void Bomb::cBomb::EffectUpdate()
+{
+	PlayScene* scene = GetRootJob()->FindGameObject<PlayScene>();
+	NullCheck(scene);
+
+	EmitterData data = scene->GetEmitterData("Bomb", "fire");
+	data.position = data.position + transform_.position_;
+	VFX::Start(data);
+	data = scene->GetEmitterData("Bomb", "sparks");
+	data.position = data.position + transform_.position_;
+	VFX::Start(data);
+	data = scene->GetEmitterData("Bomb", "flash");
+	data.position = data.position + transform_.position_;
+	VFX::Start(data);
+}
+
 Bomb::cBomb::cBomb(GameObject* parent)
-	:WeaponObject(parent,"cBomb")
+	:WeaponObject(parent, "cBomb")
 {
 	detonate_ = false;
 	ignite_ = false;

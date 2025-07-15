@@ -2,6 +2,7 @@
 #include "WeaponObject.h"
 #include <list>
 
+
 //cBomb‚ğŠÇ—‚·‚é(ƒŒƒxƒ‹‚È‚Ç)
 class Bomb :public WeaponObject
 {
@@ -17,6 +18,8 @@ class Bomb :public WeaponObject
 		void ResetSub() override;
 
 		void AddBullet() override {};
+
+		void EffectUpdate();
 	public:
 		cBomb(GameObject* parent);
 

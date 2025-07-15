@@ -25,6 +25,9 @@ namespace {
 	const float INVINCIBLETIME{ 0.5f };
 	const int FONTSIZE{ 35 };
 	const int EXPSECOUNT{ 10 };	//経験値取得のSEの同時再生数
+
+	const int NEXTEXP[3] = { 10,13,16 };
+	const int EXPUPLEVEL[2] = { 20,40 };
 }
 
 Player::Player(GameObject* parent)
@@ -451,6 +454,13 @@ void Player::AcquisitionEXP(int _exp)
 	status_.currentExp_ += (_exp * status_.ExpBoost_);
 	Audio::Play(hSEEXP_);
 
+	enum
+	{
+		LEVEL0,
+		LEVEL1,
+		LEVEL2
+	};
+
 	if (status_.currentExp_ >= status_.nextLvExp_) {
 		status_.level_++;							//レベルアップ
 		status_.totalExp_ += status_.currentExp_;	//トータルに加算
@@ -464,13 +474,13 @@ void Player::AcquisitionEXP(int _exp)
 		ep->AddEnemyNum();	//敵の数を増やす
 
 		//次のレベルに必要な経験値を計算
-		if (status_.level_ <= 20)
-			status_.nextLvExp_ += 10;
-		else if (status_.level_ <= 40) {
-			status_.nextLvExp_ += 13;
+		if (status_.level_ <= EXPUPLEVEL[LEVEL0])
+			status_.nextLvExp_ += NEXTEXP[LEVEL0];
+		else if (status_.level_ <= EXPUPLEVEL[LEVEL1]) {
+			status_.nextLvExp_ += NEXTEXP[LEVEL1];
 		}
 		else {
-			status_.nextLvExp_ += 16;
+			status_.nextLvExp_ += NEXTEXP[LEVEL2];
 		}
 	}
 

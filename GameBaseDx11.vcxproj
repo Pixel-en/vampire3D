@@ -272,6 +272,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\CSV\EmitterFile.csv" />
     <None Include="Assets\CSV\UI.csv" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
