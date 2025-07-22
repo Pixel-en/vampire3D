@@ -45,7 +45,7 @@ namespace {
 			"Knife","PoisonThrow","SpikeOrb","Missile","Laser","Bomb",
 			"Armor","FreeMind","WideAmulet","KnowledgeBook","HeartCream",
 			"WonderCookie","MuscleSuit","EnergyDrink","MagicHand","Monocle",
-			"Cushion","LifeFragment","MaxHp","Speed","Strength","Critical","Collect","Haste"
+			"Cushion","LifeFragment","MaxHp","Speed","Strength","Critical","Collect","Haste","Apple"
 		};
 		const float FRAMEIMAGEBUFFER{ 175 };
 		const int EQUIPMENTSMAX{ 6 };
@@ -72,7 +72,7 @@ namespace {
 	}
 	namespace SCENEMESSAGE {
 		const int FONTSIZE{ 50 };
-		const XMFLOAT2 POS1{440,330};
+		const XMFLOAT2 POS1{ 440,330 };
 		const XMFLOAT2 POS2{ 840, 390 };
 	}
 	namespace KNOCKS {
@@ -846,6 +846,12 @@ void HUD::ObtainWeapon(int _num)
 		needpop = false;	//ポップしない
 	}
 						  break;
+	case WEAPONTYPE::APPLE:
+	{
+		float temp = std::stof(EquipmentList_[_num].instruction_.back());
+		player->HealingHp(player->GetStatus().maxHp_ * temp);
+		needpop = false;	//ポップしない
+	}
 	default:
 		break;
 	}
@@ -872,7 +878,7 @@ void HUD::PauseInit()
 void HUD::PauseSuperUpdate()
 {
 	//分けることでしっかり切り替えられる+レベルアップ時にポーズしない
-	if ((Input::IsKeyDown(DIK_ESCAPE)||Input::IsPadButtonDown(XINPUT_GAMEPAD_START))) {
+	if ((Input::IsKeyDown(DIK_ESCAPE) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START))) {
 		//ポーズ中のみ再開させる
 		if (pause_) {
 			GetParent()->SetFlags(11101);
@@ -908,7 +914,10 @@ void HUD::PauseDraw()
 		data.Color = D2D1::ColorF(D2D1::ColorF::White);
 		data.font = TextFont::GetFontName(FontList::Makinas);
 
-		for (int i = 0;i < SEND - MAXHP;i++) {
+		for (int i = 0; i < SEND - MAXHP; i++) {
+
+			if (i + WEAPONTYPE::MAXHP == WEAPONTYPE::APPLE)
+				continue;	//アップルは表示しない
 
 			//フレームを出す
 			Transform FrameTrans = HUDTransforms_[TRANSFORMTYPE::PAUSEFRAME];
@@ -919,7 +928,7 @@ void HUD::PauseDraw()
 			std::string name, val;
 
 			int index = LEVEL::EQUIPMENTLISTNUM - (SEND - MAXHP) + i;
-			for (int j = 0;j < StatusUpList_.size();j++) {
+			for (int j = 0; j < StatusUpList_.size(); j++) {
 				if (LEVEL::EQUIPMENTSNAMELIST[index] == StatusUpList_[j].name_) {
 					name = StatusUpList_[j].displayName_;
 					break;
@@ -929,19 +938,23 @@ void HUD::PauseDraw()
 			switch (i + WEAPONTYPE::MAXHP)
 			{
 			case WEAPONTYPE::MAXHP:
-				val = StatusConvertBoost(player->GetBoostStatus().maxHp_ + 1.0f);
+				//今なら符号をのみ変える感じにするかなぁ
+				if (player->GetBaseStatus().maxHp_ > 0)
+					val = "+" + std::to_string(player->GetBoostStatus().maxHp_) + "%";
+				else
+					val = std::to_string(player->GetBoostStatus().maxHp_) + "%";
 				break;
 			case WEAPONTYPE::SPD:
 				val = StatusConvertBoost(player->GetBoostStatus().speed_);
 				break;
 			case WEAPONTYPE::ATK:
-				val=StatusConvertBoost(player->GetBoostStatus().strength_);
+				val = StatusConvertBoost(player->GetBoostStatus().strength_);
 				break;
 			case WEAPONTYPE::CRT:
 				val = StatusConvertBoost(player->GetBoostStatus().critical_);
 				break;
 			case WEAPONTYPE::COLLECT:
-				val=StatusConvertBoost(player->GetBoostStatus().collectionRange_);
+				val = StatusConvertBoost(player->GetBoostStatus().collectionRange_);
 				break;
 			case WEAPONTYPE::HASTE:
 				val = StatusConvertBoost(player->GetBoostStatus().haste_ + 1.0f);
@@ -1069,9 +1082,9 @@ void HUD::EquipmentDraw()
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
 	//武器の取得したやつ表示
-	for (int i = 0;i < player->MyWeaponList_.size();i++) {
+	for (int i = 0; i < player->MyWeaponList_.size(); i++) {
 		//同じように名前が一緒なら
-		for (int j = 0;j < LEVEL::EQUIPMENTSNAMELIST.size();j++) {
+		for (int j = 0; j < LEVEL::EQUIPMENTSNAMELIST.size(); j++) {
 			if (player->MyWeaponList_[i]->GetObjectName() == LEVEL::EQUIPMENTSNAMELIST[j]) {
 				Transform IconTrans = HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS];
 				IconTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS].position_.x + (i * EQUIPMENTS::ICONBUFFERWIDTH),HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS].position_.y,0 };
@@ -1082,9 +1095,9 @@ void HUD::EquipmentDraw()
 	}
 
 	//防具の取得したやつ表示
-	for (int i = 0;i < player->MyArmorList_.size();i++) {
+	for (int i = 0; i < player->MyArmorList_.size(); i++) {
 		//同じように名前が一緒なら
-		for (int j = 0;j < LEVEL::EQUIPMENTSNAMELIST.size();j++) {
+		for (int j = 0; j < LEVEL::EQUIPMENTSNAMELIST.size(); j++) {
 			if (player->MyArmorList_[i]->GetObjectName() == LEVEL::EQUIPMENTSNAMELIST[j]) {
 				Transform IconTrans = HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS];
 				IconTrans.position_ = { HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS].position_.x + (i * EQUIPMENTS::ICONBUFFERWIDTH),HUDTransforms_[TRANSFORMTYPE::EQUIPMENTS].position_.y - EQUIPMENTS::ICONBUFFERHEIGHT,0 };
@@ -1108,12 +1121,12 @@ void HUD::SceneMessageInit()
 
 void HUD::SceneMessageDraw()
 {
-	if (sceneMessage_.length()>0) {
+	if (sceneMessage_.length() > 0) {
 		FontData data{};
 		data.fontSize = SCENEMESSAGE::FONTSIZE;
 		data.Color = D2D1::ColorF(D2D1::ColorF::White);
 		data.font = TextFont::GetFontName(FontList::Gkktt);
-		TextFont::Draw(sceneMessage_, SCENEMESSAGE::POS1,SCENEMESSAGE::POS2, data);
+		TextFont::Draw(sceneMessage_, SCENEMESSAGE::POS1, SCENEMESSAGE::POS2, data);
 	}
 }
 

@@ -12,6 +12,8 @@
 //-----------------------------------------------------------
 namespace Image
 {
+	const int ALPHAMAX{ 255 };
+
 	//‰æ‘œî•ñ
 	struct ImageData
 	{

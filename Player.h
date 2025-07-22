@@ -50,6 +50,7 @@ private:
 	bool die_;
 	int hSEDead_;
 	int hSEEXP_;
+	int hSELevelUP_;
 
 public:
 	std::vector<WeaponObject*> MyWeaponList_;

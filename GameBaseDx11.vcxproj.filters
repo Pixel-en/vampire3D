@@ -213,6 +213,9 @@
     <ClCompile Include="FreeMind.cpp">
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClCompile>
+    <ClCompile Include="Apple.cpp">
+      <Filter>PlayScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -390,6 +393,9 @@
     </ClInclude>
     <ClInclude Include="FreeMind.h">
       <Filter>PlayScene\Equipment\Armor</Filter>
+    </ClInclude>
+    <ClInclude Include="Apple.h">
+      <Filter>PlayScene</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -37,6 +37,8 @@ namespace{
 		CRT,
 		COLLECT,
 		HASTE,
+		APPLE,
+
 		SEND
 	};
 }

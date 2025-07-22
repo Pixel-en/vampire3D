@@ -7,3 +7,6 @@ Image
  MuscleSuit_Icon.png AI
  Speed_Icon.png AI
  Strength_Icon.png
+Model
+ Enemy
+ Apple:https://booth.pm/ja/items/6020331?srsltid=AfmBOorO2Yeph7y3VL5kkQoVlFDbJQ1SRjps8xcUq-7CtV8J_0wAcxI1

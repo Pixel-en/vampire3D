@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "EXPManager.h"
 #include "HUD.h"
+#include "Apple.h"
 
 
 using std::string;
@@ -17,6 +18,8 @@ namespace {
 	const float MIDDLEDISTANCE{ 70.0f };	//Middleモデルの距離
 	const float LOWDISTANCE{ 100.0f };	//Lowモデルの距離
 	const int RAYHEIGHT{ 5 }; //レイの高さ
+
+	const int FOODRATEMAX{ 10 };//回復の割合の最大 1/10でだすよ
 }
 
 
@@ -150,8 +153,19 @@ void Enemy::Update()
 	case ANIMATION::DEATH:
 		if ((ModelLOD_ != LMAX)) {
 			if (Model::GetAnimFrame(hModel_[ModelHP_][ModelLOD_][ModelAnim_]) >= GetDeathAnimFrame()) {
-				EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
-				EManager->SpawnEXP(transform_.position_, status_.exp_);
+
+				int randFood = rand() % FOODRATEMAX;
+				if (randFood == 0) {
+					//回復を出す
+					Apple* apple = Instantiate<Apple>(GetParent()->GetParent());
+					apple->SetPosition(transform_.position_);
+				}
+				else {
+					//経験値を出す
+					EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
+					EManager->SpawnEXP(transform_.position_, status_.exp_);
+				}
+
 				KillMe();
 			}
 		}

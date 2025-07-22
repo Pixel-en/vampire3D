@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Apple.cpp" />
     <ClCompile Include="Armor.cpp" />
     <ClCompile Include="ArmorObject.cpp" />
     <ClCompile Include="Bomb.cpp" />
@@ -189,6 +190,7 @@
     <ClCompile Include="WonderCookie.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Apple.h" />
     <ClInclude Include="Armor.h" />
     <ClInclude Include="ArmorObject.h" />
     <ClInclude Include="Bomb.h" />

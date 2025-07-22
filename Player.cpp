@@ -78,6 +78,9 @@ void Player::Initialize()
 	hSEEXP_ = Audio::Load("Assets\\Audio\\SE\\EXP.wav", false, EXPSECOUNT);
 	HandleCheck(hSEEXP_, "プレイヤーの経験値取得SEがない");
 
+	hSELevelUP_ = Audio::Load("Assets\\Audio\\SE\\LevelUp.wav", false);
+	HandleCheck(hSELevelUP_, "プレイヤーのレベルアップSEがない");
+
 	//SphereCollider* collision = new SphereCollider(XMFLOAT3(0, 1.5, 0), 2);
 	BoxCollider* collision = new BoxCollider(XMFLOAT3(0, 1, 0), XMFLOAT3(1.0f, 3.0, 1.0f));
 	AddCollider(collision);
@@ -462,6 +465,9 @@ void Player::AcquisitionEXP(int _exp)
 	};
 
 	if (status_.currentExp_ >= status_.nextLvExp_) {
+
+		Audio::Play(hSELevelUP_);
+
 		status_.level_++;							//レベルアップ
 		status_.totalExp_ += status_.currentExp_;	//トータルに加算
 		status_.currentExp_ -= status_.nextLvExp_;	//余剰分を算出
