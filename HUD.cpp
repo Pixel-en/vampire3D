@@ -939,7 +939,7 @@ void HUD::PauseDraw()
 			{
 			case WEAPONTYPE::MAXHP:
 				//¡‚È‚ç•„†‚ð‚Ì‚Ý•Ï‚¦‚éŠ´‚¶‚É‚·‚é‚©‚È‚Ÿ
-				if (player->GetBaseStatus().maxHp_ > 0)
+				if (player->GetBoostStatus().maxHp_ > 0)
 					val = "+" + std::to_string(player->GetBoostStatus().maxHp_) + "%";
 				else
 					val = std::to_string(player->GetBoostStatus().maxHp_) + "%";
