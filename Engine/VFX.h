@@ -59,7 +59,7 @@ namespace VFX
 	//エミッター（パーティクルの噴射口）
 	struct Emitter
 	{
-		EmitterData data ;		//作成時に指定されたデータ
+		EmitterData data;		//作成時に指定されたデータ
 		int handle = -1;		//ハンドル（番号）
 		DWORD frameCount = 0;	//開始してからのフレーム数
 		BillBoard* pBillBoard = nullptr;	//パーティクルに使うポリゴン
@@ -87,8 +87,6 @@ namespace VFX
 		float gravity;		//重力
 		Emitter* pEmitter;	//発生元エミッタ
 	};
-
-	
 
 
 
@@ -121,5 +119,11 @@ namespace VFX
 	//エミッタを削除（エフェクト終了）
 	//引数：handle	エフェクトの番号
 	void End(int handle);
+
+	//VFXの動作と描画を行わない
+	void VFXSTOP() ;
+
+	//VFXの動作と描画を行う
+	void VFXSTART();
 };
 

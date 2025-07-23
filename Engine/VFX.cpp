@@ -5,11 +5,19 @@ namespace VFX
 {
     std::list<Emitter*>		emitterList_;	//エミッター達
     std::list<Particle*>	particleList_;	//パーティクル達
+
+    bool isStop = false;
 };
 
 //更新
 void VFX::Update()
 {
+
+    if (isStop) {
+        //停止中なら更新しない
+        return;
+    }
+
     //各エミッターの処理
     EmitterUpdate();
 
@@ -21,6 +29,7 @@ void VFX::Update()
 //発生中のパーティクルの更新
 void VFX::ParticleUpdate()
 {
+
     for (auto particle = particleList_.begin(); particle != particleList_.end();)
     {
         //寿命が尽きたので消す
@@ -190,6 +199,11 @@ void VFX::CreateParticle(std::list<VFX::Emitter*>::iterator& emitter)
 //パーティクル描画
 void VFX::Draw()
 {
+    if (isStop) {
+        //停止中なら描画しない
+        return;
+    }
+
     Direct3D::SetShader(Direct3D::SHADER_BILLBOARD);
     Direct3D::SetBlendMode(Direct3D::BLEND_ADD);
 
@@ -279,4 +293,14 @@ void VFX::End(int handle)
             break;
         }
     }
+}
+
+void VFX::VFXSTOP()
+{
+    isStop = true;
+}
+
+void VFX::VFXSTART()
+{
+    isStop = false;
 }

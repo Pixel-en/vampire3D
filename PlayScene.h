@@ -1,11 +1,9 @@
 #pragma once
 #include "Engine/GameObject.h"
-#include "Engine/VFX.h"
-#include <vector>
 
 class PlayScene : public GameObject
 {
-		float PlayTimer_;
+	float PlayTimer_;
 
 	int hIntroSound_;
 	int hLoopSound_;
@@ -22,17 +20,6 @@ class PlayScene : public GameObject
 
 	bool isGameOver_;
 	float gameOverTimer_;
-
-	struct EmitterFile
-	{
-		std::string objectName;	//オブジェクト名
-		std::string emitterName;	//エミッター名
-		EmitterData emitterData;	//エミッターのデータ
-	};
-
-	std::vector<EmitterFile> emitterList_;	//エミッターのデータを格納するリスト
-
-	void EmitterLoad();
 
 public:
 	//コンストラクタ
@@ -55,8 +42,5 @@ public:
 
 	float GetPlayTimer() { return PlayTimer_; }
 
-	void PlayerDead() ;
-
-	//エミッターのデータを返すよ
-	EmitterData GetEmitterData(std::string _objectName,std::string EmitterName);
+	void PlayerDead();
 };

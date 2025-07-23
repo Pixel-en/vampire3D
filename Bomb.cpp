@@ -1,8 +1,7 @@
 #include "Bomb.h"
 #include "EnemySpawn.h"
 #include "Player.h"
-#include "Engine/VFX.h"
-#include "PlayScene.h"
+#include "Effect.h"
 
 namespace {
 	const int LISTMAX{ 30 };
@@ -113,18 +112,15 @@ void Bomb::cBomb::ResetSub()
 
 void Bomb::cBomb::EffectUpdate()
 {
-	PlayScene* scene = GetRootJob()->FindGameObject<PlayScene>();
-	NullCheck(scene);
+	Effect* effect = GetRootJob()->FindGameObject<Effect>();
+	//最悪エフェクトがなくても動くように
+	if (effect == nullptr) {
+		return;
+	}
 
-	EmitterData data = scene->GetEmitterData("Bomb", "fire");
-	data.position = data.position + transform_.position_;
-	VFX::Start(data);
-	data = scene->GetEmitterData("Bomb", "sparks");
-	data.position = data.position + transform_.position_;
-	VFX::Start(data);
-	data = scene->GetEmitterData("Bomb", "flash");
-	data.position = data.position + transform_.position_;
-	VFX::Start(data);
+	effect->PlayEffect("Bomb", "fire", transform_.position_);
+	effect->PlayEffect("Bomb", "sparks", transform_.position_);
+	effect->PlayEffect("Bomb", "flash", transform_.position_);
 }
 
 Bomb::cBomb::cBomb(GameObject* parent)

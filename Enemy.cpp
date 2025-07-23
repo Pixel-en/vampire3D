@@ -3,13 +3,13 @@
 #include "Engine/CsvReader.h"
 #include "Engine/BoxCollider.h"
 #include <algorithm>
-#include "Engine/VFX.h"
 
 #include "Field.h"
 #include "Player.h"
 #include "EXPManager.h"
 #include "HUD.h"
 #include "Apple.h"
+#include "Effect.h"
 
 
 using std::string;
@@ -167,6 +167,14 @@ void Enemy::Update()
 					EManager->SpawnEXP(transform_.position_, status_.exp_);
 				}
 				
+				Effect* effect = GetRootJob()->FindGameObject<Effect>();
+				if (effect!= nullptr) {
+					effect->PlayEffect("Enemy", "fire", transform_.position_);
+					effect->PlayEffect("Enemy", "smoke", transform_.position_);
+					effect->PlayEffect("Enemy", "grain", transform_.position_);
+					effect->PlayEffect("Enemy", "flash", transform_.position_);
+
+				}
 
 				KillMe();
 			}

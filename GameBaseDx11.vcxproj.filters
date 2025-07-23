@@ -216,6 +216,9 @@
     <ClCompile Include="Apple.cpp">
       <Filter>PlayScene</Filter>
     </ClCompile>
+    <ClCompile Include="Effect.cpp">
+      <Filter>PlayScene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\BoxCollider.h">
@@ -395,6 +398,9 @@
       <Filter>PlayScene\Equipment\Armor</Filter>
     </ClInclude>
     <ClInclude Include="Apple.h">
+      <Filter>PlayScene</Filter>
+    </ClInclude>
+    <ClInclude Include="Effect.h">
       <Filter>PlayScene</Filter>
     </ClInclude>
   </ItemGroup>
