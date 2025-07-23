@@ -31,7 +31,7 @@ bool CsvReader::Load(std::string fileName)
 	//開けなかった
 	if (hFile == INVALID_HANDLE_VALUE)
 	{
-		std::string message = "「" + fileName + "」が開けません。\n開いている場合は閉じてください。";
+		std::string message = "「" + fileName + "」が開けません。\n開いている場合は閉じて起動しなおしてください。";
 		MessageBox(NULL, message.c_str(), "BaseProjDx9エラー", MB_OK);
 
 		return false;

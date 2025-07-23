@@ -131,6 +131,7 @@
     <ClCompile Include="Armor.cpp" />
     <ClCompile Include="ArmorObject.cpp" />
     <ClCompile Include="Bomb.cpp" />
+    <ClCompile Include="Effect.cpp" />
     <ClCompile Include="FreeMind.cpp" />
     <ClCompile Include="Cushion.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -194,6 +195,7 @@
     <ClInclude Include="Armor.h" />
     <ClInclude Include="ArmorObject.h" />
     <ClInclude Include="Bomb.h" />
+    <ClInclude Include="Effect.h" />
     <ClInclude Include="FreeMind.h" />
     <ClInclude Include="Cushion.h" />
     <ClInclude Include="Enemy.h" />

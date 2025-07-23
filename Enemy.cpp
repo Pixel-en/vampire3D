@@ -3,6 +3,7 @@
 #include "Engine/CsvReader.h"
 #include "Engine/BoxCollider.h"
 #include <algorithm>
+#include "Engine/VFX.h"
 
 #include "Field.h"
 #include "Player.h"
@@ -165,6 +166,7 @@ void Enemy::Update()
 					EXPManager* EManager = GetRootJob()->FindGameObject<EXPManager>();
 					EManager->SpawnEXP(transform_.position_, status_.exp_);
 				}
+				
 
 				KillMe();
 			}

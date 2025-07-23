@@ -2,3 +2,7 @@ ObjectName,EmitterName,FileName,PositionX,PositionY,PositionZ,PositionRndX,Posit
 Bomb,fire,cloudA,0,0.5,0,def,def,def,0,1,0,90,90,90,0.1,0.8,def,0,80,def,30,1,1,0.1,1,0,-0.05,0,-0.05,def,def,def,def,def,def,def,def,def,1.2,1.2,0.4,0.4,def,def,def,def
 Bomb,sparks,cloudA,0,0.5,0,0.5,0,0.5,0,1,0,90,90,90,0.25,1,0.93,0,80,0.003,100,1,1,0.1,1,0,0,0,0,def,def,def,def,def,def,def,def,def,0.1,0.1,0.4,0.4,0.99,0.99,def,def
 Bomb,flash,flashA_R,0,0.5,0,0,0,0,0,1,0,90,90,90,0,0.8,def,0,1,def,7,1,1,1,0.3,0,-0.05,0,-0.05,90,def,def,def,def,def,def,def,def,5,5,0,0,1.25,1.25,0,def
+Enemy,fire,cloudA,0,0.5,0,def,def,def,0,1,0,90,90,90,0.1,0.8,def,0,80,def,30,1,0.5,0.5,1,0,-0.05,0,-0.04,def,def,def,def,def,def,def,def,def,1.2,1.2,0.4,0.4,def,def,def,def
+Enemy,smoke,cloudA,0,1,0,1,0,1,0,1,0,10,0,10,0.2,0.2,0.97,0,50,0.001,120,0.7,0,1,1,0.01,0.015,0,-0.01,def,def,def,def,def,def,def,def,def,1,1,0.5,0.5,0.995,0.995,def,def
+Enemy,grain,flashA_Y,0,0,0,3,3,3,0,1,0,5,0,5,0.055,0.3,1.001,0,20,0,180,1,1,1,1,0,0,0,-0.004,0,0,0,180,180,180,0,0,0,0.3,0.3,0.2,0.2,1,1,1,def
+Enemy,flash,flashA_R,0,0.5,0,0,0,0,0,1,0,90,90,90,0,0.8,def,0,1,def,7,1,1,1,0.3,0,-0.05,0,-0.05,90,def,def,def,def,def,def,def,def,5,5,0,0,1.25,1.25,0,def
