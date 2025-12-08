@@ -54,9 +54,9 @@ public:
 
 private:
 
-	Status status_;
-	Status BaseStatus_;
-	Status BoostStatus_;
+	Status status_;	//現在のステータス
+	Status BaseStatus_;	//基礎ステータス
+	Status BoostStatus_;	//ブーストステータス
 
 	//タイマー
 	float InvincibleTimer_;	//無敵時間
@@ -95,6 +95,7 @@ public:
 	void SetBoostStateMaxHp(float _maxhp) { BoostStatus_.maxhp_ = _maxhp; };
 	void SetBoostStateExp(float _exp) { BoostStatus_.exp_ = _exp; };
 
+	//ステータスのブースト一括設定
 	void MulBoostState(float _power, float _speed, float _maxhp, float _exp);
 
 

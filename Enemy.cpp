@@ -139,6 +139,7 @@ void Enemy::Update()
 	if (ModelLOD_ != LMAX)
 		Model::AnimPlay(hModel_[ModelHP_][ModelLOD_][ModelAnim_]);
 
+	//状態によって動作を変える
 	switch (ModelAnim_)
 	{
 	case ANIMATION::MOVE:
@@ -325,6 +326,7 @@ bool Enemy::HitDamege(int _damege, float _knock)
 
 	Player* player = GetRootJob()->FindGameObject<Player>();
 
+	//クリティカルダメージ計算
 	float dBoost = 1.0;
 	if (player != nullptr) {
 		dBoost = player->GetStatus().strength_;
@@ -336,6 +338,8 @@ bool Enemy::HitDamege(int _damege, float _knock)
 	}
 	Debug::Log(" ,ダメージは");
 	Debug::Log(_damege * dBoost, true);
+
+	//ダメージ
 	status_.hp_ -= _damege * dBoost;
 	InvincibleTimer_ = status_.invincibletime_;
 
