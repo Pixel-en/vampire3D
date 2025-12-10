@@ -1,8 +1,8 @@
 #include "EXPManager.h"
 
 namespace {
-	const int SPAWNMAX{ 50 };
-	const int EXPDISTRIBUTION{ 20 };
+	const int SPAWNMAX{ 50 };	//最大出現数
+	const int EXPDISTRIBUTION{ 20 };	//分配回数
 }
 
 EXPManager::EXPManager(GameObject* parent)
@@ -65,11 +65,13 @@ void EXPManager::Release()
 
 void EXPManager::SpawnEXP(XMFLOAT3 pos, int _exp)
 {
+	//もし最大出現数を超えていたら貯蔵する
 	if (EXPList_.size() >= SPAWNMAX) {
 		EXPStorage_ += _exp;
 		return;
 	}
 
+	//経験値を出現させる
 	EXP* exp = Instantiate<EXP>(GetParent());
 	exp->SetStatus(pos, _exp);
 	EXPList_.push_back(exp);

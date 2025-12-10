@@ -79,7 +79,10 @@ public:
 	/// <returns>当たっているかどうか</returns>
 	bool RayCastField(XMFLOAT3& _pos, float _rayHeight);
 
-
+	/// <summary>
+	/// 地面のリストのサイズを取得
+	/// </summary>
+	/// <returns>リストの大きさ</returns>
 	int GetFieldPosListSize() const { return fieldPosList_.size(); }
 };
 

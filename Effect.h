@@ -6,7 +6,9 @@
 //オブジェクトコピー用
 class Effect :public GameObject
 {
-
+	/// <summary>
+	/// パーティクルのデータをロードする
+	/// </summary>
 	void LoadFile();
 
 

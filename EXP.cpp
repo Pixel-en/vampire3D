@@ -13,13 +13,11 @@ namespace {
 
 void EXP::LoadModel()
 {
-
 	if (expValue_ <= SMALL) {
 		hModel_ = Model::Load("Assets\\Model\\EXP_Blue.fbx");
 
-		HandleCheck(hModel_);
 	}
-	else if(expValue_ <= MEDIUM) {
+	else if (expValue_ <= MEDIUM) {
 		hModel_ = Model::Load("Assets\\Model\\EXP_Yellow.fbx");
 	}
 	else if (expValue_ <= LARGE) {
@@ -29,11 +27,13 @@ void EXP::LoadModel()
 		hModel_ = Model::Load("Assets\\Model\\EXP_Red.fbx");
 	}
 
+	HandleCheck(hModel_);
+
 	Model::SetAnimFrame(hModel_, 0, ANIMENDFRAME, 1.0f);
 }
 
 EXP::EXP(GameObject* parent)
-	:GameObject(parent,"EXP"),hModel_(-1)
+	:GameObject(parent, "EXP"), hModel_(-1)
 {
 	dead_ = false;
 	expValue_ = 0;
@@ -63,6 +63,7 @@ void EXP::Update()
 
 	if (distance > DISMAX * player->GetStatus().collectionRange_)
 		return;
+
 	XMVECTOR pPosVec = XMLoadFloat3(&pPos);
 	XMVECTOR PosVec = XMLoadFloat3(&transform_.position_);
 
@@ -70,6 +71,7 @@ void EXP::Update()
 
 	direction = XMVector3Normalize(direction);
 
+	//近づく
 	transform_.position_ += direction * speed_ * Time::DeltaTime();
 }
 
@@ -86,6 +88,7 @@ void EXP::Release()
 void EXP::SetStatus(XMFLOAT3 _pos, int _exp)
 {
 	transform_.position_ = _pos;
+	//地面に埋まらないように+1
 	transform_.position_.y += 1;
 	expValue_ = _exp;
 	LoadModel();
@@ -102,6 +105,7 @@ void EXP::AddEXP(int _exp)
 
 void EXP::OnCollision(GameObject* pTarget)
 {
+	//プレイヤーと衝突したら経験値を加算して消える
 	if (pTarget->GetObjectName() == "Player") {
 		Player* player = GetParent()->FindGameObject<Player>();
 		player->AcquisitionEXP(expValue_);

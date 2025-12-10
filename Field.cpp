@@ -47,13 +47,15 @@ void Field::SpawnField(int num)
 		for (int j = 0;j < FIELDNUM;j++) {
 			if (hWall_[j] <0)
 				continue;
-
+			//CenterBoneの位置を取得
 			XMFLOAT3 CenterBonePos = Model::GetBonePosition(hWall_[j], "CenterBone");
 			XMVECTOR pos = XMLoadFloat3(&trans.position_);
 			XMVECTOR bone = XMLoadFloat3(&CenterBonePos);
 			
+			//許容値を設定
 			XMVECTOR vTolerance = XMVectorReplicate(TOLERANCE);
 
+			//一定以上近ければ一致とみなす
 			if (XMVector3NearEqual(pos, bone, vTolerance)) {
 				ismatch = true;
 				break;
@@ -126,6 +128,7 @@ Field::~Field()
 
 void Field::Initialize()
 {
+	//地面モデルの読み込み
 	hModel_ = Model::Load("Assets\\Model\\Test_Ground.fbx");
 	assert(hModel_ >= 0);
 	fieldPosList_ = { {0,-1,0} };
@@ -135,7 +138,7 @@ void Field::Initialize()
 
 	for (int i = 0; i < FIELDNUM; i++) {
 		hWall_[i] = Model::Load("Assets\\Model\\WallObjects\\WallBldg" + std::to_string(i + 1) + ".fbx");
-		//HandleCheck(hWall_[i], "壁のモデルがない");
+
 		Model::SetTransform(hWall_[i], trans);
 	}
 
