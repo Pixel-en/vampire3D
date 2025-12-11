@@ -40,7 +40,14 @@ public:
 	//開放
 	void Release() override;
 
+	/// <summary>
+	/// 制限時間を取得
+	/// </summary>
+	/// <returns>制限時間</returns>
 	float GetPlayTimer() { return PlayTimer_; }
 
+	/// <summary>
+	/// プレイヤーが死んだときの処理
+	/// </summary>
 	void PlayerDead();
 };

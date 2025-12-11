@@ -204,10 +204,21 @@ public:
 	/// </summary>
 	void LevelUP();
 
+	/// <summary>
+	/// タイマーをセット
+	/// </summary>
+	/// <param name="_time">制限時間</param>
 	void SetTimer(float _time) { PlayTime_ = _time; }
 
+	/// <summary>
+	/// シーン移動前に表示するメッセージをセット
+	/// </summary>
+	/// <param name="_str">表示するメッセージ</param>
 	void SetSceneMessage(std::string _str);
 
+	/// <summary>
+	/// 倒した数を増やす
+	/// </summary>
 	void AddKnockDown() { knockCount_++; }
 };
 

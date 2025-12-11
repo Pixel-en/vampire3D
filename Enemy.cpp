@@ -222,6 +222,8 @@ void Enemy::Move()
 	//プレイヤーと敵のベクトルを取る
 	XMVECTOR epDistance = pVec - eVec;
 
+
+
 	//LODの設定
 	if (XMVectorGetX(XMVector3Length(epDistance)) <= (LOWDISTANCE * 2.5)) {
 		if (XMVectorGetX(XMVector3Length(epDistance)) <= LOWDISTANCE) {

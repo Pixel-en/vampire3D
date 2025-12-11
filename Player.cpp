@@ -454,6 +454,7 @@ void Player::AcquisitionEXP(int _exp)
 	if (die_)
 		return;
 
+	//経験値を加算
 	status_.currentExp_ += (_exp * status_.ExpBoost_);
 	Audio::Play(hSEEXP_);
 
@@ -464,6 +465,7 @@ void Player::AcquisitionEXP(int _exp)
 		LEVEL2
 	};
 
+	//レベルアップしたら
 	if (status_.currentExp_ >= status_.nextLvExp_) {
 
 		Audio::Play(hSELevelUP_);

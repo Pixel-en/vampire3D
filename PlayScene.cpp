@@ -145,12 +145,14 @@ void PlayScene::Update()
 	}
 
 	else {
+		//VFX開始
 		VFX::VFXSTART();
 
+		//タイマー更新
 		if (!isClear_ && !isGameOver_)
 			PlayTimer_ += Time::DeltaTime();
 
-
+		//HUD更新
 		HUD* hud = FindGameObject<HUD>();
 		hud->SetTimer(PlayTimer_);
 
@@ -161,7 +163,7 @@ void PlayScene::Update()
 		}
 
 		if (isClear_) {
-
+			//Clearと出してシーン遷移
 			hud->SetSceneMessage("Clear!!");
 
 			if (clearTimer_ <= 0.0f) {
@@ -174,6 +176,7 @@ void PlayScene::Update()
 		}
 
 		if (isGameOver_) {
+			//GameOverと出してシーン遷移
 			hud->SetSceneMessage("GameOver!");
 
 			if (gameOverTimer_ <= 0.0f) {

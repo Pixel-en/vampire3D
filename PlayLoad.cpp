@@ -68,6 +68,7 @@ void PlayLoad::Draw()
 	Image::Draw(hFrameImage_);
 	Image::SetTransform(hStartImage_, StartTrans_);
 
+	//テキスト表示
 	FontData data;
 	data.font = TextFont::GetFontName(FontList::Makinas);
 	data.Color = D2D1::ColorF(255, 255, 255);

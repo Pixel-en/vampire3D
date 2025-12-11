@@ -16,6 +16,7 @@ void GameOverScene::Initialize()
 
 void GameOverScene::Update()
 {
+	//ƒV[ƒ“‘JˆÚ
 	if (Input::IsKeyDown(DIK_RETURN) || Input::IsPadButtonDown(XINPUT_GAMEPAD_START)) {
 		SceneManager* sc = GetRootJob()->FindGameObject<SceneManager>();
 		sc->ChangeScene(SCENE_ID_TITLE);

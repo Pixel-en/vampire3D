@@ -133,9 +133,11 @@ void Field::Initialize()
 	assert(hModel_ >= 0);
 	fieldPosList_ = { {0,-1,0} };
 
+	//明らかに違う場所に設置する
 	Transform trans;
 	trans.position_.y = 100000;
 
+	//モデルのロード
 	for (int i = 0; i < FIELDNUM; i++) {
 		hWall_[i] = Model::Load("Assets\\Model\\WallObjects\\WallBldg" + std::to_string(i + 1) + ".fbx");
 
@@ -151,6 +153,7 @@ void Field::Initialize()
 	{
 		X,Y,Z
 	};
+	//コライダーを生成するためにcsvからボーンのデータを取得
 	for (int i = 0; i < csv.GetHeight(); i++) {
 		if (hWall_[i] <0)
 			continue;
@@ -184,6 +187,7 @@ void Field::Initialize()
 				count++;
 			}
 
+			//コライダーを生成
 			BoxCollider* collider = new BoxCollider(bonePos, size);
 			collider->SetName("Collider:F" + std::to_string(i));
 			AddCollider(collider);
@@ -205,7 +209,9 @@ void Field::Draw()
 		Transform trans;
 		trans.position_ = fieldPosList_[i];
 		Model::SetTransform(hModel_, trans);
+		//床を生成
 		Model::Draw(hModel_);
+		//壁を生成
 		Model::Draw(hWall_[i]);
 
 	}

@@ -42,10 +42,17 @@ private:
 
 	Status Booststatus_;
 
+	/// <summary>
+	/// 武器のステータス類をCSVから読み込む
+	/// </summary>
 	void WeaponCSVLoad();
+
+	/// <summary>
+	/// プレイヤーのステータスをCSVから読み込む
+	/// </summary>
 	void PlayerStatusLoad();
 
-	std::map<std::string, WeaponObject::Status> WeaponState_;
+	std::map<std::string, WeaponObject::Status> WeaponState_;	//武器のステータスリスト
 
 	bool die_;
 	int hSEDead_;
@@ -53,8 +60,8 @@ private:
 	int hSELevelUP_;
 
 public:
-	std::vector<WeaponObject*> MyWeaponList_;
-	std::vector<ArmorObject*> MyArmorList_;
+	std::vector<WeaponObject*> MyWeaponList_;	//所持している武器リスト
+	std::vector<ArmorObject*> MyArmorList_;		//所持している防具リスト
 
 	//ナイフ用
 	XMFLOAT3 LookPos_;
@@ -65,13 +72,14 @@ public:
 	//引数:_state　書き込むステータス
 	bool WeaponStateWrite(std::string name, WeaponObject::Status& _state);
 
-	Status GetStatus() { return status_; }
-	Status GetBaseStatus() { return Basestatus_; }
-	Status GetBoostStatus() { return Booststatus_; }
+	Status GetStatus() { return status_; }	//現在のステータスを返す
+	Status GetBaseStatus() { return Basestatus_; }	//ベースのステータスを返す
+	Status GetBoostStatus() { return Booststatus_; }	//ブーストステータスのセッター
 	void SetBoostStatusResist(int _resist) { Booststatus_.resist_ = _resist; }
 	void SetBoostStatusCriticalBoost(float _criticalBoost) { Booststatus_.criticalBoost_ = _criticalBoost; }
 	void SetBoostStatusArea(float _area) { Booststatus_.area_ = _area; }
 	void SetBoostStatusExpBoost(float _expBoost) { Booststatus_.ExpBoost_ = _expBoost; }
+
 	/// <summary>
 	/// trueなら乗算、falseなら除算をブーストに行う
 	/// </summary>
@@ -95,7 +103,7 @@ public:
 		else Booststatus_.critical_ = Booststatus_.critical_ / _critical;
 	}
 
-	//trueで加算,falseで除算
+	//trueで加算,falseで減算
 	void AddSubBoostStatusHaste(float _haste, bool _isMult) {
 		
 		float val = fmodf(_haste, 1.0f);
@@ -103,15 +111,29 @@ public:
 		if (_isMult) Booststatus_.haste_ += val;
 		else Booststatus_.haste_ -= val;
 	}
+
+	/// <summary>
+	/// 回収範囲をブーストする
+	/// </summary>
+	/// <param name="_collectionRange">回収範囲</param>
+	/// <param name="_isMult">trueで乗算falseで除算</param>
 	void MultDivBoostStatusCollectionRange(float _collectionRange, bool _isMult) {
 		if (_isMult) Booststatus_.collectionRange_ *= _collectionRange;
 		else Booststatus_.collectionRange_ /= _collectionRange;
 	}
 
+	/// <summary>
+	/// 最大HPをブーストする
+	/// </summary>
+	/// <param name="_maxHp">増やすHP</param>
 	void AddStatusMaxHp(int _maxHp) {
 		Booststatus_.maxHp_ += _maxHp;
 	}
 
+	/// <summary>
+	/// HPを回復
+	/// </summary>
+	/// <param name="_hp">回復するHP</param>
 	void HealingHp(int _hp);
 
 	//ステータスの更新
@@ -161,6 +183,10 @@ public:
 	//引数：pTarget 当たった相手
 	void OnCollision(GameObject* pTarget) override;
 
+	//何かに衝突した場合に呼ばれる(オーバーライド用)
+	//引数：pTarget 衝突した相手
+	//引数：MyItr　自分のコライダーリストのイテレーター
+	//引数：list　相手のコライダーリスト
 	void OnCollisionsList(GameObject* pTarget, std::list<Collider*>::iterator MyItr, std::list<Collider*> list) override;
 
 	/// <summary>

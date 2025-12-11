@@ -1,7 +1,7 @@
 #pragma once
 #include "Engine/GameObject.h"
 
-//オブジェクトコピー用
+//プレイシーンのロード画面
 class PlayLoad :public GameObject
 {
 	//背景用ハンドル
@@ -39,8 +39,16 @@ public:
 	//開放
 	void Release() override;
 
+	/// <summary>
+	/// バーの長さを設定
+	/// </summary>
+	/// <param name="scale">長さ</param>
 	void SetBarScale(float scale);
 
+	/// <summary>
+	/// スタートフラグが立っているかどうか
+	/// </summary>
+	/// <returns>スタートフラグ</returns>
 	bool GetIsStart() { return isStart_; }
 };
 
