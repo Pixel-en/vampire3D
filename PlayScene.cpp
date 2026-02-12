@@ -143,7 +143,7 @@ void PlayScene::Update()
 			}
 		}
 	}
-
+	//ロードが終わっているとき
 	else {
 		//VFX開始
 		VFX::VFXSTART();

@@ -17,6 +17,7 @@ void TestScene::Initialize()
 //更新
 void TestScene::Update()
 {
+	//使わないのでもしここに入ったらプレイシーンへ飛ばす
 	if (Input::IsKeyDown(DIK_RETURN)) {
 		SceneManager* psManager = (SceneManager*)FindObject("SceneManager");
 		psManager->ChangeScene(SCENE_ID_PLAY);

@@ -2,12 +2,12 @@
 #include "Engine/GameObject.h"
 
 //オブジェクトコピー用
-class a:public GameObject
+class Test:public GameObject
 {
 public:
-	a(GameObject* parent);
+	Test(GameObject* parent);
 
-	~a();
+	~Test();
 
 	//初期化
 	void Initialize() override;

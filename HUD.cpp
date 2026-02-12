@@ -1127,6 +1127,7 @@ void HUD::SceneMessageDraw()
 		data.Color = D2D1::ColorF(D2D1::ColorF::White);
 		data.font = TextFont::GetFontName(FontList::Gkktt);
 		TextFont::Draw(sceneMessage_, SCENEMESSAGE::POS1, SCENEMESSAGE::POS2, data);
+
 	}
 }
 
