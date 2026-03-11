@@ -10,6 +10,7 @@ class TitleScene : public GameObject
 	bool isbutton_;
 
 	int hSE_;
+	int hBGM_;
 public:
 	//コンストラクタ
 	//引数：parent  親オブジェクト（SceneManager）

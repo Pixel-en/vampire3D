@@ -23,7 +23,10 @@ void TitleScene::Initialize()
 	timer_ = TIMER;
 	isbutton_ = false;
 
+	hBGM_ = Audio::Load("Assets\\Audio\\BGM\\Title.wav", true);
 	hSE_ = Audio::Load("Assets\\Audio\\SE\\Choise.wav");
+	Audio::Play(hBGM_);
+
 }
 
 void TitleScene::Update()
